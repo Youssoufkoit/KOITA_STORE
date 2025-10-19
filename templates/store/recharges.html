@@ -75,7 +75,8 @@
     </div>
 </section>
 
-<!-- Catégories avec Images (comme les produits) -->
+<!-- Catégories avec Images (masquées si une catégorie est sélectionnée) -->
+{% if not selected_category and not search_query %}
 <section class="categories-with-images">
     <div class="section-header-categories">
         <h2><i class="fas fa-th-large"></i> Catégories</h2>
@@ -84,7 +85,7 @@
     
     <div class="categories-grid-images">
         <!-- Carte TOUT -->
-        <a href="{% url 'store:recharges' %}" class="category-card-image {% if not selected_category %}active{% endif %}">
+        <a href="{% url 'store:recharges' %}" class="category-card-image active">
             <div class="category-image-wrapper">
                 <img src="{% static 'images/002.jpg' %}" alt="Tous les produits" class="category-img">
                 <div class="category-overlay">
@@ -104,8 +105,7 @@
         </a>
         
         {% for category in categories %}
-        <a href="{% url 'store:recharges' %}?category={{ category.slug }}" 
-           class="category-card-image {% if selected_category.id == category.id %}active{% endif %}">
+        <a href="{% url 'store:recharges' %}?category={{ category.slug }}" class="category-card-image">
             <div class="category-image-wrapper">
                 {% if category.image %}
                     <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-img">
@@ -132,6 +132,7 @@
         {% endfor %}
     </div>
 </section>
+{% endif %}
 
 <!-- Grille de Produits -->
 <section class="products-showcase">
@@ -449,7 +450,7 @@
 }
 
 /* ========================================
-   CATÉGORIES AVEC IMAGES (COMME PRODUITS)
+   CATÉGORIES AVEC IMAGES
 ======================================== */
 .categories-with-images {
     margin-bottom: 4rem;
@@ -627,7 +628,7 @@
 }
 
 /* ========================================
-   GRILLE DE PRODUITS (déjà stylisé)
+   GRILLE DE PRODUITS
 ======================================== */
 .products-showcase {
     margin-top: 3rem;
@@ -648,12 +649,6 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-
-.result-count {
-    color: #666;
-    font-size: 1rem;
-    font-weight: 600;
 }
 
 .products-grid-modern {
@@ -1072,4 +1067,3 @@
     });
 </script>
 {% endblock %}
- 
