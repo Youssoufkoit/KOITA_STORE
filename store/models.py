@@ -3,7 +3,7 @@ from django.utils.text import slugify
 
 
 class Category(models.Model):
-    """Modèle pour les catégories de produits"""
+    """Modèle pour les catégories de produits avec image"""
     name = models.CharField(max_length=100, verbose_name="Nom de la catégorie")
     slug = models.SlugField(max_length=100, unique=True, verbose_name="Slug")
     description = models.TextField(blank=True, verbose_name="Description")
@@ -12,6 +12,14 @@ class Category(models.Model):
         blank=True,
         help_text="Classe CSS de l'icône (ex: fas fa-gamepad)",
         verbose_name="Icône"
+    )
+    # NOUVEAU: Champ image ajouté
+    image = models.ImageField(
+        upload_to='categories/',
+        blank=True,
+        null=True,
+        verbose_name="Image de la catégorie",
+        help_text="Image d'illustration de la catégorie (recommandé: 400x300px)"
     )
     order = models.IntegerField(default=0, verbose_name="Ordre d'affichage")
     is_active = models.BooleanField(default=True, verbose_name="Actif")
@@ -33,7 +41,7 @@ class Category(models.Model):
     
     def get_products_count(self):
         """Compte le nombre de produits liés à cette catégorie"""
-        return self.products.count()  # ✅ corrigé
+        return self.products.count()
 
 
 class Product(models.Model):
@@ -45,7 +53,7 @@ class Product(models.Model):
         Category,
         on_delete=models.CASCADE,
         verbose_name="Catégorie",
-        related_name='products'  # ✅ correspond bien à Category.products
+        related_name='products'
     )
     image = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Image")
     stock = models.IntegerField(default=0, verbose_name="Stock disponible")

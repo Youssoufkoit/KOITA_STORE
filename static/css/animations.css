@@ -1,0 +1,434 @@
+/* ========================================
+   ANIMATIONS ET EFFETS SUPPLÉMENTAIRES
+======================================== */
+
+/* Animation de chargement pour la recherche */
+@keyframes searchPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+    }
+}
+
+.search-input-improved:focus-within {
+    animation: searchPulse 2s infinite;
+}
+
+/* Animation de survol pour les catégories */
+@keyframes categoryShine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.category-card-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.category-card-image:hover::after {
+    left: 100%;
+}
+
+/* Effet de typing pour le placeholder */
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+.search-field-improved:focus::placeholder {
+    animation: typing 2s steps(40, end);
+}
+
+/* Badge animé pour les produits en vedette */
+@keyframes badgeRotate {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-10deg);
+    }
+    75% {
+        transform: rotate(10deg);
+    }
+}
+
+.corner-badge.featured:hover {
+    animation: badgeRotate 0.5s ease;
+}
+
+/* Effet de vague sur les boutons */
+.add-cart-btn::before,
+.search-btn-improved::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.add-cart-btn:active::before,
+.search-btn-improved:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Skeleton loading pour les images */
+@keyframes skeleton-loading {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.product-img[src=""],
+.category-img[src=""] {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+/* Effet parallax sur le scroll */
+@media (min-width: 768px) {
+    .category-image-wrapper {
+        overflow: hidden;
+    }
+    
+    .category-card-image:hover .category-img {
+        transform: scale(1.15) translateY(-5px);
+    }
+}
+
+/* Indicateur de chargement */
+.loading-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 107, 53, 0.3);
+    border-top-color: var(--primary-orange);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Tooltip personnalisé */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    padding: 0.5rem 1rem;
+    background: var(--dark-gray);
+    color: var(--white);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+[data-tooltip]::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--dark-gray);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Effet de glitch pour les titres */
+@keyframes glitch {
+    0% {
+        text-shadow: 2px 2px var(--primary-orange), -2px -2px var(--secondary-blue);
+    }
+    25% {
+        text-shadow: -2px -2px var(--primary-orange), 2px 2px var(--secondary-blue);
+    }
+    50% {
+        text-shadow: 2px -2px var(--primary-orange), -2px 2px var(--secondary-blue);
+    }
+    75% {
+        text-shadow: -2px 2px var(--primary-orange), 2px -2px var(--secondary-blue);
+    }
+    100% {
+        text-shadow: 2px 2px var(--primary-orange), -2px -2px var(--secondary-blue);
+    }
+}
+
+.section-header-categories h2:hover {
+    animation: glitch 0.3s ease;
+}
+
+/* Progress bar pour le scroll */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-orange), var(--secondary-blue));
+    z-index: 9999;
+    transition: width 0.1s ease;
+}
+
+/* Effet de particules sur hover */
+@keyframes particles {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(1);
+    }
+}
+
+.product-card-hover-particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: var(--primary-orange);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particles 1s ease-out forwards;
+}
+
+/* Effet de révélation au scroll */
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal-on-scroll {
+    opacity: 0;
+    animation: reveal 0.8s ease forwards;
+}
+
+/* Badge "Nouveau" qui pulse */
+@keyframes newBadgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+    }
+}
+
+.badge-new {
+    animation: newBadgePulse 2s infinite;
+}
+
+/* Effet de zoom sur les images au survol */
+.zoom-on-hover {
+    overflow: hidden;
+}
+
+.zoom-on-hover img {
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.zoom-on-hover:hover img {
+    transform: scale(1.2);
+}
+
+/* Compteur animé */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-count {
+    animation: countUp 0.6s ease-out;
+}
+
+/* Effet de flip pour les cartes */
+.flip-card {
+    perspective: 1000px;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+/* Effet de neon sur les boutons */
+@keyframes neonGlow {
+    0%, 100% {
+        text-shadow: 0 0 5px var(--primary-orange),
+                     0 0 10px var(--primary-orange),
+                     0 0 20px var(--primary-orange);
+    }
+    50% {
+        text-shadow: 0 0 10px var(--primary-orange),
+                     0 0 20px var(--primary-orange),
+                     0 0 40px var(--primary-orange);
+    }
+}
+
+.neon-text {
+    animation: neonGlow 2s ease-in-out infinite;
+}
+
+/* Effet de confetti lors de l'ajout au panier */
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100%) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--primary-orange);
+    animation: confetti-fall 3s linear forwards;
+    z-index: 9999;
+}
+
+/* Effet de fumée sur les cartes premium */
+@keyframes smoke {
+    0% {
+        opacity: 0.5;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(1.5);
+    }
+}
+
+.smoke-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    animation: smoke 3s ease-out infinite;
+    pointer-events: none;
+}
+
+/* Responsive amélioré */
+@media (max-width: 768px) {
+    /* Désactiver certaines animations sur mobile pour performance */
+    .category-card-image::after,
+    .product-card-hover-particle,
+    .smoke-effect {
+        display: none;
+    }
+    
+    /* Simplifier les animations */
+    .modern-product-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .category-card-image:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+}
+
+/* Mode sombre (si activé dans les préférences) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --white: #1a1a1a;
+        --dark-gray: #f5f5f5;
+        --light-gray: #2a2a2a;
+        --border-color: #3a3a3a;
+    }
+}
+
+/* Accessibilité - Focus visible amélioré */
+*:focus-visible {
+    outline: 3px solid var(--primary-orange);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Réduction des animations pour les préférences utilisateur */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
