@@ -10,12 +10,16 @@ def home(request):
 
 
 def recharges(request):
-    """Page des recharges - UNIQUEMENT les produits de type 'recharge'"""
+    """
+    Page des recharges - UNIQUEMENT les produits qui NE SONT PAS des comptes
+    On filtre en EXCLUANT les catégories contenant 'compte' dans leur nom/slug
+    """
     
-    # Récupérer UNIQUEMENT les catégories de type RECHARGE
+    # Récupérer UNIQUEMENT les catégories qui ne sont PAS des comptes
     categories = Category.objects.filter(
-        is_active=True,
-        category_type='recharge'  # Utilise le nouveau champ category_type
+        is_active=True
+    ).exclude(
+        Q(slug__icontains='compte') | Q(name__icontains='compte')
     ).order_by('order', 'name')
     
     # Récupérer les paramètres de requête
@@ -23,10 +27,11 @@ def recharges(request):
     search_query = request.GET.get('search', '').strip()
     sort_by = request.GET.get('sort', 'default')
     
-    # Commencer avec UNIQUEMENT les produits de catégories RECHARGE
+    # Commencer avec UNIQUEMENT les produits de catégories RECHARGE (exclure comptes)
     products = Product.objects.filter(
-        is_active=True,
-        category__category_type='recharge'  # Filtre par type de catégorie
+        is_active=True
+    ).exclude(
+        Q(category__slug__icontains='compte') | Q(category__name__icontains='compte')
     ).select_related('category')
     
     # Filtrer par catégorie si spécifié
@@ -60,8 +65,9 @@ def recharges(request):
     
     # Compter le total de produits RECHARGE actifs
     total_products = Product.objects.filter(
-        is_active=True,
-        category__category_type='recharge'
+        is_active=True
+    ).exclude(
+        Q(category__slug__icontains='compte') | Q(category__name__icontains='compte')
     ).count()
     
     context = {
@@ -77,18 +83,23 @@ def recharges(request):
 
 
 def accounts_for_sale(request):
-    """Page des comptes à vendre - UNIQUEMENT les produits de type 'account'"""
+    """
+    Page des comptes à vendre - UNIQUEMENT les produits de type COMPTE
+    On filtre en INCLUANT seulement les catégories contenant 'compte'
+    """
     
     # Récupérer UNIQUEMENT les catégories de type COMPTE
     account_categories = Category.objects.filter(
-        is_active=True,
-        category_type='account'  # ⚠️ IMPORTANT : Utilise le champ category_type
+        is_active=True
+    ).filter(
+        Q(slug__icontains='compte') | Q(name__icontains='compte')
     ).order_by('order', 'name')
     
     # Récupérer UNIQUEMENT les produits des catégories de type COMPTE
     products = Product.objects.filter(
-        is_active=True,
-        category__category_type='account'  # ⚠️ IMPORTANT : Filtre par type
+        is_active=True
+    ).filter(
+        Q(category__slug__icontains='compte') | Q(category__name__icontains='compte')
     ).select_related('category')
     
     # Filtrage par catégorie spécifique (optionnel)
