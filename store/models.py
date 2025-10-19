@@ -42,7 +42,8 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, 
         on_delete=models.CASCADE, 
-        verbose_name="Catégorie"
+        verbose_name="Catégorie",
+        related_name='products'  # AJOUTEZ CECI
     )
     image = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Image")
     stock = models.IntegerField(default=0, verbose_name="Stock disponible")
