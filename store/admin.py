@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Category, Product
 
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """Administration des catégories"""
@@ -29,7 +30,7 @@ class CategoryAdmin(admin.ModelAdmin):
         count = obj.get_products_count()
         color = 'green' if count > 0 else 'red'
         return format_html(
-            '<span style="color: {}; font-weight: bold;">{} produits</span>',
+            '<span style="color: {}; font-weight: bold;">{} produit(s)</span>',
             color, count
         )
     products_count.short_description = 'Nombre de produits'
@@ -89,10 +90,11 @@ class ProductAdmin(admin.ModelAdmin):
     )
     
     def price_display(self, obj):
-        """Affiche le prix formaté"""
+        """Affiche le prix formaté correctement"""
+        formatted_price = f"{float(obj.price):,.0f} FCFA"
         return format_html(
-            '<span style="color: #ff6b35; font-weight: bold; font-size: 1.1rem;">{:,.0f} FCFA</span>',
-            obj.price
+            '<span style="color: #ff6b35; font-weight: bold; font-size: 1.1rem;">{}</span>',
+            formatted_price
         )
     price_display.short_description = 'Prix'
     
@@ -117,18 +119,20 @@ class ProductAdmin(admin.ModelAdmin):
             '<span style="color: {}; font-weight: bold;">{} {}</span>',
             color, icon, text
         )
-    stock_status.short_description = 'Statut Stock'
+    stock_status.short_description = 'Statut du stock'
     
     def image_preview(self, obj):
         """Prévisualise l'image du produit"""
         if obj.image:
             return format_html(
-                '<img src="{}" style="max-width: 200px; max-height: 200px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" />',
+                '<img src="{}" style="max-width: 200px; max-height: 200px; border-radius: 10px; '
+                'box-shadow: 0 4px 10px rgba(0,0,0,0.1);" />',
                 obj.image.url
             )
         return format_html('<span style="color: #999;">Aucune image</span>')
     image_preview.short_description = 'Aperçu Image'
     
+    # Actions personnalisées
     actions = [
         'mark_as_active',
         'mark_as_inactive',

@@ -8,8 +8,8 @@ class Category(models.Model):
     slug = models.SlugField(max_length=100, unique=True, verbose_name="Slug")
     description = models.TextField(blank=True, verbose_name="Description")
     icon = models.CharField(
-        max_length=100, 
-        blank=True, 
+        max_length=100,
+        blank=True,
         help_text="Classe CSS de l'icône (ex: fas fa-gamepad)",
         verbose_name="Icône"
     )
@@ -32,18 +32,20 @@ class Category(models.Model):
         super().save(*args, **kwargs)
     
     def get_products_count(self):
-        return self.product_set.count()
+        """Compte le nombre de produits liés à cette catégorie"""
+        return self.products.count()  # ✅ corrigé
 
 
 class Product(models.Model):
+    """Modèle pour les produits"""
     name = models.CharField(max_length=200, verbose_name="Nom du produit")
     description = models.TextField(verbose_name="Description")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix (FCFA)")
     category = models.ForeignKey(
-        Category, 
-        on_delete=models.CASCADE, 
+        Category,
+        on_delete=models.CASCADE,
         verbose_name="Catégorie",
-        related_name='products'  # AJOUTEZ CECI
+        related_name='products'  # ✅ correspond bien à Category.products
     )
     image = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Image")
     stock = models.IntegerField(default=0, verbose_name="Stock disponible")
