@@ -1,0 +1,1331 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Bannière de profil -->
+    <div class="profile-banner">
+        <div class="banner-overlay"></div>
+        <h1>Mon Profil</h1>
+    </div>
+
+    <!-- Messages de succès/erreur -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-check-circle"></i>
+                    {{ message }}
+                    <button class="close-alert" onclick="this.parentElement.remove()">×</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="profile-content">
+        <!-- Sidebar Profil -->
+        <aside class="profile-sidebar">
+            <div class="profile-card">
+                <div class="profile-avatar-section">
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="profile-avatar">
+                    {% else %}
+                        <div class="profile-avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <button class="change-avatar-btn" onclick="document.getElementById('avatarInput').click();">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <form id="avatarForm" action="{% url 'accounts:update_avatar' %}" method="post" enctype="multipart/form-data" style="display: none;">
+                        {% csrf_token %}
+                        <input type="file" id="avatarInput" name="avatar" accept="image/*" onchange="this.form.submit();">
+                    </form>
+                </div>
+                
+                <div class="profile-info">
+                    <h2>{{ user.username }}</h2>
+                    <p class="user-email"><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                    <p class="member-since"><i class="fas fa-calendar-alt"></i> Membre depuis {{ user.date_joined|date:"F Y" }}</p>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-shopping-bag"></i>
+                        <div class="stat-details">
+                            <span class="stat-value">{{ total_orders }}</span>
+                            <span class="stat-label">Commandes</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-coins"></i>
+                        <div class="stat-details">
+                            <span class="stat-value">{{ total_spent|floatformat:0 }}</span>
+                            <span class="stat-label">FCFA Dépensés</span>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="profile-nav">
+                    <a href="#" class="nav-item active" data-section="info">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Informations</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="orders">
+                        <i class="fas fa-history"></i>
+                        <span>Mes Commandes</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="security">
+                        <i class="fas fa-lock"></i>
+                        <span>Sécurité</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Paramètres</span>
+                    </a>
+                </nav>
+
+                <a href="{% url 'accounts:logout' %}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Se déconnecter
+                </a>
+            </div>
+        </aside>
+
+        <!-- Contenu Principal -->
+        <main class="profile-main">
+            <!-- Section Informations Personnelles -->
+            <section id="info-section" class="profile-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-user-circle"></i> Informations Personnelles</h2>
+                </div>
+
+                <form action="{% url 'accounts:update_profile' %}" method="post" class="profile-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">
+                                <i class="fas fa-user"></i> Nom d'utilisateur
+                            </label>
+                            <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">
+                                <i class="fas fa-id-card"></i> Prénom
+                            </label>
+                            <input type="text" id="first_name" name="first_name" value="{{ user.first_name|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last_name">
+                                <i class="fas fa-id-card"></i> Nom
+                            </label>
+                            <input type="text" id="last_name" name="last_name" value="{{ user.last_name|default:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">
+                            <i class="fas fa-phone"></i> Téléphone
+                        </label>
+                        <input type="tel" id="phone" name="phone" value="{{ user.profile.phone|default:'' }}" placeholder="+221 XX XXX XX XX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">
+                            <i class="fas fa-map-marker-alt"></i> Adresse
+                        </label>
+                        <textarea id="address" name="address" rows="3">{{ user.profile.address|default:'' }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-save"></i> Enregistrer les modifications
+                    </button>
+                </form>
+            </section>
+
+            <!-- Section Historique des Commandes -->
+            <section id="orders-section" class="profile-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Historique des Commandes</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all">Toutes</button>
+                        <button class="filter-btn" data-filter="pending">En attente</button>
+                        <button class="filter-btn" data-filter="completed">Complétées</button>
+                        <button class="filter-btn" data-filter="cancelled">Annulées</button>
+                    </div>
+                </div>
+
+                <div class="orders-list">
+                    {% for order in orders %}
+                    <div class="order-card" data-status="{{ order.status }}">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <h3>Commande #{{ order.id }}</h3>
+                                <p class="order-date"><i class="fas fa-calendar"></i> {{ order.created_at|date:"d/m/Y à H:i" }}</p>
+                            </div>
+                            <div class="order-status">
+                                {% if order.status == 'pending' %}
+                                    <span class="status-badge pending">
+                                        <i class="fas fa-clock"></i> En attente
+                                    </span>
+                                {% elif order.status == 'processing' %}
+                                    <span class="status-badge processing">
+                                        <i class="fas fa-spinner"></i> En cours
+                                    </span>
+                                {% elif order.status == 'completed' %}
+                                    <span class="status-badge completed">
+                                        <i class="fas fa-check-circle"></i> Complétée
+                                    </span>
+                                {% elif order.status == 'cancelled' %}
+                                    <span class="status-badge cancelled">
+                                        <i class="fas fa-times-circle"></i> Annulée
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="order-items">
+                            {% for item in order.items.all %}
+                            <div class="order-item">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                {% else %}
+                                    <div class="item-placeholder"><i class="fas fa-image"></i></div>
+                                {% endif %}
+                                <div class="item-details">
+                                    <h4>{{ item.product.name }}</h4>
+                                    <p>Quantité: {{ item.quantity }}</p>
+                                </div>
+                                <div class="item-price">{{ item.price|floatformat:0 }} FCFA</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="order-footer">
+                            <div class="order-total">
+                                <span>Total:</span>
+                                <strong>{{ order.total_amount|floatformat:0 }} FCFA</strong>
+                            </div>
+                            <div class="order-actions">
+                                <a href="{% url 'store:order_detail' order.id %}" class="btn btn-secondary">
+                                    <i class="fas fa-eye"></i> Détails
+                                </a>
+                                {% if order.status == 'pending' %}
+                                <button class="btn btn-danger btn-sm" onclick="cancelOrder({{ order.id }})">
+                                    <i class="fas fa-times"></i> Annuler
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>Aucune commande</h3>
+                        <p>Vous n'avez pas encore passé de commande.</p>
+                        <a href="{% url 'store:home' %}" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Commencer mes achats
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Section Sécurité -->
+            <section id="security-section" class="profile-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-lock"></i> Sécurité du Compte</h2>
+                </div>
+
+                <form action="{% url 'accounts:change_password' %}" method="post" class="profile-form">
+                    {% csrf_token %}
+                    
+                    <div class="security-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Pour votre sécurité, veuillez choisir un mot de passe fort contenant au moins 8 caractères, des lettres et des chiffres.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="old_password">
+                            <i class="fas fa-key"></i> Mot de passe actuel
+                        </label>
+                        <input type="password" id="old_password" name="old_password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_password1">
+                            <i class="fas fa-lock"></i> Nouveau mot de passe
+                        </label>
+                        <input type="password" id="new_password1" name="new_password1" required>
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_password2">
+                            <i class="fas fa-lock"></i> Confirmer le mot de passe
+                        </label>
+                        <input type="password" id="new_password2" name="new_password2" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-shield-alt"></i> Modifier le mot de passe
+                    </button>
+                </form>
+
+                <div class="security-actions">
+                    <div class="security-action-card">
+                        <i class="fas fa-history"></i>
+                        <h3>Activité récente</h3>
+                        <p>Dernière connexion: {{ user.last_login|date:"d/m/Y à H:i" }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section Paramètres -->
+            <section id="settings-section" class="profile-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Paramètres</h2>
+                </div>
+
+                <form action="{% url 'accounts:update_settings' %}" method="post" class="profile-form">
+                    {% csrf_token %}
+                    
+                    <div class="settings-group">
+                        <h3><i class="fas fa-bell"></i> Notifications</h3>
+                        
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <strong>Notifications par email</strong>
+                                <p>Recevoir des emails sur les nouvelles offres et promotions</p>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" name="email_notifications" {% if user.profile.email_notifications %}checked{% endif %}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <strong>Confirmations de commande</strong>
+                                <p>Recevoir des emails de confirmation pour chaque commande</p>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" name="order_notifications" {% if user.profile.order_notifications %}checked{% endif %}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3><i class="fas fa-palette"></i> Apparence</h3>
+                        
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <strong>Mode sombre</strong>
+                                <p>Activer le thème sombre pour l'interface</p>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" name="dark_mode" {% if user.profile.dark_mode %}checked{% endif %}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-group danger-zone">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Zone de danger</h3>
+                        
+                        <div class="danger-action">
+                            <div class="danger-info">
+                                <strong>Supprimer mon compte</strong>
+                                <p>Une fois supprimé, votre compte ne pourra pas être récupéré</p>
+                            </div>
+                            <button type="button" class="btn btn-danger" onclick="confirmDeleteAccount()">
+                                <i class="fas fa-trash-alt"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-save"></i> Enregistrer les paramètres
+                    </button>
+                </form>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script>
+// Navigation entre les sections
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.profile-section');
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            navItems.forEach(nav => nav.classList.remove('active'));
+            sections.forEach(section => section.classList.remove('active'));
+            
+            this.classList.add('active');
+            
+            const sectionId = this.getAttribute('data-section') + '-section';
+            document.getElementById(sectionId).classList.add('active');
+        });
+    });
+    
+    // Filtrage des commandes
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const orderCards = document.querySelectorAll('.order-card');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            orderCards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-status') === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // Indicateur de force du mot de passe
+    const newPasswordInput = document.getElementById('new_password1');
+    const strengthIndicator = document.getElementById('passwordStrength');
+    
+    if (newPasswordInput && strengthIndicator) {
+        newPasswordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]+/)) strength++;
+            if (password.match(/[A-Z]+/)) strength++;
+            if (password.match(/[0-9]+/)) strength++;
+            if (password.match(/[$@#&!]+/)) strength++;
+            
+            strengthIndicator.style.width = '100%';
+            
+            if (strength <= 2) {
+                strengthIndicator.style.backgroundColor = '#e74c3c';
+                strengthIndicator.title = 'Faible';
+            } else if (strength <= 3) {
+                strengthIndicator.style.backgroundColor = '#f39c12';
+                strengthIndicator.title = 'Moyen';
+            } else {
+                strengthIndicator.style.backgroundColor = '#2ecc71';
+                strengthIndicator.title = 'Fort';
+            }
+        });
+    }
+});
+
+// Fonction pour annuler une commande
+function cancelOrder(orderId) {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette commande ?')) {
+        fetch(`/store/order/${orderId}/cancel/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur lors de l\'annulation de la commande');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue');
+        });
+    }
+}
+
+// Fonction pour confirmer la suppression du compte
+function confirmDeleteAccount() {
+    const confirmText = prompt('Pour confirmer la suppression de votre compte, tapez "SUPPRIMER" :');
+    
+    if (confirmText === 'SUPPRIMER') {
+        if (confirm('Cette action est irréversible. Continuer ?')) {
+            fetch('{% url "accounts:delete_account" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    alert('Erreur lors de la suppression du compte');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue');
+            });
+        }
+    } else if (confirmText !== null) {
+        alert('Texte de confirmation incorrect');
+    }
+}
+
+// Fonction pour récupérer le token CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Fermeture automatique des alertes
+setTimeout(function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        alert.style.transition = 'opacity 0.5s ease';
+        alert.style.opacity = '0';
+        setTimeout(() => alert.remove(), 500);
+    });
+}, 5000);
+</script>
+
+<style>
+/* Messages */
+.messages-container {
+    margin-bottom: 2rem;
+}
+
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: "Raleway", sans-serif;
+    font-weight: 500;
+    animation: slideInFromTop 0.5s ease;
+    position: relative;
+}
+
+.alert i {
+    font-size: 1.5rem;
+}
+
+.close-alert {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.close-alert:hover {
+    opacity: 1;
+}
+
+.alert-success {
+    background-color: rgba(46, 204, 113, 0.1);
+    border: 2px solid #2ecc71;
+    color: #27ae60;
+}
+
+.alert-error {
+    background-color: rgba(231, 76, 60, 0.1);
+    border: 2px solid #e74c3c;
+    color: #c0392b;
+}
+
+.alert-info {
+    background-color: rgba(52, 152, 219, 0.1);
+    border: 2px solid #3498db;
+    color: #2980b9;
+}
+
+.alert-warning {
+    background-color: rgba(243, 156, 18, 0.1);
+    border: 2px solid #f39c12;
+    color: #e67e22;
+}
+
+/* Conteneur principal */
+.profile-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Bannière */
+.profile-banner {
+    background: linear-gradient(135deg, var(--secondary-blue), var(--light-blue));
+    color: var(--white);
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: heroRotate 20s linear infinite;
+}
+
+.profile-banner h1 {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 3rem;
+    letter-spacing: 3px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Layout */
+.profile-content {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+}
+
+/* Sidebar */
+.profile-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.profile-card {
+    background: var(--white);
+    border-radius: 20px;
+    border: 3px solid var(--border-color);
+    padding: 2rem;
+    box-shadow: 0 10px 40px var(--shadow-light);
+}
+
+/* Avatar */
+.profile-avatar-section {
+    position: relative;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-avatar,
+.profile-avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--primary-orange);
+    box-shadow: 0 8px 25px var(--orange-glow);
+}
+
+.profile-avatar-placeholder {
+    background: linear-gradient(135deg, var(--primary-orange), var(--dark-orange));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 3rem;
+    margin: 0 auto;
+}
+
+.change-avatar-btn {
+    position: absolute;
+    bottom: 5px;
+    right: calc(50% - 60px);
+    background: linear-gradient(135deg, var(--secondary-blue), var(--light-blue));
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--blue-glow);
+    transition: all 0.3s ease;
+}
+
+.change-avatar-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Info utilisateur */
+.profile-info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-info h2 {
+    font-family: "Montserrat", sans-serif;
+    color: var(--secondary-blue);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.user-email,
+.member-since {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+}
+
+/* Stats */
+.profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem 0;
+    border-top: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-item i {
+    font-size: 2rem;
+    color: var(--primary-orange);
+}
+
+.stat-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: "Bebas Neue", sans-serif;
+    color: var(--secondary-blue);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Navigation profil */
+.profile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+    color: var(--primary-orange);
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: linear-gradient(135deg, var(--primary-orange), var(--dark-orange));
+    color: var(--white);
+}
+
+.nav-item:hover i,
+.nav-item.active i {
+    color: var(--white);
+    transform: scale(1.2);
+}
+
+/* Bouton déconnexion */
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: var(--white);
+    border-radius: 12px;
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+/* Sections */
+.profile-main {
+    background: var(--white);
+    border-radius: 20px;
+    border: 3px solid var(--border-color);
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px var(--shadow-light);
+}
+
+.profile-section {
+    display: none;
+}
+
+.profile-section.active {
+    display: block;
+    animation: fadeInUp 0.5s ease;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--border-color);
+}
+
+.section-header h2 {
+    font-family: "Bebas Neue", sans-serif;
+    color: var(--secondary-blue);
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+}
+
+/* Formulaires */
+.profile-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.btn-large {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.btn-sm {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+}
+
+/* Filtres commandes */
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--border-color);
+    background: var(--white);
+    border-radius: 8px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--primary-orange), var(--dark-orange));
+    color: var(--white);
+    border-color: var(--primary-orange);
+}
+
+/* Cartes commandes */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.order-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    border: 2px solid var(--border-color);
+    padding: 1.5rem;
+    box-shadow: 0 5px 20px var(--shadow-light);
+    transition: all 0.3s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-medium);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.order-info h3 {
+    font-family: "Montserrat", sans-serif;
+    color: var(--secondary-blue);
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+}
+
+.order-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Badges de statut */
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-badge.pending {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+    border: 2px solid #f39c12;
+}
+
+.status-badge.processing {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    border: 2px solid #3498db;
+}
+
+.status-badge.completed {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 2px solid #2ecc71;
+}
+
+.status-badge.cancelled {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 2px solid #e74c3c;
+}
+
+/* Items de commande */
+.order-items {
+    margin: 1rem 0;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--white);
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+}
+
+.order-item img,
+.item-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.item-placeholder {
+    background: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-details h4 {
+    font-family: "Montserrat", sans-serif;
+    color: var(--dark-gray);
+    margin-bottom: 0.3rem;
+}
+
+.item-details p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.item-price {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 1.3rem;
+    color: var(--primary-orange);
+}
+
+/* Footer de commande */
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.order-total strong {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 1.5rem;
+    color: var(--secondary-blue);
+}
+
+.order-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* État vide */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-family: "Montserrat", sans-serif;
+    color: var(--dark-gray);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+/* Sécurité */
+.security-notice {
+    background: rgba(52, 152, 219, 0.1);
+    border-left: 4px solid #3498db;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.security-notice i {
+    color: #3498db;
+    font-size: 1.5rem;
+}
+
+.password-strength {
+    height: 5px;
+    border-radius: 3px;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.security-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.security-action-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.security-action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-medium);
+}
+
+.security-action-card i {
+    font-size: 3rem;
+    color: var(--primary-orange);
+    margin-bottom: 1rem;
+}
+
+.security-action-card h3 {
+    font-family: "Montserrat", sans-serif;
+    color: var(--secondary-blue);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.security-action-card p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Paramètres */
+.settings-group {
+    margin-bottom: 3rem;
+}
+
+.settings-group h3 {
+    font-family: "Montserrat", sans-serif;
+    color: var(--secondary-blue);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.toggle-item:hover {
+    border-color: var(--primary-orange);
+    box-shadow: 0 5px 20px var(--shadow-light);
+}
+
+.toggle-info strong {
+    display: block;
+    font-family: "Montserrat", sans-serif;
+    color: var(--dark-gray);
+    margin-bottom: 0.3rem;
+}
+
+.toggle-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Toggle switch */
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 30px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.toggle input:checked + .toggle-slider {
+    background: linear-gradient(135deg, var(--primary-orange), var(--dark-orange));
+}
+
+.toggle input:checked + .toggle-slider:before {
+    transform: translateX(30px);
+}
+
+/* Zone de danger */
+.danger-zone {
+    border: 3px solid #e74c3c;
+    border-radius: 15px;
+    padding: 2rem;
+    background: rgba(231, 76, 60, 0.05);
+}
+
+.danger-zone h3 {
+    color: #e74c3c;
+}
+
+.danger-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: var(--white);
+    border-radius: 12px;
+    border: 2px solid #e74c3c;
+}
+
+.danger-info strong {
+    display: block;
+    color: #e74c3c;
+    font-family: "Montserrat", sans-serif;
+    margin-bottom: 0.3rem;
+}
+
+.danger-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .profile-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-sidebar {
+        position: relative;
+        top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-banner h1 {
+        font-size: 2rem;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .filter-tabs {
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .order-footer {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .order-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-form .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        padding: 1.5rem;
+    }
+    
+    .profile-main {
+        padding: 1.5rem;
+    }
+    
+    .order-item {
+        flex-wrap: wrap;
+    }
+    
+    .item-price {
+        width: 100%;
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero">
+    <h1>Bienvenue sur KOITA_STORE</h1>
+    <p>Vos recharges Free Fire et comptes de jeux en toute sécurité</p>
+</section>
+
+<section class="products-section">
+    <h2>Nos Produits Populaires</h2>
+    
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.category == 'recharge' %}
+                <div class="product-badge">Recharge</div>
+            {% else %}
+                <div class="product-badge hot">Compte</div>
+            {% endif %}
+            
+            <!-- Badge de stock -->
+            {% if product.stock <= 0 %}
+                <div class="product-badge out-of-stock">Rupture</div>
+            {% elif product.stock <= 5 %}
+                <div class="product-badge low-stock">Stock bas</div>
+            {% endif %}
+            
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut">
+            {% endif %}
+            
+            <h3>{{ product.name }}</h3>
+            <p class="product-description">{{ product.description|truncatechars:100 }}</p>
+            <div class="price">{{ product.price|floatformat:0 }}FCFA</div>
+            
+            <!-- Affichage du stock -->
+            <div class="stock-info">
+                {% if product.stock > 0 %}
+                    <span class="in-stock">En stock: {{ product.stock }}</span>
+                {% else %}
+                    <span class="out-of-stock">Rupture de stock</span>
+                {% endif %}
+            </div>
+            
+            <!-- Bouton d'ajout au panier -->
+            {% if product.stock > 0 %}
+            <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-cart-plus"></i> Ajouter au panier
+                </button>
+            </form>
+            {% else %}
+            <button class="btn btn-disabled" disabled>
+                <i class="fas fa-times-circle"></i> Indisponible
+            </button>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="no-products">
+            <p>Aucun produit disponible pour le moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="features">
+    <h2>Pourquoi choisir KOITA_STORE ?</h2>
+    <div class="features-grid">
+        <div class="feature-box">
+            <i class="fas fa-bolt"></i>
+            <h3>Livraison Instantanée</h3>
+            <p>Recevez vos diamants en moins de 5 minutes</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-shield-alt"></i>
+            <h3>100% Sécurisé</h3>
+            <p>Paiements sécurisés et protégés</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-headset"></i>
+            <h3>Support 24/7</h3>
+            <p>Assistance disponible à tout moment</p>
+        </div>
+    </div>
+</section>
+
+<style>
+.stock-info {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.in-stock {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.out-of-stock {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.low-stock {
+    background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+}
+
+.out-of-stock-badge {
+    background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+}
+
+.btn-disabled {
+    background: #95a5a6 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+.btn-disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+</style>
+{% endblock %}

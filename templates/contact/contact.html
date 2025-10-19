@@ -1,0 +1,330 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <title>Contactez-nous - KOITA_STORE</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Raleway:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <!-- Logo à gauche -->
+    <div class="logo">
+      <a href="/">
+        <img src="{% static 'images/logo.png' %}" alt="KOITA_STORE Logo">
+        <span>KOITA_STORE</span>
+      </a>
+    </div>
+    
+    <!-- Navigation au milieu -->
+    <nav class="main-nav">
+      <a href="/">Accueil</a>
+      <a href="/recharges/">Recharges</a>
+      <a href="/accounts-for-sale/">Achats comptes</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    
+    <!-- Icônes Profil et Panier à droite -->
+    <div class="header-icons">
+      <div class="profile-dropdown">
+        <a href="#" class="icon-btn profile-icon" id="profileToggle">
+          <i class="fas fa-user-circle"></i>
+        </a>
+        <div class="dropdown-content" id="profileDropdown">
+          {% if user.is_authenticated %}
+            <a href="/accounts/profile/"><i class="fas fa-user"></i> Mon Profil</a>
+            <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+          {% else %}
+            <a href="/accounts/login/"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+            <a href="/accounts/signup/"><i class="fas fa-user-plus"></i> Inscription</a>
+          {% endif %}
+        </div>
+      </div>
+      
+      <a href="/cart/" class="icon-btn cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="cartBadge">
+          {% if cart_total_items > 0 %}
+            {{ cart_total_items }}
+          {% else %}
+            0
+          {% endif %}
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section Contact -->
+    <section class="hero">
+      <h1>Contactez-nous</h1>
+      <p>Nous sommes là pour vous aider 24/7</p>
+    </section>
+
+    <!-- Section Informations de Contact -->
+    <section class="contact-info-section">
+      <h2>Nos Coordonnées</h2>
+      
+      <div class="contact-info-grid">
+        <!-- Email -->
+        <div class="contact-info-card">
+          <div class="contact-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h3>Email</h3>
+          <p>contact@koitastore.com</p>
+          <p>support@koitastore.com</p>
+          <a href="mailto:contact@koitastore.com" class="btn btn-secondary">
+            <i class="fas fa-paper-plane"></i> Envoyer un email
+          </a>
+        </div>
+
+        <!-- Téléphone -->
+        <div class="contact-info-card">
+          <div class="contact-icon">
+            <i class="fas fa-phone-alt"></i>
+          </div>
+          <h3>Téléphone</h3>
+          <p>+221 XX XXX XX XX</p>
+          <p>Lundi - Dimanche: 8h - 22h</p>
+          <a href="tel:+221XXXXXXXXX" class="btn btn-secondary">
+            <i class="fas fa-phone"></i> Appeler
+          </a>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="contact-info-card">
+          <div class="contact-icon">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <h3>WhatsApp</h3>
+          <p>+221 XX XXX XX XX</p>
+          <p>Réponse rapide garantie</p>
+          <a href="https://wa.me/221XXXXXXXXX" target="_blank" class="btn btn-primary">
+            <i class="fab fa-whatsapp"></i> Chat WhatsApp
+          </a>
+        </div>
+
+        <!-- Localisation -->
+        <div class="contact-info-card">
+          <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3>Adresse</h3>
+          <p>Dakar, Sénégal</p>
+          <p>Quartier [Votre quartier]</p>
+          <a href="#" class="btn btn-secondary">
+            <i class="fas fa-map"></i> Voir sur la carte
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulaire de Contact -->
+    <section class="contact-form-section">
+      <h2>Envoyez-nous un Message</h2>
+      
+      <div class="contact-form-container">
+        <form class="contact-form" action="/contact/submit/" method="POST">
+          {% csrf_token %}
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">
+                <i class="fas fa-user"></i> Nom Complet *
+              </label>
+              <input type="text" id="name" name="name" placeholder="Votre nom" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">
+                <i class="fas fa-envelope"></i> Email *
+              </label>
+              <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">
+                <i class="fas fa-phone"></i> Téléphone
+              </label>
+              <input type="text" id="phone" name="phone" placeholder="+221 XX XXX XX XX">
+            </div>
+
+            <div class="form-group">
+              <label for="subject">
+                <i class="fas fa-tag"></i> Sujet *
+              </label>
+              <select id="subject" name="subject" required>
+                <option value="">Choisissez un sujet</option>
+                <option value="recharge">Question sur une recharge</option>
+                <option value="compte">Achat de compte</option>
+                <option value="probleme">Problème technique</option>
+                <option value="paiement">Question de paiement</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">
+              <i class="fas fa-comment-dots"></i> Message *
+            </label>
+            <textarea id="message" name="message" rows="6" placeholder="Décrivez votre demande en détail..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-large">
+            <i class="fas fa-paper-plane"></i> Envoyer le Message
+          </button>
+        </form>
+
+        <div class="contact-form-image">
+          <div class="contact-illustration">
+            <i class="fas fa-headset"></i>
+            <h3>Support 24/7</h3>
+            <p>Notre équipe est disponible pour répondre à toutes vos questions</p>
+            
+            <div class="contact-stats">
+              <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <strong>Réponse en moins de 2h</strong>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <strong>+5000 clients satisfaits</strong>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-shield-check"></i>
+                <strong>100% Sécurisé</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section FAQ Rapide -->
+    <section class="quick-faq-section">
+      <h2>Questions Fréquentes</h2>
+      
+      <div class="faq-grid">
+        <div class="faq-item">
+          <div class="faq-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3>Délai de livraison ?</h3>
+          <p>Les recharges sont livrées en moins de 5 minutes après validation du paiement.</p>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <h3>Moyens de paiement ?</h3>
+          <p>Wave, Orange Money, Free Money et virements bancaires acceptés.</p>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Sécurité des comptes ?</h3>
+          <p>Tous nos comptes sont vérifiés et garantis sans risque de bannissement.</p>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-icon">
+            <i class="fas fa-undo"></i>
+          </div>
+          <h3>Politique de remboursement ?</h3>
+          <p>Remboursement complet en cas de non-réception sous 24h.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Réseaux Sociaux -->
+    <section class="social-section">
+      <h2>Suivez-nous sur les Réseaux Sociaux</h2>
+      
+      <div class="social-links">
+        <a href="#" class="social-btn facebook">
+          <i class="fab fa-facebook-f"></i>
+          <span>Facebook</span>
+        </a>
+        <a href="#" class="social-btn instagram">
+          <i class="fab fa-instagram"></i>
+          <span>Instagram</span>
+        </a>
+        <a href="#" class="social-btn twitter">
+          <i class="fab fa-twitter"></i>
+          <span>Twitter</span>
+        </a>
+        <a href="#" class="social-btn tiktok">
+          <i class="fab fa-tiktok"></i>
+          <span>TikTok</span>
+        </a>
+        <a href="#" class="social-btn youtube">
+          <i class="fab fa-youtube"></i>
+          <span>YouTube</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>KOITA_STORE</h3>
+        <p>Votre boutique de confiance pour les recharges Free Fire</p>
+      </div>
+      <div class="footer-section">
+        <h3>Liens Rapides</h3>
+        <a href="/">Accueil</a>
+        <a href="/recharges/">Recharges</a>
+        <a href="/accounts-for-sale/">Achats comptes</a>
+        <a href="/contact/">Contact</a>
+      </div>
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p><i class="fas fa-envelope"></i> contact@koitastore.com</p>
+        <p><i class="fas fa-phone"></i> +221 XX XXX XX XX</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 KOITA_STORE - Tous droits réservés</p>
+    </div>
+  </footer>
+
+  <script>
+    // Toggle du dropdown de profil
+    document.getElementById('profileToggle')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('profileDropdown').classList.toggle('show');
+    });
+
+    // Fermer le dropdown si on clique ailleurs
+    window.addEventListener('click', function(e) {
+      if (!e.target.matches('.profile-icon') && !e.target.closest('.profile-icon')) {
+        const dropdown = document.getElementById('profileDropdown');
+        if (dropdown && dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+        }
+      }
+    });
+
+    // Animation au submit du formulaire
+    document.querySelector('.contact-form')?.addEventListener('submit', function(e) {
+      const btn = this.querySelector('button[type="submit"]');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+      btn.disabled = true;
+    });
+  </script>
+</body>
+</html>

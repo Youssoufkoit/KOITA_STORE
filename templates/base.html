@@ -1,0 +1,220 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOITA_STORE - Recharges Free Fire</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Raleway:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <!-- Logo à gauche -->
+    <div class="logo">
+      <a href="/">
+       <img src="{% static 'images/logo.png' %}" alt="KOITA_STORE Logo">
+        <span>KOITA_STORE</span>
+      </a>
+    </div>
+    
+    <!-- Navigation au milieu -->
+    <nav class="main-nav">
+      <a href="/">Accueil</a>
+      <a href="/recharges/">Recharges</a>
+      <a href="/accounts-for-sale/">Achats comptes</a>
+        <a href="/contact/">Contact</a>
+    </nav>
+    
+    <!-- Icônes Profil et Panier à droite -->
+    <div class="header-icons">
+      <div class="profile-dropdown">
+        <a href="#" class="icon-btn profile-icon" id="profileToggle">
+          <i class="fas fa-user-circle"></i>
+        </a>
+        <div class="dropdown-content" id="profileDropdown">
+          {% if user.is_authenticated %}
+            <a href="/accounts/profile/"><i class="fas fa-user"></i> Mon Profil</a>
+            <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+          {% else %}
+            <a href="/accounts/login/"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+            <a href="/accounts/signup/"><i class="fas fa-user-plus"></i> Inscription</a>
+          {% endif %}
+        </div>
+      </div>
+      
+      <a href="/cart/" class="icon-btn cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+       <span class="cart-badge" id="cartBadge">
+    {% if cart_total_items > 0 %}
+        {{ cart_total_items }}
+    {% else %}
+        0
+    {% endif %}
+</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}
+    <!-- Page d'accueil par défaut avec des produits -->
+    <section class="hero">
+      <h1>Bienvenue sur KOITA_STORE</h1>
+      <p>Vos recharges Free Fire et comptes de jeux en toute sécurité</p>
+    </section>
+
+    <section class="products-section">
+      <h2>Nos Produits Populaires</h2>
+      
+      <div class="product-grid">
+        <!-- Produit 1 -->
+        <div class="product-card">
+          <div class="product-badge">Populaire</div>
+          <img src="{% static 'images/002;' %}" alt="100 Diamants">
+          <h3>100 Diamants</h3>
+          <p class="product-description">Recharge instantanée</p>
+          <div class="price">1 500 FCFA</div>
+          <button class="btn btn-primary">
+            <i class="fas fa-cart-plus"></i> Ajouter au panier
+          </button>
+        </div>
+
+        <!-- Produit 2 -->
+        <div class="product-card">
+          <div class="product-badge hot">Promo</div>
+          <img src="{% static 'images/diamonds-310.jpg' %}" alt="310 Diamants">
+          <h3>310 Diamants</h3>
+          <p class="product-description">+10 diamants bonus</p>
+          <div class="price">4 500 FCFA</div>
+          <button class="btn btn-primary">
+            <i class="fas fa-cart-plus"></i> Ajouter au panier
+          </button>
+        </div>
+
+        <!-- Produit 3 -->
+        <div class="product-card">
+          <img src="{% static 'images/diamonds-520.jpg' %}" alt="520 Diamants">
+          <h3>520 Diamants</h3>
+          <p class="product-description">+20 diamants bonus</p>
+          <div class="price">7 500 FCFA</div>
+          <button class="btn btn-primary">
+            <i class="fas fa-cart-plus"></i> Ajouter au panier
+          </button>
+        </div>
+
+        <!-- Produit 4 -->
+        <div class="product-card">
+          <div class="product-badge hot">Meilleure offre</div>
+          <img src="{% static 'images/diamonds-1060.jpg' %}" alt="1060 Diamants">
+          <h3>1060 Diamants</h3>
+          <p class="product-description">+60 diamants bonus</p>
+          <div class="price">15 000 FCFA</div>
+          <button class="btn btn-primary">
+            <i class="fas fa-cart-plus"></i> Ajouter au panier
+          </button>
+        </div>
+
+        <!-- Produit 5 -->
+        <div class="product-card">
+          <img src="{% static 'images/diamonds-2180.jpg' %}" alt="2180 Diamants">
+          <h3>2180 Diamants</h3>
+          <p class="product-description">+180 diamants bonus</p>
+          <div class="price">30 000 FCFA</div>
+          <button class="btn btn-primary">
+            <i class="fas fa-cart-plus"></i> Ajouter au panier
+          </button>
+        </div>
+
+        <!-- Produit 6 -->
+        <div class="product-card">
+          <div class="product-badge">VIP</div>
+          <img src="{% static 'images/account-elite.jpg' %}" alt="Compte Elite">
+          <h3>Compte Elite Pass</h3>
+          <p class="product-description">Niveau 50+ avec skins rares</p>
+          <div class="price">25 000 FCFA</div>
+          <button class="btn btn-primary">
+            <i class="fas fa-cart-plus"></i> Ajouter au panier
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>Pourquoi choisir KOITA_STORE ?</h2>
+      <div class="features-grid">
+        <div class="feature-box">
+          <i class="fas fa-bolt"></i>
+          <h3>Livraison Instantanée</h3>
+          <p>Recevez vos diamants en moins de 5 minutes</p>
+        </div>
+        <div class="feature-box">
+          <i class="fas fa-shield-alt"></i>
+          <h3>100% Sécurisé</h3>
+          <p>Paiements sécurisés et protégés</p>
+        </div>
+        <div class="feature-box">
+          <i class="fas fa-headset"></i>
+          <h3>Support 24/7</h3>
+          <p>Assistance disponible à tout moment</p>
+        </div>
+      </div>
+    </section>
+    {% endblock %}
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>KOITA_STORE</h3>
+        <p>Votre boutique de confiance pour les recharges Free Fire</p>
+      </div>
+      <div class="footer-section">
+        <h3>Liens Rapides</h3>
+        <a href="/">Accueil</a>
+        <a href="/recharges/">Recharges</a>
+        <a href="/accounts-for-sale/">Achats comptes</a>
+      </div>
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p><i class="fas fa-envelope"></i> contact@koitastore.com</p>
+        <p><i class="fas fa-phone"></i> +221 XX XXX XX XX</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 KOITA_STORE - Tous droits réservés</p>
+    </div>
+  </footer>
+
+  <script>
+    // Toggle du dropdown de profil
+    document.getElementById('profileToggle')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('profileDropdown').classList.toggle('show');
+    });
+
+    // Fermer le dropdown si on clique ailleurs
+    window.addEventListener('click', function(e) {
+      if (!e.target.matches('.profile-icon') && !e.target.closest('.profile-icon')) {
+        const dropdown = document.getElementById('profileDropdown');
+        if (dropdown && dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

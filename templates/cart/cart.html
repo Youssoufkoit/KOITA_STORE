@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="cart-section">
+    <h2>Mon Panier</h2>
+    
+    {% if cart_items %}
+    <div class="cart-container">
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Image</th>
+                    <th>Prix Unitaire</th>
+                    <th>Quantité</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr class="cart-item">
+                    <td>{{ item.product.name }}</td>
+                    <td>
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-image">
+                        {% else %}
+                            <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut" class="cart-product-image">
+                        {% endif %}
+                    </td>
+                    <td class="price-cell">{{ item.product.price }} FCFA</td>
+                    <td>
+                        <form action="{% url 'cart:update_cart' item.id %}" method="post" class="quantity-form">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="100" class="quantity-input">
+                            <button type="submit" class="btn btn-secondary btn-small">
+                                <i class="fas fa-sync-alt"></i> Modifier
+                            </button>
+                        </form>
+                    </td>
+                    <td class="total-cell">{{ item.total_price }} FCFA</td>
+                    <td>
+                        <form action="{% url 'cart:remove_from_cart' item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-small">
+                                <i class="fas fa-trash-alt"></i> Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="cart-total-row">
+                    <td colspan="4"><strong>Total du Panier</strong></td>
+                    <td colspan="2" class="cart-total-price"><strong>{{ cart_total }} FCFA</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- SECTION DE VALIDATION -->
+        <div class="cart-actions">
+            <a href="{% url 'store:home' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Continuer mes achats
+            </a>
+            
+            <!-- SI L'UTILISATEUR EST CONNECTÉ -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'cart:checkout' %}" class="btn btn-primary btn-large">
+                    <i class="fas fa-credit-card"></i> Valider ma commande
+                </a>
+            {% else %}
+                <!-- SI NON CONNECTÉ : DEMANDER CONNEXION/INSCRIPTION -->
+                <div class="checkout-login-required">
+                    <div class="login-message">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Vous devez être connecté pour valider votre commande</p>
+                    </div>
+                    <div class="auth-buttons">
+                        <a href="{% url 'accounts:login' %}?next=/cart/checkout/" class="btn btn-primary btn-large">
+                            <i class="fas fa-sign-in-alt"></i> Se connecter
+                        </a>
+                        <a href="{% url 'accounts:signup' %}?next=/cart/checkout/" class="btn btn-secondary btn-large">
+                            <i class="fas fa-user-plus"></i> Créer un compte
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+    <!-- PANIER VIDE -->
+    <div class="empty-cart">
+        <div class="empty-cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <h3>Votre panier est vide</h3>
+        <p>Découvrez nos produits et commencez vos achats !</p>
+        <a href="/" class="btn btn-primary">
+            <i class="fas fa-store"></i> Découvrir nos produits
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+/* STYLES SPÉCIFIQUES POUR LE PANIER */
+.cart-section {
+    animation: fadeInUp 0.8s ease;
+}
+
+.cart-section h2 {
+    color: var(--secondary-blue);
+    font-size: 2.3rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.cart-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-orange), var(--secondary-blue));
+    border-radius: 2px;
+}
+
+.cart-container {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 35px var(--shadow-light);
+}
+
+.cart-product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.cart-item:hover .cart-product-image {
+    transform: scale(1.1);
+}
+
+.quantity-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-input {
+    width: 70px;
+    padding: 0.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.quantity-input:focus {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 10px var(--orange-glow);
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+.price-cell,
+.total-cell {
+    color: var(--primary-orange);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.cart-total-row {
+    background: linear-gradient(135deg, var(--light-gray), #e8eaf0);
+}
+
+.cart-total-row td {
+    padding: 1.5rem 1rem !important;
+    font-size: 1.2rem;
+}
+
+.cart-total-price {
+    color: var(--primary-orange) !important;
+    font-size: 1.5rem !important;
+}
+
+/* ACTIONS DU PANIER */
+.cart-actions {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.btn-large {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* MESSAGE CONNEXION REQUISE */
+.checkout-login-required {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(0, 78, 137, 0.05));
+    padding: 2.5rem;
+    border-radius: 15px;
+    border: 3px solid var(--primary-orange);
+    text-align: center;
+    animation: pulseGlow 2s infinite;
+    box-shadow: 0 8px 25px var(--orange-glow);
+}
+
+.login-message {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.login-message i {
+    font-size: 2.5rem;
+    color: var(--primary-orange);
+    animation: bounce 1s ease infinite;
+}
+
+.login-message p {
+    font-size: 1.3rem;
+    color: var(--secondary-blue);
+    font-weight: 600;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* PANIER VIDE */
+.empty-cart {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 10px 35px var(--shadow-light);
+    animation: fadeInUp 0.8s ease;
+}
+
+.empty-cart-icon {
+    font-size: 5rem;
+    color: var(--primary-orange);
+    margin-bottom: 2rem;
+    animation: swing 2s ease-in-out infinite;
+}
+
+@keyframes swing {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(15deg);
+  }
+  75% {
+    transform: rotate(-15deg);
+  }
+}
+
+.empty-cart h3 {
+    color: var(--secondary-blue);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.empty-cart p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .cart-table {
+        font-size: 0.9rem;
+    }
+    
+    .cart-table th,
+    .cart-table td {
+        padding: 0.8rem 0.5rem;
+    }
+    
+    .cart-product-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .quantity-form {
+        flex-direction: column;
+    }
+    
+    .auth-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .auth-buttons .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style>
+{% endblock %}

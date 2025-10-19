@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="product-detail">
+    <div class="product-detail-content">
+        <div class="product-image">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut">
+            {% endif %}
+        </div>
+        <div class="product-info">
+            <h2>{{ product.name }}</h2>
+            <p class="product-category">
+                Catégorie: 
+                {% if product.category == 'recharge' %}
+                    Recharge Free Fire
+                {% else %}
+                    Compte Free Fire
+                {% endif %}
+            </p>
+            <p class="product-description">{{ product.description }}</p>
+            <div class="price">{{ product.price }} FCFA</div>
+            
+            {% if user.is_authenticated %}
+                <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-cart-plus"></i> Ajouter au panier
+                    </button>
+                </form>
+            {% else %}
+                <p class="login-required">
+                    <a href="{% url 'accounts:login' %}">Connectez-vous</a> pour acheter ce produit.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
