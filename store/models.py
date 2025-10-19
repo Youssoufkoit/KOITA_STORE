@@ -13,7 +13,6 @@ class Category(models.Model):
         help_text="Classe CSS de l'icône (ex: fas fa-gamepad)",
         verbose_name="Icône"
     )
-    # NOUVEAU: Champ image ajouté
     image = models.ImageField(
         upload_to='categories/',
         blank=True,
@@ -45,7 +44,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    """Modèle pour les produits"""
+    """Modèle pour les produits (recharges ET comptes)"""
+    
+    # Champs communs
     name = models.CharField(max_length=200, verbose_name="Nom du produit")
     description = models.TextField(verbose_name="Description")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix (FCFA)")
@@ -59,6 +60,119 @@ class Product(models.Model):
     stock = models.IntegerField(default=0, verbose_name="Stock disponible")
     is_active = models.BooleanField(default=True, verbose_name="Actif")
     is_featured = models.BooleanField(default=False, verbose_name="Produit vedette")
+    
+    # ===== CHAMPS SPÉCIFIQUES POUR LES COMPTES =====
+    
+    # Informations du compte
+    account_level = models.IntegerField(
+        null=True, 
+        blank=True, 
+        verbose_name="Niveau du compte",
+        help_text="Ex: 50, 65, 80, etc."
+    )
+    
+    account_rank = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name="Rang/Grade",
+        help_text="Ex: Héroïque, Grand Maître, Conqueror, etc."
+    )
+    
+    has_elite_pass = models.BooleanField(
+        default=False,
+        verbose_name="Elite Pass actif"
+    )
+    
+    diamonds_included = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name="Diamants inclus",
+        help_text="Nombre de diamants sur le compte"
+    )
+    
+    # Skins et bundles
+    skins_list = models.TextField(
+        blank=True,
+        verbose_name="Liste des skins/bundles",
+        help_text="Listez les skins rares (un par ligne)"
+    )
+    
+    # Armes
+    weapons_list = models.TextField(
+        blank=True,
+        verbose_name="Liste des armes",
+        help_text="Listez les armes disponibles (un par ligne)"
+    )
+    
+    # Véhicules
+    vehicles_list = models.TextField(
+        blank=True,
+        verbose_name="Liste des véhicules/skyboards",
+        help_text="Listez les véhicules disponibles (un par ligne)"
+    )
+    
+    # Pets/Familiers
+    pets_list = models.TextField(
+        blank=True,
+        verbose_name="Liste des pets",
+        help_text="Listez les pets disponibles (un par ligne)"
+    )
+    
+    # Sécurité
+    email_changeable = models.BooleanField(
+        default=True,
+        verbose_name="Email changeable"
+    )
+    
+    phone_linked = models.BooleanField(
+        default=False,
+        verbose_name="Numéro de téléphone lié"
+    )
+    
+    facebook_linked = models.BooleanField(
+        default=False,
+        verbose_name="Facebook lié"
+    )
+    
+    # Informations additionnelles
+    account_region = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name="Région du compte",
+        help_text="Ex: Afrique, Europe, Asie, etc.",
+        choices=[
+            ('', 'Non spécifié'),
+            ('afrique', 'Afrique'),
+            ('europe', 'Europe'),
+            ('asie', 'Asie'),
+            ('amerique', 'Amérique'),
+            ('oceanie', 'Océanie'),
+        ]
+    )
+    
+    total_matches = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name="Nombre total de matchs"
+    )
+    
+    win_rate = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Taux de victoire (%)",
+        help_text="Ex: 65.50 pour 65.50%"
+    )
+    
+    # Notes internes
+    internal_notes = models.TextField(
+        blank=True,
+        verbose_name="Notes internes",
+        help_text="Notes visibles uniquement par l'admin (non affichées sur le site)"
+    )
+    
+    # Dates
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Dernière modification")
     
@@ -80,3 +194,33 @@ class Product(models.Model):
             return 'low_stock'
         else:
             return 'in_stock'
+    
+    def is_account(self):
+        """Vérifie si c'est un compte de jeu"""
+        if self.category:
+            return 'compte' in self.category.slug.lower() or 'compte' in self.category.name.lower()
+        return False
+    
+    def get_features_list(self):
+        """Retourne une liste formatée des caractéristiques du compte"""
+        features = []
+        
+        if self.account_level:
+            features.append(f"Niveau {self.account_level}")
+        
+        if self.account_rank:
+            features.append(f"Rang: {self.account_rank}")
+        
+        if self.has_elite_pass:
+            features.append("Elite Pass actif")
+        
+        if self.diamonds_included:
+            features.append(f"{self.diamonds_included} diamants inclus")
+        
+        if self.email_changeable:
+            features.append("Email changeable")
+        
+        if self.win_rate:
+            features.append(f"Win rate: {self.win_rate}%")
+        
+        return features
