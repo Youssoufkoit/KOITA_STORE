@@ -9,6 +9,4 @@ Instructions rapides :
   4. python manage.py createsuperuser  # pour toi (admin)
   5. python manage.py runserver
 Remplace SECRET_KEY et DEBUG dans koita_store/settings.py ou utilise un .env
-git add .                    # ajouter tous les fichiers
-git commit -m "Ton message"  # enregistrer les modifications localement
-git push origin main          # envoyer sur GitHub
+          # envoyer sur GitHub

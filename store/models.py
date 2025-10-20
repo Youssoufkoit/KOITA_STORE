@@ -224,3 +224,81 @@ class Product(models.Model):
             features.append(f"Win rate: {self.win_rate}%")
         
         return features
+    # store/models.py - Ajouter ces modèles
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+class Order(models.Model):
+    """Modèle de commande"""
+    STATUS_CHOICES = [
+        ('pending', 'En attente'),
+        ('processing', 'En cours'),
+        ('completed', 'Complétée'),
+        ('cancelled', 'Annulée'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Montant total')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Commande'
+        verbose_name_plural = 'Commandes'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Commande #{self.id} - {self.user.username}"
+
+
+class OrderItem(models.Model):
+    """Articles d'une commande"""
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    redeem_code = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Code REDEEM fourni'
+    )
+    
+    class Meta:
+        verbose_name = 'Article de commande'
+        verbose_name_plural = 'Articles de commande'
+    
+    def __str__(self):
+        return f"{self.product.name} x{self.quantity}"
+    
+    def total_price(self):
+        return self.price * self.quantity
+
+
+class Notification(models.Model):
+    """Notifications utilisateur"""
+    TYPE_CHOICES = [
+        ('order', 'Commande'),
+        ('redeem', 'Code REDEEM'),
+        ('info', 'Information'),
+        ('warning', 'Avertissement'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    notification_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='info')
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    redeem_code = models.CharField(max_length=50, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.title} - {self.user.username}"
