@@ -156,3 +156,24 @@ def product_detail(request, pk):
 def contact(request):
     """Page de contact"""
     return render(request, 'contact/contact.html')
+# store/views.py - Mettre à jour la vue product_detail
+
+from django.shortcuts import render, get_object_or_404
+from .models import Product
+
+def product_detail(request, pk):
+    """Page de détail d'un produit avec support REDEEM"""
+    product = get_object_or_404(Product, pk=pk)
+    
+    # Produits similaires de la même catégorie
+    related_products = Product.objects.filter(
+        category=product.category,
+        is_active=True
+    ).exclude(pk=pk).select_related('category')[:4]
+    
+    context = {
+        'product': product,
+        'related_products': related_products,
+        'is_redeem_product': product.is_redeem_product,
+    }
+    return render(request, 'store/product_detail.html', context)

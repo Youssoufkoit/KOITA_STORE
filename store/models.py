@@ -224,9 +224,11 @@ class Product(models.Model):
             features.append(f"Win rate: {self.win_rate}%")
         
         return features
-    # store/models.py - Ajouter ces modèles
+  
+  
+  # store/models.py - Ajouter ces modèles
 
-from django.db import models
+ 
 from django.contrib.auth.models import User
 from django.utils import timezone
 
