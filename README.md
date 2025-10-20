@@ -10,3 +10,6 @@ Instructions rapides :
   5. python manage.py runserver
 Remplace SECRET_KEY et DEBUG dans koita_store/settings.py ou utilise un .env
           # envoyer sur GitHub
+git add .
+git commit -m "Mise à jour du projet"
+git push

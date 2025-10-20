@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Category, Product
+from .models import Category, Product, Order, OrderItem, Notification
 
 
 # ============================================
@@ -57,7 +57,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 # ============================================
-# PROXY MODELS POUR SÉPARER RECHARGES ET COMPTES
+# PROXY MODELS
 # ============================================
 
 class RechargeProduct(Product):
@@ -77,17 +77,25 @@ class AccountProduct(Product):
 
 
 # ============================================
-# ADMIN DES RECHARGES
+# ADMIN DES RECHARGES AVEC SUPPORT REDEEM
 # ============================================
 
 @admin.register(RechargeProduct)
 class RechargeProductAdmin(admin.ModelAdmin):
-    """Administration des RECHARGES uniquement"""
+    """Administration des RECHARGES avec support REDEEM CODE"""
     
-    list_display = ['name', 'category', 'price_display', 'stock_status', 'is_featured', 'is_active']
+    list_display = [
+        'name', 
+        'category', 
+        'price_display', 
+        'stock_status', 
+        'redeem_status',
+        'is_featured', 
+        'is_active'
+    ]
     list_editable = ['is_featured', 'is_active']
-    list_filter = ['category', 'is_active', 'is_featured']
-    search_fields = ['name', 'description']
+    list_filter = ['category', 'is_active', 'is_featured', 'is_redeem_product', 'redeem_code_used']
+    search_fields = ['name', 'description', 'redeem_code']
     
     fieldsets = (
         ('Informations', {
@@ -97,6 +105,15 @@ class RechargeProductAdmin(admin.ModelAdmin):
             'fields': ('price', 'stock'),
             'description': 'Stock = nombre d\'unités disponibles'
         }),
+        ('🎁 CODE REDEEM (Si applicable)', {
+            'fields': (
+                'is_redeem_product',
+                'redeem_code',
+                'redeem_code_used',
+            ),
+            'description': '⚠️ IMPORTANT : Si c\'est un produit REDEEM, cochez la case et entrez le code unique',
+            'classes': ('wide',),
+        }),
         ('Image', {
             'fields': ('image',),
         }),
@@ -105,12 +122,11 @@ class RechargeProductAdmin(admin.ModelAdmin):
         }),
     )
     
-    actions = ['mark_as_featured', 'unmark_as_featured', 'add_stock']
+    actions = ['mark_as_featured', 'unmark_as_featured', 'add_stock', 'reset_redeem_codes']
     
     def get_queryset(self, request):
         """Afficher UNIQUEMENT les produits qui NE SONT PAS des comptes"""
         qs = super().get_queryset(request)
-        # Exclure les catégories contenant "compte"
         return qs.exclude(category__slug__icontains='compte').exclude(category__name__icontains='compte')
     
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -140,6 +156,34 @@ class RechargeProductAdmin(admin.ModelAdmin):
         return format_html('<span style="color: green;">✅ En stock ({} unités)</span>', obj.stock)
     stock_status.short_description = 'Stock'
     
+    def redeem_status(self, obj):
+        """Afficher le statut du code REDEEM"""
+        if not obj.is_redeem_product:
+            return format_html('<span style="color: #999;">➖ Non REDEEM</span>')
+        
+        if obj.redeem_code_used:
+            return format_html(
+                '<span style="background: #e74c3c; color: white; padding: 0.3rem 0.8rem; border-radius: 12px; font-weight: bold;">'
+                '❌ CODE UTILISÉ'
+                '</span>'
+            )
+        elif obj.redeem_code:
+            return format_html(
+                '<span style="background: #2ecc71; color: white; padding: 0.3rem 0.8rem; border-radius: 12px; font-weight: bold;">'
+                '✅ CODE DISPO: {}'
+                '</span>',
+                obj.redeem_code[:8] + '...' if len(obj.redeem_code) > 8 else obj.redeem_code
+            )
+        else:
+            return format_html(
+                '<span style="background: #f39c12; color: white; padding: 0.3rem 0.8rem; border-radius: 12px; font-weight: bold;">'
+                '⚠️ PAS DE CODE'
+                '</span>'
+            )
+    redeem_status.short_description = 'Statut REDEEM'
+    
+    # ACTIONS
+    
     def mark_as_featured(self, request, queryset):
         updated = queryset.update(is_featured=True)
         self.message_user(request, f'✅ {updated} recharge(s) mise(s) en vedette.')
@@ -156,10 +200,20 @@ class RechargeProductAdmin(admin.ModelAdmin):
             product.save()
         self.message_user(request, f'✅ Stock augmenté de 10 unités pour {queryset.count()} produit(s).')
     add_stock.short_description = "📦 Ajouter +10 au stock"
+    
+    def reset_redeem_codes(self, request, queryset):
+        """Réinitialiser les codes REDEEM utilisés"""
+        updated = queryset.filter(is_redeem_product=True).update(redeem_code_used=False)
+        self.message_user(
+            request, 
+            f'🔄 {updated} code(s) REDEEM réinitialisé(s).',
+            level='success'
+        )
+    reset_redeem_codes.short_description = "🔄 Réinitialiser codes REDEEM"
 
 
 # ============================================
-# ADMIN DES COMPTES
+# ADMIN DES COMPTES (INCHANGÉ)
 # ============================================
 
 @admin.register(AccountProduct)
@@ -231,9 +285,8 @@ class AccountProductAdmin(admin.ModelAdmin):
     actions = ['mark_as_sold', 'mark_as_available', 'mark_as_featured', 'unmark_as_featured']
     
     def get_queryset(self, request):
-        """Afficher UNIQUEMENT les comptes (catégorie contenant 'compte')"""
+        """Afficher UNIQUEMENT les comptes"""
         qs = super().get_queryset(request)
-        # Inclure SEULEMENT les catégories contenant "compte"
         from django.db.models import Q
         return qs.filter(
             Q(category__slug__icontains='compte') | 
@@ -274,26 +327,14 @@ class AccountProductAdmin(admin.ModelAdmin):
             )
     availability_status.short_description = 'Statut'
     
-    # ACTIONS SPÉCIFIQUES AUX COMPTES
-    
     def mark_as_sold(self, request, queryset):
-        """Marquer les comptes comme VENDUS"""
         updated = queryset.update(stock=0, is_active=False)
-        self.message_user(
-            request, 
-            f'💰 {updated} compte(s) marqué(s) comme VENDU(S).',
-            level='success'
-        )
+        self.message_user(request, f'💰 {updated} compte(s) marqué(s) comme VENDU(S).', level='success')
     mark_as_sold.short_description = "💰 Marquer comme VENDU"
     
     def mark_as_available(self, request, queryset):
-        """Marquer les comptes comme DISPONIBLES"""
         updated = queryset.update(stock=1, is_active=True)
-        self.message_user(
-            request, 
-            f'✅ {updated} compte(s) marqué(s) comme DISPONIBLE(S).',
-            level='success'
-        )
+        self.message_user(request, f'✅ {updated} compte(s) marqué(s) comme DISPONIBLE(S).', level='success')
     mark_as_available.short_description = "✅ Marquer comme DISPONIBLE"
     
     def mark_as_featured(self, request, queryset):
@@ -308,12 +349,46 @@ class AccountProductAdmin(admin.ModelAdmin):
 
 
 # ============================================
+# ADMIN DES COMMANDES
+# ============================================
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ['product', 'quantity', 'price', 'redeem_code']
+    can_delete = False
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'total_amount', 'status', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['user__username', 'user__email']
+    readonly_fields = ['created_at', 'updated_at']
+    inlines = [OrderItemInline]
+    
+    fieldsets = (
+        ('Informations Commande', {
+            'fields': ('user', 'total_amount', 'status')
+        }),
+        ('Dates', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'notification_type', 'is_read', 'created_at']
+    list_filter = ['notification_type', 'is_read', 'created_at']
+    search_fields = ['user__username', 'title', 'message']
+    readonly_fields = ['created_at']
+
+
+# ============================================
 # PERSONNALISATION DU SITE ADMIN
 # ============================================
 
 admin.site.site_header = "🎮 KOITA_STORE - Administration"
 admin.site.site_title = "KOITA_STORE Admin"
 admin.site.index_title = "📊 Tableau de bord"
-
-# Note: Le modèle Product n'est plus enregistré directement
-# On utilise uniquement les proxy models RechargeProduct et AccountProduct

@@ -119,3 +119,11 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'store:home'
 LOGOUT_REDIRECT_URL = 'store:home'
 
+# Configuration EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # ou votre serveur SMTP
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'votre-email@gmail.com'  # À remplacer
+EMAIL_HOST_PASSWORD = 'votre-mot-de-passe-app'  # À remplacer
+DEFAULT_FROM_EMAIL = 'KOITA_STORE <votre-email@gmail.com>'

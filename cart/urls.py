@@ -11,3 +11,9 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('order-success/<int:order_id>/', views.order_success, name='order_success'),
 ]
+# cart/urls.py - AJOUTER CETTE ROUTE
+
+urlpatterns = [
+    # ... autres routes existantes ...
+    path('process-order/', views.process_order, name='process_order'),
+]
