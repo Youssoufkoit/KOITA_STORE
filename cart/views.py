@@ -3,6 +3,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem
 from store.models import Product
+from django.core.mail import send_mail
+from django.conf import settings
+from store.models import Notification, Order, OrderItem
 
 def get_or_create_cart(request):
     """Récupère ou crée un panier pour l'utilisateur"""

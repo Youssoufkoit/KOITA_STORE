@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
 from .models import Product, Category
 
 
@@ -137,31 +140,6 @@ def accounts_for_sale(request):
 
 
 def product_detail(request, pk):
-    """Page de détail d'un produit"""
-    product = get_object_or_404(Product, pk=pk)
-    
-    # Produits similaires de la même catégorie
-    related_products = Product.objects.filter(
-        category=product.category,
-        is_active=True
-    ).exclude(pk=pk).select_related('category')[:4]
-    
-    context = {
-        'product': product,
-        'related_products': related_products,
-    }
-    return render(request, 'store/product_detail.html', context)
-
-
-def contact(request):
-    """Page de contact"""
-    return render(request, 'contact/contact.html')
-# store/views.py - Mettre à jour la vue product_detail
-
-from django.shortcuts import render, get_object_or_404
-from .models import Product
-
-def product_detail(request, pk):
     """Page de détail d'un produit avec support REDEEM"""
     product = get_object_or_404(Product, pk=pk)
     
@@ -177,3 +155,35 @@ def product_detail(request, pk):
         'is_redeem_product': product.is_redeem_product,
     }
     return render(request, 'store/product_detail.html', context)
+
+
+def contact(request):
+    """Page de contact avec envoi d'email"""
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        
+        # Envoyer l'email
+        full_message = f"""
+Message de {name} ({email})
+Sujet: {subject}
+
+Message:
+{message}
+        """
+        
+        try:
+            send_mail(
+                subject=f"Contact KOITA_STORE: {subject}",
+                message=full_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.DEFAULT_FROM_EMAIL],
+                fail_silently=False,
+            )
+            messages.success(request, '✅ Votre message a été envoyé avec succès!')
+        except Exception as e:
+            messages.error(request, f'❌ Erreur lors de l\'envoi du message: {str(e)}')
+    
+    return render(request, 'contact/contact.html')

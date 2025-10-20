@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Category, Product, Order, OrderItem, Notification
+from .models import Category, Product, Order, OrderItem, Notification, RechargeProduct, AccountProduct
 
 
 # ============================================
@@ -57,26 +57,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 # ============================================
-# PROXY MODELS
-# ============================================
-
-class RechargeProduct(Product):
-    """Proxy model pour les Recharges uniquement"""
-    class Meta:
-        proxy = True
-        verbose_name = "Recharge"
-        verbose_name_plural = "📱 Recharges (Diamants, etc.)"
-
-
-class AccountProduct(Product):
-    """Proxy model pour les Comptes uniquement"""
-    class Meta:
-        proxy = True
-        verbose_name = "Compte de Jeu"
-        verbose_name_plural = "🎮 Comptes de Jeux"
-
-
-# ============================================
 # ADMIN DES RECHARGES AVEC SUPPORT REDEEM
 # ============================================
 
@@ -89,13 +69,16 @@ class RechargeProductAdmin(admin.ModelAdmin):
         'category', 
         'price_display', 
         'stock_status', 
-        'redeem_status',
         'is_featured', 
         'is_active'
     ]
     list_editable = ['is_featured', 'is_active']
-    list_filter = ['category', 'is_active', 'is_featured', 'is_redeem_product', 'redeem_code_used']
-    search_fields = ['name', 'description', 'redeem_code']
+    list_filter = [
+        'category', 
+        'is_active', 
+        'is_featured', 
+    ]
+    search_fields = ['name', 'description']
     
     fieldsets = (
         ('Informations', {
@@ -105,15 +88,6 @@ class RechargeProductAdmin(admin.ModelAdmin):
             'fields': ('price', 'stock'),
             'description': 'Stock = nombre d\'unités disponibles'
         }),
-        ('🎁 CODE REDEEM (Si applicable)', {
-            'fields': (
-                'is_redeem_product',
-                'redeem_code',
-                'redeem_code_used',
-            ),
-            'description': '⚠️ IMPORTANT : Si c\'est un produit REDEEM, cochez la case et entrez le code unique',
-            'classes': ('wide',),
-        }),
         ('Image', {
             'fields': ('image',),
         }),
@@ -122,7 +96,7 @@ class RechargeProductAdmin(admin.ModelAdmin):
         }),
     )
     
-    actions = ['mark_as_featured', 'unmark_as_featured', 'add_stock', 'reset_redeem_codes']
+    actions = ['mark_as_featured', 'unmark_as_featured', 'add_stock']
     
     def get_queryset(self, request):
         """Afficher UNIQUEMENT les produits qui NE SONT PAS des comptes"""
@@ -156,34 +130,6 @@ class RechargeProductAdmin(admin.ModelAdmin):
         return format_html('<span style="color: green;">✅ En stock ({} unités)</span>', obj.stock)
     stock_status.short_description = 'Stock'
     
-    def redeem_status(self, obj):
-        """Afficher le statut du code REDEEM"""
-        if not obj.is_redeem_product:
-            return format_html('<span style="color: #999;">➖ Non REDEEM</span>')
-        
-        if obj.redeem_code_used:
-            return format_html(
-                '<span style="background: #e74c3c; color: white; padding: 0.3rem 0.8rem; border-radius: 12px; font-weight: bold;">'
-                '❌ CODE UTILISÉ'
-                '</span>'
-            )
-        elif obj.redeem_code:
-            return format_html(
-                '<span style="background: #2ecc71; color: white; padding: 0.3rem 0.8rem; border-radius: 12px; font-weight: bold;">'
-                '✅ CODE DISPO: {}'
-                '</span>',
-                obj.redeem_code[:8] + '...' if len(obj.redeem_code) > 8 else obj.redeem_code
-            )
-        else:
-            return format_html(
-                '<span style="background: #f39c12; color: white; padding: 0.3rem 0.8rem; border-radius: 12px; font-weight: bold;">'
-                '⚠️ PAS DE CODE'
-                '</span>'
-            )
-    redeem_status.short_description = 'Statut REDEEM'
-    
-    # ACTIONS
-    
     def mark_as_featured(self, request, queryset):
         updated = queryset.update(is_featured=True)
         self.message_user(request, f'✅ {updated} recharge(s) mise(s) en vedette.')
@@ -200,20 +146,10 @@ class RechargeProductAdmin(admin.ModelAdmin):
             product.save()
         self.message_user(request, f'✅ Stock augmenté de 10 unités pour {queryset.count()} produit(s).')
     add_stock.short_description = "📦 Ajouter +10 au stock"
-    
-    def reset_redeem_codes(self, request, queryset):
-        """Réinitialiser les codes REDEEM utilisés"""
-        updated = queryset.filter(is_redeem_product=True).update(redeem_code_used=False)
-        self.message_user(
-            request, 
-            f'🔄 {updated} code(s) REDEEM réinitialisé(s).',
-            level='success'
-        )
-    reset_redeem_codes.short_description = "🔄 Réinitialiser codes REDEEM"
 
 
 # ============================================
-# ADMIN DES COMPTES (INCHANGÉ)
+# ADMIN DES COMPTES
 # ============================================
 
 @admin.register(AccountProduct)
@@ -224,6 +160,31 @@ class AccountProductAdmin(admin.ModelAdmin):
     list_editable = ['is_featured', 'is_active']
     list_filter = ['category', 'is_active', 'is_featured', 'stock']
     search_fields = ['name', 'description']
+    
+    # AJOUTEZ CES MÉTHODES MANQUANTES :
+    def price_display(self, obj):
+        price_formatted = f"{float(obj.price):,.0f}"
+        return format_html(
+            '<span style="color: #667eea; font-weight: bold;">{} FCFA</span>',
+            price_formatted
+        )
+    price_display.short_description = 'Prix'
+    
+    def availability_status(self, obj):
+        """Statut spécifique pour les comptes"""
+        if obj.stock > 0 and obj.is_active:
+            return format_html(
+                '<span style="background: #2ecc71; color: white; padding: 0.4rem 0.8rem; border-radius: 15px; font-weight: bold;">'
+                '✅ DISPONIBLE'
+                '</span>'
+            )
+        else:
+            return format_html(
+                '<span style="background: #e74c3c; color: white; padding: 0.4rem 0.8rem; border-radius: 15px; font-weight: bold;">'
+                '❌ VENDU'
+                '</span>'
+            )
+    availability_status.short_description = 'Statut'
     
     fieldsets = (
         ('Informations du Compte', {
@@ -303,30 +264,6 @@ class AccountProductAdmin(admin.ModelAdmin):
             )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
-    def price_display(self, obj):
-        price_formatted = f"{float(obj.price):,.0f}"
-        return format_html(
-            '<span style="color: #667eea; font-weight: bold;">{} FCFA</span>',
-            price_formatted
-        )
-    price_display.short_description = 'Prix'
-    
-    def availability_status(self, obj):
-        """Statut spécifique pour les comptes"""
-        if obj.stock > 0 and obj.is_active:
-            return format_html(
-                '<span style="background: #2ecc71; color: white; padding: 0.4rem 0.8rem; border-radius: 15px; font-weight: bold;">'
-                '✅ DISPONIBLE'
-                '</span>'
-            )
-        else:
-            return format_html(
-                '<span style="background: #e74c3c; color: white; padding: 0.4rem 0.8rem; border-radius: 15px; font-weight: bold;">'
-                '❌ VENDU'
-                '</span>'
-            )
-    availability_status.short_description = 'Statut'
-    
     def mark_as_sold(self, request, queryset):
         updated = queryset.update(stock=0, is_active=False)
         self.message_user(request, f'💰 {updated} compte(s) marqué(s) comme VENDU(S).', level='success')
@@ -392,3 +329,22 @@ class NotificationAdmin(admin.ModelAdmin):
 admin.site.site_header = "🎮 KOITA_STORE - Administration"
 admin.site.site_title = "KOITA_STORE Admin"
 admin.site.index_title = "📊 Tableau de bord"
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'price', 'stock', 'is_redeem_product', 'redeem_code_used']
+    list_filter = ['category', 'is_redeem_product', 'is_active', 'is_featured']
+    search_fields = ['name', 'description', 'redeem_code']
+    
+    fieldsets = (
+        ('Informations de base', {
+            'fields': ('name', 'category', 'description', 'price', 'stock', 'image')
+        }),
+        ('Options', {
+            'fields': ('is_active', 'is_featured')
+        }),
+        ('REDEEM Code', {
+            'fields': ('is_redeem_product', 'redeem_code', 'redeem_code_used'),
+            'description': 'Section réservée aux produits de type REDEEM Code'
+        }),
+        # ... autres fieldsets existants
+    )

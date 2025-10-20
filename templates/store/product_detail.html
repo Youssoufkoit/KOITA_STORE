@@ -2,41 +2,1578 @@
 {% load static %}
 
 {% block content %}
-<div class="product-detail">
-    <div class="product-detail-content">
-        <div class="product-image">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+<div class="product-detail-container">
+    <!-- Navigation améliorée -->
+    <nav class="detail-breadcrumb">
+        <div class="breadcrumb-content">
+            <a href="{% url 'store:home' %}" class="breadcrumb-link">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+            <span class="breadcrumb-separator">›</span>
+            {% if product.is_redeem_product %}
+                <a href="{% url 'store:recharges' %}" class="breadcrumb-link">Recharges Diamants</a>
             {% else %}
-                <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut">
+                <a href="{% url 'store:accounts_for_sale' %}" class="breadcrumb-link">Comptes Premium</a>
+            {% endif %}
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-current">{{ product.name }}</span>
+        </div>
+    </nav>
+
+    <div class="product-hero-section">
+        <div class="product-visual-section">
+            <!-- Image principale avec effet zoom -->
+            <div class="main-image-container">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="main-product-image" id="mainImage">
+                {% else %}
+                    <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut" class="main-product-image" id="mainImage">
+                {% endif %}
+                <div class="image-overlay">
+                    <button class="zoom-btn" onclick="toggleZoom()">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                </div>
+                
+                {% if product.is_featured %}
+                <div class="floating-badge featured-badge">
+                    <i class="fas fa-star"></i> Produit Vedette
+                </div>
+                {% endif %}
+                
+                {% if product.is_available %}
+                <div class="floating-badge stock-badge">
+                    <i class="fas fa-check"></i> En Stock
+                </div>
+                {% else %}
+                <div class="floating-badge out-of-stock-badge">
+                    <i class="fas fa-times"></i> Rupture
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Miniatures d'explication REDEEM -->
+            {% if product.is_redeem_product %}
+            <div class="redeem-process-showcase">
+                <h3 class="showcase-title">
+                    <i class="fas fa-rocket"></i>
+                    Comment obtenir vos diamants en 3 étapes
+                </h3>
+                
+                <div class="process-steps">
+                    <div class="process-step" data-step="1">
+                        <div class="step-visual">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <h4>Achetez le code</h4>
+                            <p>Commandez votre code REDEEM</p>
+                        </div>
+                        <div class="step-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <div class="process-step" data-step="2">
+                        <div class="step-visual">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <h4>Recevez le code</h4>
+                            <p>Par email et notifications</p>
+                        </div>
+                        <div class="step-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <div class="process-step" data-step="3">
+                        <div class="step-visual">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <h4>Activez sur Garena</h4>
+                            <p>Sur shop2game.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endif %}
         </div>
-        <div class="product-info">
-            <h2>{{ product.name }}</h2>
-            <p class="product-category">
-                Catégorie: 
-                {% if product.category == 'recharge' %}
-                    Recharge Free Fire
-                {% else %}
-                    Compte Free Fire
-                {% endif %}
-            </p>
-            <p class="product-description">{{ product.description }}</p>
-            <div class="price">{{ product.price }} FCFA</div>
+
+        <!-- Section d'information produit -->
+        <div class="product-info-hero">
+            <div class="category-tag">
+                <i class="fas fa-tag"></i>
+                {{ product.category.name }}
+            </div>
             
-            {% if user.is_authenticated %}
-                <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+            <h1 class="product-title">{{ product.name }}</h1>
+            
+            <div class="product-description-card">
+                <p>{{ product.description }}</p>
+            </div>
+
+            <!-- Carte de prix et achat -->
+            <div class="purchase-card">
+                <div class="price-display">
+                    <span class="price-amount">{{ product.price }}</span>
+                    <span class="price-currency">FCFA</span>
+                </div>
+                
+                <div class="stock-indicator">
+                    <div class="stock-dot {% if product.is_available %}available{% else %}unavailable{% endif %}"></div>
+                    <span>
+                        {% if product.is_available %}
+                            ✅ {{ product.stock }} unité(s) disponible(s)
+                        {% else %}
+                            ❌ Produit momentanément indisponible
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if product.is_available %}
+                <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="purchase-form">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-cart-plus"></i> Ajouter au panier
+                    <div class="quantity-selector-modern">
+                        <label>Quantité :</label>
+                        <div class="quantity-controls">
+                            <button type="button" class="quantity-btn minus" onclick="decreaseQuantity()">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}" class="quantity-input-modern">
+                            <button type="button" class="quantity-btn plus" onclick="increaseQuantity()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="add-to-cart-btn-modern">
+                        <span class="btn-icon">
+                            <i class="fas fa-cart-plus"></i>
+                        </span>
+                        <span class="btn-text">Ajouter au Panier</span>
+                        <span class="btn-price">{{ product.price }} FCFA</span>
                     </button>
                 </form>
-            {% else %}
-                <p class="login-required">
-                    <a href="{% url 'accounts:login' %}">Connectez-vous</a> pour acheter ce produit.
-                </p>
-            {% endif %}
+                {% else %}
+                <button class="add-to-cart-btn-modern disabled" disabled>
+                    <span class="btn-icon">
+                        <i class="fas fa-clock"></i>
+                    </span>
+                    <span class="btn-text">Produit Indisponible</span>
+                </button>
+                {% endif %}
+
+                <div class="purchase-guarantees">
+                    <div class="guarantee-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Paiement 100% Sécurisé</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>Livraison Instantanée</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-headset"></i>
+                        <span>Support 24h/24</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Section REDEEM améliorée -->
+    {% if product.is_redeem_product %}
+    <div class="redeem-master-section">
+        <div class="section-header-animated">
+            <div class="header-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2>🚨 Important : Lisez ceci avant d'acheter</h2>
+            <p>Comprenez comment fonctionnent les codes REDEEM</p>
+        </div>
+
+        <div class="redeem-info-grid">
+            <!-- Carte d'avertissement -->
+            <div class="info-card warning-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h3>Ce que vous n'achetez PAS</h3>
+                </div>
+                <div class="card-content">
+                    <p>Vous n'achetez <strong>PAS</strong> des diamants qui seront crédités automatiquement sur votre compte Free Fire.</p>
+                    <ul class="warning-list">
+                        <li>❌ Pas de crédit automatique</li>
+                        <li>❌ Pas d'envoi direct par le site</li>
+                        <li>❌ Pas de lien avec votre ID de jeu</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Carte de ce qu'on achète -->
+            <div class="info-card success-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Ce que vous achetez VRAIMENT</h3>
+                </div>
+                <div class="card-content">
+                    <p>Vous achetez un <strong>CODE REDEEM UNIQUE</strong> que vous échangez sur le site officiel de Garena.</p>
+                    <div class="code-preview">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Exemple: FF-XXXX-XXXX-XXXX</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte de livraison -->
+            <div class="info-card delivery-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <h3>Où recevrez-vous le code ?</h3>
+                </div>
+                <div class="card-content">
+                    <div class="delivery-channels">
+                        <div class="channel">
+                            <div class="channel-icon email">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="channel-info">
+                                <strong>Email</strong>
+                                <span>Votre boîte Gmail/Yahoo</span>
+                            </div>
+                        </div>
+                        <div class="channel">
+                            <div class="channel-icon notification">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="channel-info">
+                                <strong>Notifications</strong>
+                                <span>Sur ce site (en haut)</span>
+                            </div>
+                        </div>
+                        <div class="channel">
+                            <div class="channel-icon orders">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="channel-info">
+                                <strong>Mes Commandes</strong>
+                                <span>Dans votre profil</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte d'utilisation -->
+            <div class="info-card usage-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3>Comment utiliser le code ?</h3>
+                </div>
+                <div class="card-content">
+                    <div class="usage-steps-modern">
+                        <div class="usage-step">
+                            <div class="step-indicator">1</div>
+                            <div class="step-content">
+                                <h4>Aller sur Garena</h4>
+                                <p>Rendez-vous sur 
+                                    <a href="https://shop2game.com" target="_blank" class="garena-link">
+                                        shop2game.com
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="usage-step">
+                            <div class="step-indicator">2</div>
+                            <div class="step-content">
+                                <h4>Se connecter</h4>
+                                <p>Avec le même compte que Free Fire</p>
+                            </div>
+                        </div>
+                        <div class="usage-step">
+                            <div class="step-indicator">3</div>
+                            <div class="step-content">
+                                <h4>Entrer le code</h4>
+                                <p>Coller votre code REDEEM</p>
+                            </div>
+                        </div>
+                        <div class="usage-step">
+                            <div class="step-indicator">4</div>
+                            <div class="step-content">
+                                <h4>Profiter !</h4>
+                                <p>Diamants ajoutés instantanément</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bandeau d'action -->
+        <div class="action-banner">
+            <div class="banner-content">
+                <div class="banner-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="banner-text">
+                    <h3>Prêt à obtenir vos diamants ?</h3>
+                    <p>Rejoignez des milliers de joueurs satisfaits</p>
+                </div>
+                {% if product.is_available %}
+                <a href="#purchase" class="banner-btn">
+                    <i class="fas fa-bolt"></i>
+                    Acheter Maintenant
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Produits similaires améliorés -->
+    {% if related_products %}
+    <section class="related-products-modern">
+        <div class="section-header-animated">
+            <div class="header-icon">
+                <i class="fas fa-th-large"></i>
+            </div>
+            <h2>Produits Similaires</h2>
+            <p>Découvrez d'autres offres qui pourraient vous intéresser</p>
+        </div>
+
+        <div class="related-products-carousel">
+            {% for related_product in related_products %}
+            <div class="related-product-modern">
+                <div class="related-product-image">
+                    {% if related_product.image %}
+                        <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut">
+                    {% endif %}
+                    <div class="product-overlay">
+                        <a href="{% url 'store:product_detail' related_product.id %}" class="view-details-btn">
+                            <i class="fas fa-eye"></i>
+                            Voir détails
+                        </a>
+                    </div>
+                </div>
+                <div class="related-product-info">
+                    <h3>{{ related_product.name }}</h3>
+                    <div class="related-price">{{ related_product.price }} FCFA</div>
+                    <a href="{% url 'store:product_detail' related_product.id %}" class="related-product-link">
+                        Voir l'offre <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
 </div>
+
+<!-- Modal Zoom -->
+<div class="image-modal" id="imageModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeZoom()">&times;</span>
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="zoomed-image">
+        {% else %}
+            <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut" class="zoomed-image">
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Variables CSS étendues */
+:root {
+    --primary-gradient: linear-gradient(135deg, #ff6b35, #f7931e);
+    --secondary-gradient: linear-gradient(135deg, #38b6ff, #1a659e);
+    --success-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
+    --warning-gradient: linear-gradient(135deg, #f39c12, #e67e22);
+    --danger-gradient: linear-gradient(135deg, #e74c3c, #c0392b);
+    --purple-gradient: linear-gradient(135deg, #9b59b6, #8e44ad);
+    --dark-gradient: linear-gradient(135deg, #2c3e50, #34495e);
+    
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 15px 50px rgba(0, 0, 0, 0.15);
+    --shadow-heavy: 0 25px 80px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation améliorée */
+.detail-breadcrumb {
+    background: var(--white);
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-soft);
+}
+
+.breadcrumb-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.breadcrumb-link {
+    color: var(--secondary-blue);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.breadcrumb-link:hover {
+    color: var(--primary-orange);
+    transform: translateX(5px);
+}
+
+.breadcrumb-separator {
+    color: #ccc;
+    font-weight: bold;
+}
+
+.breadcrumb-current {
+    color: var(--primary-orange);
+    font-weight: 700;
+}
+
+/* Section Hero Produit */
+.product-hero-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+}
+
+.product-visual-section {
+    position: relative;
+}
+
+.main-image-container {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-heavy);
+    margin-bottom: 2rem;
+}
+
+.main-product-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.main-image-container:hover .main-product-image {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1));
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.zoom-btn {
+    background: var(--white);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.3s ease;
+}
+
+.zoom-btn:hover {
+    background: var(--primary-orange);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Badges flottants */
+.floating-badge {
+    position: absolute;
+    top: 1.5rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 25px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-medium);
+    z-index: 10;
+}
+
+.featured-badge {
+    left: 1.5rem;
+    background: var(--warning-gradient);
+}
+
+.stock-badge {
+    right: 1.5rem;
+    background: var(--success-gradient);
+}
+
+.out-of-stock-badge {
+    right: 1.5rem;
+    background: var(--danger-gradient);
+}
+
+/* Processus REDEEM */
+.redeem-process-showcase {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2.5rem;
+    border-radius: 20px;
+    color: white;
+    box-shadow: var(--shadow-heavy);
+}
+
+.showcase-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.process-step {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.process-step:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.step-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 1rem;
+}
+
+.step-number {
+    background: white;
+    color: #667eea;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.step-icon {
+    font-size: 2rem;
+    opacity: 0.9;
+}
+
+.step-content h4 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.1rem;
+}
+
+.step-content p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.step-arrow {
+    position: absolute;
+    right: -0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Section Info Produit */
+.product-info-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.category-tag {
+    background: var(--secondary-gradient);
+    color: white;
+    padding: 0.7rem 1.2rem;
+    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.product-title {
+    font-size: 3rem;
+    color: var(--secondary-blue);
+    margin: 0;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.product-description-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-soft);
+    border-left: 4px solid var(--primary-orange);
+}
+
+/* Carte d'achat */
+.purchase-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-heavy);
+    border: 2px solid var(--border-color);
+}
+
+.price-display {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.price-amount {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 4rem;
+    color: var(--primary-orange);
+    text-shadow: 2px 2px 4px rgba(255, 107, 53, 0.3);
+}
+
+.price-currency {
+    font-size: 1.5rem;
+    color: var(--dark-gray);
+    margin-left: 0.5rem;
+}
+
+.stock-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.stock-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.stock-dot.available {
+    background: #2ecc71;
+    box-shadow: 0 0 10px #2ecc71;
+}
+
+.stock-dot.unavailable {
+    background: #e74c3c;
+    box-shadow: 0 0 10px #e74c3c;
+}
+
+/* Sélecteur de quantité moderne */
+.quantity-selector-modern {
+    margin-bottom: 2rem;
+}
+
+.quantity-selector-modern label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    color: var(--secondary-blue);
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.quantity-btn {
+    background: var(--primary-orange);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-soft);
+}
+
+.quantity-btn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-medium);
+}
+
+.quantity-input-modern {
+    width: 80px;
+    height: 45px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.quantity-input-modern:focus {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+/* Bouton d'ajout au panier moderne */
+.add-to-cart-btn-modern {
+    width: 100%;
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 1.5rem 2rem;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-medium);
+    margin-bottom: 1.5rem;
+}
+
+.add-to-cart-btn-modern:hover:not(.disabled) {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.add-to-cart-btn-modern.disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    font-size: 1.3rem;
+}
+
+.btn-price {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+}
+
+/* Garanties */
+.purchase-guarantees {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.guarantee-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.guarantee-item i {
+    color: var(--primary-orange);
+    font-size: 1.2rem;
+}
+
+/* Section REDEEM Master */
+.redeem-master-section {
+    margin: 4rem 0;
+}
+
+.section-header-animated {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.header-icon {
+    font-size: 3rem;
+    color: var(--primary-orange);
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.section-header-animated h2 {
+    font-size: 2.5rem;
+    color: var(--secondary-blue);
+    margin-bottom: 0.5rem;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 2px;
+}
+
+.section-header-animated p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Grille d'information REDEEM */
+.redeem-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.info-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.warning-card {
+    border-color: #e74c3c;
+}
+
+.success-card {
+    border-color: #2ecc71;
+}
+
+.delivery-card {
+    border-color: #3498db;
+}
+
+.usage-card {
+    border-color: #9b59b6;
+    grid-column: 1 / -1;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.warning-card .card-icon {
+    background: var(--danger-gradient);
+}
+
+.success-card .card-icon {
+    background: var(--success-gradient);
+}
+
+.delivery-card .card-icon {
+    background: var(--secondary-gradient);
+}
+
+.usage-card .card-icon {
+    background: var(--purple-gradient);
+}
+
+.card-header h3 {
+    margin: 0;
+    color: var(--dark-gray);
+    font-size: 1.3rem;
+}
+
+/* Contenu des cartes */
+.warning-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.warning-list li {
+    padding: 0.5rem 0;
+    font-weight: 600;
+}
+
+.code-preview {
+    background: var(--dark-gradient);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+/* Canaux de livraison */
+.delivery-channels {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.channel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.channel:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.channel-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+}
+
+.channel-icon.email {
+    background: var(--danger-gradient);
+}
+
+.channel-icon.notification {
+    background: var(--warning-gradient);
+}
+
+.channel-icon.orders {
+    background: var(--success-gradient);
+}
+
+.channel-info {
+    flex: 1;
+}
+
+.channel-info strong {
+    display: block;
+    color: var(--dark-gray);
+}
+
+.channel-info span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Étapes d'utilisation modernes */
+.usage-steps-modern {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.usage-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.step-indicator {
+    background: var(--purple-gradient);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.step-content h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--dark-gray);
+}
+
+.step-content p {
+    margin: 0;
+    color: #666;
+}
+
+.garena-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.garena-link:hover {
+    color: #764ba2;
+}
+
+/* Bannière d'action */
+.action-banner {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 3rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-heavy);
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.banner-icon {
+    font-size: 4rem;
+    opacity: 0.9;
+}
+
+.banner-text h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+}
+
+.banner-text p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.banner-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.banner-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Produits similaires modernes */
+.related-products-modern {
+    margin: 4rem 0;
+}
+
+.related-products-carousel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.related-product-modern {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.related-product-modern:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.related-product-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.related-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.related-product-modern:hover .related-product-image img {
+    transform: scale(1.1);
+}
+
+.product-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.related-product-modern:hover .product-overlay {
+    opacity: 1;
+}
+
+.view-details-btn {
+    background: var(--primary-orange);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+    background: var(--dark-orange);
+    transform: scale(1.1);
+}
+
+.related-product-info {
+    padding: 1.5rem;
+}
+
+.related-product-info h3 {
+    margin: 0 0 1rem 0;
+    color: var(--dark-gray);
+    font-size: 1.2rem;
+}
+
+.related-price {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 1.8rem;
+    color: var(--primary-orange);
+    margin-bottom: 1rem;
+}
+
+.related-product-link {
+    color: var(--secondary-blue);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.related-product-link:hover {
+    color: var(--primary-orange);
+    gap: 1rem;
+}
+
+/* Modal Zoom */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    position: relative;
+    margin: auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.close-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: var(--primary-orange);
+}
+
+.zoomed-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .product-hero-section {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .redeem-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .usage-steps-modern {
+        grid-template-columns: 1fr;
+    }
+    
+    .banner-content {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .process-steps {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .step-arrow {
+        display: none;
+    }
+    
+    .purchase-guarantees {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-title {
+        font-size: 2.5rem;
+    }
+    
+    .price-amount {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .breadcrumb-content {
+        flex-wrap: wrap;
+    }
+    
+    .main-product-image {
+        height: 300px;
+    }
+    
+    .floating-badge {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .add-to-cart-btn-modern {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion de la quantité
+    const quantityInput = document.getElementById('quantity');
+    const maxStock = parseInt('{{ product.stock }}');
+    
+    function updateQuantity(value) {
+        let newValue = parseInt(quantityInput.value) + value;
+        if (newValue < 1) newValue = 1;
+        if (newValue > maxStock) newValue = maxStock;
+        quantityInput.value = newValue;
+    }
+    
+    window.increaseQuantity = function() { updateQuantity(1); }
+    window.decreaseQuantity = function() { updateQuantity(-1); }
+    
+    if (quantityInput) {
+        quantityInput.addEventListener('change', function() {
+            let value = parseInt(this.value);
+            if (isNaN(value) || value < 1) this.value = 1;
+            if (value > maxStock) {
+                this.value = maxStock;
+                showNotification(`Stock maximum : ${maxStock} unités`, 'warning');
+            }
+        });
+    }
+    
+    // Animation des étapes du processus
+    const processSteps = document.querySelectorAll('.process-step');
+    processSteps.forEach((step, index) => {
+        step.style.animationDelay = `${index * 0.2}s`;
+        step.classList.add('fade-in-up');
+    });
+    
+    // Animation des cartes d'information
+    const infoCards = document.querySelectorAll('.info-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationDelay = `${Array.from(infoCards).indexOf(entry.target) * 0.1}s`;
+                entry.target.classList.add('slide-in-up');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    infoCards.forEach(card => observer.observe(card));
+    
+    // Gestion du zoom d'image
+    window.toggleZoom = function() {
+        document.getElementById('imageModal').style.display = 'block';
+    }
+    
+    window.closeZoom = function() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+    
+    // Fermer le modal en cliquant à l'extérieur
+    window.onclick = function(event) {
+        const modal = document.getElementById('imageModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Animation au scroll
+    function animateOnScroll() {
+        const elements = document.querySelectorAll('.fade-in-up, .slide-in-up');
+        elements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                element.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Initial check
+    
+    // Notification système
+    function showNotification(message, type = 'info') {
+        // Créer une notification toast
+        const notification = document.createElement('div');
+        notification.className = `notification-toast ${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas fa-${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animation d'entrée
+        setTimeout(() => notification.classList.add('show'), 100);
+        
+        // Suppression après 3 secondes
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+    
+    function getNotificationIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+        return icons[type] || 'info-circle';
+    }
+});
+
+// CSS pour les animations
+const style = document.createElement('style');
+style.textContent = `
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+    }
+    
+    .fade-in-up.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .slide-in-up {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .slide-in-up.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .notification-toast {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        z-index: 10000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        border-left: 4px solid;
+    }
+    
+    .notification-toast.show {
+        transform: translateX(0);
+    }
+    
+    .notification-toast.success {
+        border-left-color: #2ecc71;
+    }
+    
+    .notification-toast.warning {
+        border-left-color: #f39c12;
+    }
+    
+    .notification-toast.error {
+        border-left-color: #e74c3c;
+    }
+    
+    .notification-toast.info {
+        border-left-color: #3498db;
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .notification-content i {
+        font-size: 1.2rem;
+    }
+    
+    .notification-toast.success i { color: #2ecc71; }
+    .notification-toast.warning i { color: #f39c12; }
+    .notification-toast.error i { color: #e74c3c; }
+    .notification-toast.info i { color: #3498db; }
+`;
+document.head.appendChild(style);
+</script>
 {% endblock %}

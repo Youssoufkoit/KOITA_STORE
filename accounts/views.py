@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .forms import SignUpForm, LoginForm, UserUpdateForm, ProfileUpdateForm
-
+from django.shortcuts import get_object_or_404
+from store.models import Notification, Order
 
 # ============================================
 # VUES D'AUTHENTIFICATION (EXISTANTES)
@@ -298,17 +299,6 @@ def test_profile(request):
 
 from store.models import Notification
 
-@login_required
-def notifications_view(request):
-    """Vue pour afficher toutes les notifications"""
-    notifications = request.user.notifications.all().order_by('-created_at')
-    unread_count = notifications.filter(is_read=False).count()
-    
-    context = {
-        'notifications': notifications,
-        'unread_count': unread_count,
-    }
-    return render(request, 'accounts/notifications.html', context)
 
 
 @login_required
@@ -337,3 +327,14 @@ def delete_notification(request, notification_id):
         notification.delete()
         messages.success(request, '✅ Notification supprimée')
     return redirect('accounts:notifications')
+@login_required
+def notifications_view(request):
+    """Vue pour afficher toutes les notifications"""
+    notifications = request.user.notifications.all().order_by('-created_at')
+    unread_count = notifications.filter(is_read=False).count()
+    
+    context = {
+        'notifications': notifications,
+        'unread_count': unread_count,
+    }
+    return render(request, 'accounts/notifications.html', context)

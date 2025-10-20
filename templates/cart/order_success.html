@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="order-success-section">
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        
+        <h1>Commande Validée !</h1>
+        <p class="order-id">Référence: #{{ order_id }}</p>
+        
+        <div class="success-message">
+            <p>✅ Votre commande a été traitée avec succès.</p>
+            <p>📧 Vous recevrez vos codes REDEEM par email et dans vos notifications.</p>
+        </div>
+        
+        <div class="success-actions">
+            <a href="{% url 'accounts:notifications' %}" class="btn btn-primary">
+                <i class="fas fa-bell"></i> Voir mes notifications
+            </a>
+            <a href="{% url 'store:home' %}" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Retour à l'accueil
+            </a>
+        </div>
+        
+        <div class="support-info">
+            <h3>Besoin d'aide ?</h3>
+            <p>Contactez notre support au <strong>+221 XX XXX XX XX</strong> ou par email à <strong>support@koitastore.com</strong></p>
+        </div>
+    </div>
+</section>
+
+<style>
+.order-success-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 2rem;
+}
+
+.success-container {
+    text-align: center;
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px var(--shadow-light);
+    border: 3px solid var(--border-color);
+    max-width: 500px;
+    width: 100%;
+}
+
+.success-icon {
+    font-size: 5rem;
+    color: #2ecc71;
+    margin-bottom: 1.5rem;
+    animation: bounce 1s ease;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.success-container h1 {
+    color: var(--secondary-blue);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 2px;
+}
+
+.order-id {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.success-message {
+    background: rgba(46, 204, 113, 0.1);
+    border: 2px solid #2ecc71;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.success-message p {
+    margin: 0.5rem 0;
+    color: #27ae60;
+    font-weight: 500;
+}
+
+.success-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.support-info {
+    background: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-orange);
+}
+
+.support-info h3 {
+    color: var(--secondary-blue);
+    margin-bottom: 0.8rem;
+    font-family: "Montserrat", sans-serif;
+}
+
+.support-info p {
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+    .success-container {
+        padding: 2rem 1.5rem;
+    }
+    
+    .success-container h1 {
+        font-size: 2rem;
+    }
+    
+    .success-actions {
+        flex-direction: column;
+    }
+    
+    .success-actions .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

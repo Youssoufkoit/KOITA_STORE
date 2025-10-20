@@ -1,6 +1,407 @@
-<form action="{% url 'cart:process_order' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary btn-large">
-        <i class="fas fa-check-circle"></i> Valider la commande
-    </button>
-</form>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="checkout-section">
+    <h2>Validation de Commande</h2>
+    
+    <div class="checkout-container">
+        <!-- Récapitulatif de la commande -->
+        <div class="order-summary">
+            <h3><i class="fas fa-shopping-bag"></i> Récapitulatif</h3>
+            
+            {% for item in cart_items %}
+            <div class="checkout-item">
+                <div class="item-image">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-product.jpg' %}" alt="Image par défaut">
+                    {% endif %}
+                </div>
+                <div class="item-details">
+                    <h4>{{ item.product.name }}</h4>
+                    <p class="item-quantity">Quantité: {{ item.quantity }}</p>
+                </div>
+                <div class="item-total">
+                    {{ item.total_price }} FCFA
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="checkout-total">
+                <strong>Total: {{ cart_total }} FCFA</strong>
+            </div>
+        </div>
+
+        <!-- Informations de livraison -->
+        <div class="delivery-info">
+            <h3><i class="fas fa-shipping-fast"></i> Informations de livraison</h3>
+            
+            <div class="user-info-card">
+                <div class="info-row">
+                    <strong>Nom:</strong> {{ user.get_full_name|default:user.username }}
+                </div>
+                <div class="info-row">
+                    <strong>Email:</strong> {{ user.email }}
+                </div>
+                {% if user.profile.phone %}
+                <div class="info-row">
+                    <strong>Téléphone:</strong> {{ user.profile.phone }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="delivery-note">
+                <i class="fas fa-info-circle"></i>
+                <p>Les codes REDEEM seront envoyés par email et disponibles dans vos notifications après paiement.</p>
+            </div>
+        </div>
+
+      <!-- Méthodes de paiement -->
+<div class="payment-methods">
+    <h3><i class="fas fa-credit-card"></i> Méthodes de paiement</h3>
+    
+    <div class="payment-options">
+        <div class="payment-option">
+            <input type="radio" id="wave" name="payment_method" value="wave" checked>
+            <label for="wave">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Wave</span>
+            </label>
+        </div>
+        
+        <div class="payment-option">
+            <input type="radio" id="orange_money" name="payment_method" value="orange_money">
+            <label for="orange_money">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Orange Money</span>
+            </label>
+        </div>
+        
+        <div class="payment-option">
+            <input type="radio" id="binance" name="payment_method" value="binance">
+            <label for="binance">
+                <i class="fab fa-bitcoin"></i>
+                <span>Binance</span>
+            </label>
+        </div>
+        
+        <div class="payment-option">
+            <input type="radio" id="bybit" name="payment_method" value="bybit">
+            <label for="bybit">
+                <i class="fas fa-wallet"></i>
+                <span>Bybit</span>
+            </label>
+        </div>
+    </div>
+</div>
+ <!-- Validation finale -->
+        <div class="checkout-actions">
+            <form action="{% url 'cart:process_order' %}" method="post" class="checkout-form">
+                {% csrf_token %}
+                <input type="hidden" name="payment_method" id="selected_payment" value="wave">
+                
+                <div class="terms-agreement">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        J'accepte les <a href="#" target="_blank">conditions générales de vente</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-large checkout-btn">
+                    <i class="fas fa-lock"></i> Payer {{ cart_total }} FCFA
+                </button>
+            </form>
+            
+            <a href="{% url 'cart:cart_view' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour au panier
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+.checkout-section {
+    animation: fadeInUp 0.8s ease;
+}
+
+.checkout-section h2 {
+    color: var(--secondary-blue);
+    font-size: 2.3rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.checkout-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-orange), var(--secondary-blue));
+    border-radius: 2px;
+}
+
+.checkout-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.order-summary, .delivery-info, .payment-methods {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px var(--shadow-light);
+    border: 2px solid var(--border-color);
+}
+
+.order-summary h3, .delivery-info h3, .payment-methods h3 {
+    color: var(--secondary-blue);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: "Montserrat", sans-serif;
+}
+
+.checkout-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.checkout-item:last-child {
+    border-bottom: none;
+}
+
+.item-image img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-details h4 {
+    color: var(--dark-gray);
+    margin-bottom: 0.3rem;
+    font-family: "Montserrat", sans-serif;
+}
+
+.item-quantity {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.item-total {
+    font-weight: bold;
+    color: var(--primary-orange);
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 1.2rem;
+}
+
+.checkout-total {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-color);
+    text-align: right;
+    font-size: 1.3rem;
+    color: var(--secondary-blue);
+}
+
+.user-info-card {
+    background: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.info-row {
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.delivery-note {
+    background: rgba(52, 152, 219, 0.1);
+    border-left: 4px solid #3498db;
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.delivery-note i {
+    color: #3498db;
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+}
+
+.delivery-note p {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.payment-option {
+    position: relative;
+}
+
+.payment-option input[type="radio"] {
+    display: none;
+}
+
+.payment-option label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.payment-option label:hover {
+    border-color: var(--primary-orange);
+    transform: translateY(-2px);
+}
+
+.payment-option input[type="radio"]:checked + label {
+    border-color: var(--primary-orange);
+    background: rgba(255, 107, 53, 0.1);
+    box-shadow: 0 5px 15px var(--orange-glow);
+}
+
+.payment-option label i {
+    font-size: 1.5rem;
+    color: var(--primary-orange);
+}
+
+.payment-option label span {
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+.checkout-actions {
+    grid-column: 1 / -1;
+    background: var(--white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px var(--shadow-light);
+    border: 2px solid var(--border-color);
+    text-align: center;
+}
+
+.terms-agreement {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.terms-agreement label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.terms-agreement a {
+    color: var(--primary-orange);
+    text-decoration: none;
+}
+
+.terms-agreement a:hover {
+    text-decoration: underline;
+}
+
+.checkout-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    padding: 1.3rem 2rem;
+}
+
+@media (max-width: 768px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .checkout-section h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-summary, .delivery-info, .payment-methods, .checkout-actions {
+        padding: 1.5rem;
+    }
+    
+    .checkout-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+    }
+    
+    .item-details {
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gérer la sélection des méthodes de paiement
+    const paymentOptions = document.querySelectorAll('input[name="payment_method"]');
+    const selectedPayment = document.getElementById('selected_payment');
+    
+    paymentOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            selectedPayment.value = this.value;
+        });
+    });
+    
+    // Validation du formulaire
+    const checkoutForm = document.querySelector('.checkout-form');
+    checkoutForm.addEventListener('submit', function(e) {
+        const termsChecked = document.getElementById('terms').checked;
+        
+        if (!termsChecked) {
+            e.preventDefault();
+            alert('Veuillez accepter les conditions générales de vente');
+            return false;
+        }
+        
+        // Afficher un indicateur de chargement
+        const submitBtn = this.querySelector('.checkout-btn');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement en cours...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

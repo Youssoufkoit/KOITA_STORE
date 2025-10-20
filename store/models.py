@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -172,6 +173,24 @@ class Product(models.Model):
         help_text="Notes visibles uniquement par l'admin (non affichées sur le site)"
     )
     
+    # ===== CHAMPS REDEEM CODE =====
+    is_redeem_product = models.BooleanField(
+        default=False,
+        verbose_name='Produit REDEEM',
+        help_text='Cocher si ce produit nécessite un code REDEEM'
+    )
+    redeem_code = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Code REDEEM',
+        help_text='Code unique à fournir après achat (pour produits REDEEM uniquement)'
+    )
+    redeem_code_used = models.BooleanField(
+        default=False,
+        verbose_name='Code REDEEM utilisé',
+        help_text='Indique si le code a déjà été vendu'
+    )
+    
     # Dates
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Dernière modification")
@@ -224,13 +243,6 @@ class Product(models.Model):
             features.append(f"Win rate: {self.win_rate}%")
         
         return features
-  
-  
-  # store/models.py - Ajouter ces modèles
-
- 
-from django.contrib.auth.models import User
-from django.utils import timezone
 
 class Order(models.Model):
     """Modèle de commande"""
@@ -304,3 +316,23 @@ class Notification(models.Model):
     
     def __str__(self):
         return f"{self.title} - {self.user.username}"
+
+
+# ============================================
+# PROXY MODELS
+# ============================================
+
+class RechargeProduct(Product):
+    """Proxy model pour les Recharges uniquement"""
+    class Meta:
+        proxy = True
+        verbose_name = "Recharge"
+        verbose_name_plural = "📱 Recharges (Diamants, etc.)"
+
+
+class AccountProduct(Product):
+    """Proxy model pour les Comptes uniquement"""
+    class Meta:
+        proxy = True
+        verbose_name = "Compte de Jeu"
+        verbose_name_plural = "🎮 Comptes de Jeux"
