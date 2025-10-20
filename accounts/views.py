@@ -294,3 +294,46 @@ def test_profile(request):
     }
     
     return render(request, 'accounts/test_profile.html', context)
+# accounts/views.py - AJOUTER CETTE FONCTION
+
+from store.models import Notification
+
+@login_required
+def notifications_view(request):
+    """Vue pour afficher toutes les notifications"""
+    notifications = request.user.notifications.all().order_by('-created_at')
+    unread_count = notifications.filter(is_read=False).count()
+    
+    context = {
+        'notifications': notifications,
+        'unread_count': unread_count,
+    }
+    return render(request, 'accounts/notifications.html', context)
+
+
+@login_required
+def mark_notification_read(request, notification_id):
+    """Marquer une notification comme lue"""
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    
+    return redirect('accounts:notifications')
+
+
+@login_required
+def mark_all_notifications_read(request):
+    """Marquer toutes les notifications comme lues"""
+    request.user.notifications.filter(is_read=False).update(is_read=True)
+    messages.success(request, '✅ Toutes les notifications ont été marquées comme lues')
+    return redirect('accounts:notifications')
+
+
+@login_required
+def delete_notification(request, notification_id):
+    """Supprimer une notification"""
+    if request.method == 'POST':
+        notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+        notification.delete()
+        messages.success(request, '✅ Notification supprimée')
+    return redirect('accounts:notifications')

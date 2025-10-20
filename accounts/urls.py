@@ -46,3 +46,21 @@ urlpatterns = [
     # ============================================
     path('test-profile/', views.test_profile, name='test_profile'),
 ]
+# accounts/urls.py - AJOUTER CES ROUTES
+
+from django.urls import path
+from . import views
+
+app_name = 'accounts'
+
+urlpatterns = [
+    # ... routes existantes ...
+    
+    # ============================================
+    # NOTIFICATIONS
+    # ============================================
+    path('notifications/', views.notifications_view, name='notifications'),
+    path('notifications/<int:notification_id>/read/', views.mark_notification_read, name='mark_notification_read'),
+    path('notifications/read-all/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    path('notifications/<int:notification_id>/delete/', views.delete_notification, name='delete_notification'),
+]
