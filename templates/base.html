@@ -40,157 +40,55 @@
     </nav>
     
     <!-- Icônes Profil et Panier à droite -->
-   <!-- Icônes Profil et Panier à droite -->
-<div class="header-icons">
-    <!-- Icône Notification -->
-    <a href="{% url 'accounts:notifications' %}" class="icon-btn notification-icon">
-        <i class="fas fa-bell"></i>
-        {% if user.is_authenticated and user.notifications.unread.count > 0 %}
-            <span class="notification-badge">{{ user.notifications.unread.count }}</span>
-        {% endif %}
-    </a>
-    
-    <!-- Dropdown Profil -->
-    <div class="profile-dropdown">
-        <a href="#" class="icon-btn profile-icon" id="profileToggle">
-            <i class="fas fa-user-circle"></i>
+    <div class="header-icons">
+        <!-- Icône Notification -->
+        <a href="{% url 'accounts:notifications' %}" class="icon-btn notification-icon">
+            <i class="fas fa-bell"></i>
+            {% if user.is_authenticated and user.notifications.unread.count > 0 %}
+                <span class="notification-badge">{{ user.notifications.unread.count }}</span>
+            {% endif %}
         </a>
-        <div class="dropdown-content" id="profileDropdown">
-            {% if user.is_authenticated %}
-                <a href="{% url 'accounts:profile' %}"><i class="fas fa-user"></i> Mon Profil</a>
-                <a href="{% url 'accounts:notifications' %}">
-                    <i class="fas fa-bell"></i> Notifications
-                    {% if user.notifications.unread.count > 0 %}
-                        <span class="notification-count">{{ user.notifications.unread.count }}</span>
-                    {% endif %}
-                </a>
-                <a href="{% url 'accounts:order_history' %}"><i class="fas fa-history"></i> Mes Commandes</a>
-                <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
-            {% else %}
-                <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
-                <a href="{% url 'accounts:signup' %}"><i class="fas fa-user-plus"></i> Inscription</a>
-            {% endif %}
+        
+        <!-- Dropdown Profil -->
+        <div class="profile-dropdown">
+            <a href="#" class="icon-btn profile-icon" id="profileToggle">
+                <i class="fas fa-user-circle"></i>
+            </a>
+            <div class="dropdown-content" id="profileDropdown">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:profile' %}"><i class="fas fa-user"></i> Mon Profil</a>
+                    <a href="{% url 'accounts:notifications' %}">
+                        <i class="fas fa-bell"></i> Notifications
+                        {% if user.notifications.unread.count > 0 %}
+                            <span class="notification-count">{{ user.notifications.unread.count }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'accounts:order_history' %}"><i class="fas fa-history"></i> Mes Commandes</a>
+                    <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                    <a href="{% url 'accounts:signup' %}"><i class="fas fa-user-plus"></i> Inscription</a>
+                {% endif %}
+            </div>
         </div>
+        
+        <!-- Icône Panier -->
+        <a href="{% url 'cart:cart_view' %}" class="icon-btn cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge" id="cartBadge">
+                {% if cart_total_items > 0 %}
+                    {{ cart_total_items }}
+                {% else %}
+                    0
+                {% endif %}
+            </span>
+        </a>
     </div>
-    
-    <!-- Icône Panier -->
-    <a href="{% url 'cart:cart_view' %}" class="icon-btn cart-icon">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-badge" id="cartBadge">
-            {% if cart_total_items > 0 %}
-                {{ cart_total_items }}
-            {% else %}
-                0
-            {% endif %}
-        </span>
-    </a>
-</div>
   </header>
 
   <main>
     {% block content %}
-    <!-- Page d'accueil par défaut avec des produits -->
-    <section class="hero">
-      <h1>Bienvenue sur KOITA_STORE</h1>
-      <p>Vos recharges Free Fire et comptes de jeux en toute sécurité</p>
-    </section>
-
-    <section class="products-section">
-      <h2>Nos Produits Populaires</h2>
-      
-      <div class="product-grid">
-        <!-- Produit 1 -->
-        <div class="product-card">
-          <div class="product-badge">Populaire</div>
-          <img src="{% static 'images/002;' %}" alt="100 Diamants">
-          <h3>100 Diamants</h3>
-          <p class="product-description">Recharge instantanée</p>
-          <div class="price">1 500 FCFA</div>
-          <button class="btn btn-primary">
-            <i class="fas fa-cart-plus"></i> Ajouter au panier
-          </button>
-        </div>
-
-        <!-- Produit 2 -->
-        <div class="product-card">
-          <div class="product-badge hot">Promo</div>
-          <img src="{% static 'images/diamonds-310.jpg' %}" alt="310 Diamants">
-          <h3>310 Diamants</h3>
-          <p class="product-description">+10 diamants bonus</p>
-          <div class="price">4 500 FCFA</div>
-          <button class="btn btn-primary">
-            <i class="fas fa-cart-plus"></i> Ajouter au panier
-          </button>
-        </div>
-
-        <!-- Produit 3 -->
-        <div class="product-card">
-          <img src="{% static 'images/diamonds-520.jpg' %}" alt="520 Diamants">
-          <h3>520 Diamants</h3>
-          <p class="product-description">+20 diamants bonus</p>
-          <div class="price">7 500 FCFA</div>
-          <button class="btn btn-primary">
-            <i class="fas fa-cart-plus"></i> Ajouter au panier
-          </button>
-        </div>
-
-        <!-- Produit 4 -->
-        <div class="product-card">
-          <div class="product-badge hot">Meilleure offre</div>
-          <img src="{% static 'images/diamonds-1060.jpg' %}" alt="1060 Diamants">
-          <h3>1060 Diamants</h3>
-          <p class="product-description">+60 diamants bonus</p>
-          <div class="price">15 000 FCFA</div>
-          <button class="btn btn-primary">
-            <i class="fas fa-cart-plus"></i> Ajouter au panier
-          </button>
-        </div>
-
-        <!-- Produit 5 -->
-        <div class="product-card">
-          <img src="{% static 'images/diamonds-2180.jpg' %}" alt="2180 Diamants">
-          <h3>2180 Diamants</h3>
-          <p class="product-description">+180 diamants bonus</p>
-          <div class="price">30 000 FCFA</div>
-          <button class="btn btn-primary">
-            <i class="fas fa-cart-plus"></i> Ajouter au panier
-          </button>
-        </div>
-
-        <!-- Produit 6 -->
-        <div class="product-card">
-          <div class="product-badge">VIP</div>
-          <img src="{% static 'images/account-elite.jpg' %}" alt="Compte Elite">
-          <h3>Compte Elite Pass</h3>
-          <p class="product-description">Niveau 50+ avec skins rares</p>
-          <div class="price">25 000 FCFA</div>
-          <button class="btn btn-primary">
-            <i class="fas fa-cart-plus"></i> Ajouter au panier
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="features">
-      <h2>Pourquoi choisir KOITA_STORE ?</h2>
-      <div class="features-grid">
-        <div class="feature-box">
-          <i class="fas fa-bolt"></i>
-          <h3>Livraison Instantanée</h3>
-          <p>Recevez vos diamants en moins de 5 minutes</p>
-        </div>
-        <div class="feature-box">
-          <i class="fas fa-shield-alt"></i>
-          <h3>100% Sécurisé</h3>
-          <p>Paiements sécurisés et protégés</p>
-        </div>
-        <div class="feature-box">
-          <i class="fas fa-headset"></i>
-          <h3>Support 24/7</h3>
-          <p>Assistance disponible à tout moment</p>
-        </div>
-      </div>
-    </section>
+    <!-- Contenu par défaut qui sera remplacé par les pages enfants -->
     {% endblock %}
   </main>
 

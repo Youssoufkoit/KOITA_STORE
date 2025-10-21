@@ -5,6 +5,85 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ========================================
+    // CARROUSEL AUTOMATIQUE
+    // ========================================
+    
+    function initCarousel() {
+        const carousel = document.querySelector('.carousel-container');
+        if (!carousel) return;
+
+        const slides = carousel.querySelector('.carousel-slides');
+        const slidesCount = carousel.querySelectorAll('.slide').length;
+        const prevBtn = carousel.querySelector('.prev-btn');
+        const nextBtn = carousel.querySelector('.next-btn');
+        const dots = carousel.querySelectorAll('.dot');
+        let currentIndex = 0;
+        let autoPlayInterval;
+
+        function goToSlide(index) {
+            if (index < 0) {
+                currentIndex = slidesCount - 1;
+            } else if (index >= slidesCount) {
+                currentIndex = 0;
+            } else {
+                currentIndex = index;
+            }
+            slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+            updateDots();
+        }
+
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(() => {
+                goToSlide(currentIndex + 1);
+            }, 5000);
+        }
+
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                stopAutoPlay();
+                goToSlide(currentIndex - 1);
+                startAutoPlay();
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                stopAutoPlay();
+                goToSlide(currentIndex + 1);
+                startAutoPlay();
+            });
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                stopAutoPlay();
+                const slideIndex = parseInt(this.getAttribute('data-slide'));
+                goToSlide(slideIndex);
+                startAutoPlay();
+            });
+        });
+
+        // Démarrer l'auto-play
+        startAutoPlay();
+
+        // Pause au survol
+        carousel.addEventListener('mouseenter', stopAutoPlay);
+        carousel.addEventListener('mouseleave', startAutoPlay);
+    }
+
+    initCarousel();
+    
+    // ========================================
     // BARRE DE RECHERCHE AMÉLIORÉE
     // ========================================
     
@@ -59,24 +138,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // ANIMATION D'AJOUT AU PANIER
     // ========================================
     
-    const addToCartButtons = document.querySelectorAll('.add-cart-btn');
+    const addToCartButtons = document.querySelectorAll('.add-cart-btn, .btn-primary');
     
     addToCartButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Effet confetti
-            createConfetti(e.clientX, e.clientY);
-            
-            // Animation du bouton
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-check"></i> Ajouté !';
-            button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-            
-            // Reset après 2 secondes
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = '';
-            }, 2000);
-        });
+        // Vérifier que c'est bien un bouton d'ajout au panier
+        if (button.textContent.includes('Ajouter au panier') || button.classList.contains('add-cart-btn')) {
+            button.addEventListener('click', function(e) {
+                // Empêcher le comportement par défaut si c'est un formulaire
+                if (button.type !== 'submit') {
+                    e.preventDefault();
+                }
+                
+                // Effet confetti
+                const rect = button.getBoundingClientRect();
+                createConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+                
+                // Animation du bouton
+                const originalText = button.innerHTML;
+                const originalBackground = button.style.background;
+                button.innerHTML = '<i class="fas fa-check"></i> Ajouté !';
+                button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                
+                // Reset après 2 secondes
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = originalBackground;
+                }, 2000);
+                
+                // Mettre à jour le badge du panier
+                updateCartBadge(true);
+                showNotification('Produit ajouté au panier !', 'success');
+            });
+        }
     });
     
     // ========================================
@@ -85,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function createConfetti(x, y) {
         const colors = ['#ff6b35', '#38b6ff', '#f39c12', '#e74c3c', '#2ecc71'];
-        const confettiCount = 30;
+        const confettiCount = 20;
         
         for (let i = 0; i < confettiCount; i++) {
             const confetti = document.createElement('div');
@@ -99,7 +192,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(confetti);
             
             setTimeout(() => {
-                confetti.remove();
+                if (confetti.parentNode) {
+                    confetti.remove();
+                }
             }, 3000);
         }
     }
@@ -136,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 current = target;
                 clearInterval(timer);
             }
-            element.textContent = Math.floor(current);
+            element.textContent = Math.floor(current).toLocaleString();
         }, 20);
     }
     
@@ -144,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const counterObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const target = parseInt(entry.target.dataset.count);
+                const target = parseInt(entry.target.dataset.count) || 0;
                 animateCounter(entry.target, target);
                 counterObserver.unobserve(entry.target);
             }
@@ -157,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // EFFET DE PARTICULES SUR HOVER
     // ========================================
     
-    const productCards = document.querySelectorAll('.modern-product-card');
+    const productCards = document.querySelectorAll('.product-card, .modern-product-card');
     
     productCards.forEach(card => {
         card.addEventListener('mouseenter', function(e) {
@@ -177,7 +272,9 @@ document.addEventListener('DOMContentLoaded', function() {
             element.appendChild(particle);
             
             setTimeout(() => {
-                particle.remove();
+                if (particle.parentNode) {
+                    particle.remove();
+                }
             }, 1000);
         }
     }
@@ -194,12 +291,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             searchTimeout = setTimeout(() => {
                 const query = e.target.value.toLowerCase();
-                const products = document.querySelectorAll('.modern-product-card');
+                const products = document.querySelectorAll('.product-card, .modern-product-card');
                 let visibleCount = 0;
                 
                 products.forEach(product => {
-                    const title = product.querySelector('.product-title').textContent.toLowerCase();
-                    const description = product.querySelector('.product-desc').textContent.toLowerCase();
+                    const title = product.querySelector('h3')?.textContent.toLowerCase() || '';
+                    const description = product.querySelector('.product-description')?.textContent.toLowerCase() || '';
                     
                     if (title.includes(query) || description.includes(query)) {
                         product.style.display = 'block';
@@ -233,9 +330,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Ajouter des tooltips aux icônes
-    const icons = document.querySelectorAll('.category-icon-large, .product-category-badge i');
+    const icons = document.querySelectorAll('.category-icon-large, .product-category-badge i, .feature-box i');
     icons.forEach(icon => {
-        const categoryName = icon.closest('.category-card-image, .product-content')?.querySelector('h3, h4')?.textContent;
+        const categoryName = icon.closest('.category-card-image, .product-content, .feature-box')?.querySelector('h3, h4')?.textContent;
         if (categoryName) {
             createTooltip(icon, categoryName);
         }
@@ -279,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (clearButton) {
             clearButton.addEventListener('click', function() {
                 localStorage.removeItem('lastSearch');
+                searchInput.value = '';
             });
         }
     }
@@ -287,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ANIMATION AU SCROLL (REVEAL)
     // ========================================
     
-    const revealElements = document.querySelectorAll('.modern-product-card, .category-card-image');
+    const revealElements = document.querySelectorAll('.product-card, .category-card-image, .feature-box');
     
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
@@ -354,8 +452,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     
     function showNotification(message, type = 'info') {
+        // Supprimer les notifications existantes
+        document.querySelectorAll('.custom-notification').forEach(notif => notif.remove());
+        
         const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
+        notification.className = `custom-notification notification-${type}`;
         notification.innerHTML = `
             <i class="fas fa-${getNotificationIcon(type)}"></i>
             <span>${message}</span>
@@ -375,13 +476,19 @@ document.addEventListener('DOMContentLoaded', function() {
             gap: 1rem;
             animation: slideInRight 0.5s ease;
             border-left: 4px solid ${getNotificationColor(type)};
+            font-family: "Montserrat", sans-serif;
+            font-weight: 600;
         `;
         
         document.body.appendChild(notification);
         
         setTimeout(() => {
             notification.style.animation = 'slideOutRight 0.5s ease';
-            setTimeout(() => notification.remove(), 500);
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 500);
         }, 3000);
     }
     
@@ -409,9 +516,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // GESTION DU PANIER (MISE À JOUR BADGE)
     // ========================================
     
-    function updateCartBadge() {
+    function updateCartBadge(increment = false) {
         const cartBadge = document.getElementById('cartBadge');
-        const cartCount = localStorage.getItem('cartCount') || 0;
+        let cartCount = parseInt(localStorage.getItem('cartCount') || '0');
+        
+        if (increment) {
+            cartCount++;
+            localStorage.setItem('cartCount', cartCount.toString());
+        }
         
         if (cartBadge) {
             cartBadge.textContent = cartCount;
@@ -421,28 +533,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 cartBadge.classList.add('badge-pulse');
             } else {
                 cartBadge.style.display = 'none';
+                cartBadge.classList.remove('badge-pulse');
             }
         }
     }
     
-    // Écouter les événements d'ajout au panier
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            let cartCount = parseInt(localStorage.getItem('cartCount') || 0);
-            cartCount++;
-            localStorage.setItem('cartCount', cartCount);
-            updateCartBadge();
-            showNotification('Produit ajouté au panier !', 'success');
-        });
-    });
-    
+    // Initialiser le badge du panier
     updateCartBadge();
     
     // ========================================
     // COMPARAISON DE PRODUITS
     // ========================================
     
-    let compareList = [];
+    let compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
     
     function initCompare() {
         const compareButtons = document.querySelectorAll('.compare-btn');
@@ -454,6 +557,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 toggleCompare(productId);
             });
         });
+        
+        updateCompareButton();
     }
     
     function toggleCompare(productId) {
@@ -469,6 +574,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Ajouté à la comparaison', 'success');
         }
         
+        localStorage.setItem('compareList', JSON.stringify(compareList));
         updateCompareButton();
     }
     
@@ -491,7 +597,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const priceMax = document.getElementById('priceMax');
         const priceFilterBtn = document.getElementById('applyPriceFilter');
         
-        if (priceFilterBtn) {
+        if (priceFilterBtn && priceMin && priceMax) {
             priceFilterBtn.addEventListener('click', function() {
                 const min = parseFloat(priceMin.value) || 0;
                 const max = parseFloat(priceMax.value) || Infinity;
@@ -502,18 +608,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function filterByPrice(min, max) {
-        const products = document.querySelectorAll('.modern-product-card');
+        const products = document.querySelectorAll('.product-card, .modern-product-card');
         let visibleCount = 0;
         
         products.forEach(product => {
-            const priceText = product.querySelector('.price-amount').textContent;
-            const price = parseFloat(priceText.replace(/\s/g, ''));
-            
-            if (price >= min && price <= max) {
-                product.style.display = 'block';
-                visibleCount++;
-            } else {
-                product.style.display = 'none';
+            const priceElement = product.querySelector('.price');
+            if (priceElement) {
+                const priceText = priceElement.textContent.replace(/[^\d,]/g, '').replace(',', '.');
+                const price = parseFloat(priceText);
+                
+                if (!isNaN(price) && price >= min && price <= max) {
+                    product.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    product.style.display = 'none';
+                }
             }
         });
         
@@ -548,9 +657,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.addEventListener('keydown', function(e) {
         // Ctrl + K : Focus sur la recherche
-        if (e.ctrlKey && e.key === 'k') {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
-            searchInput?.focus();
+            if (searchInput) {
+                searchInput.focus();
+            }
         }
         
         // Escape : Fermer les modals
@@ -559,7 +670,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // F : Ouvrir/fermer filtres
-        if (e.key === 'f' && !searchInput?.matches(':focus')) {
+        if (e.key === 'f' && !(searchInput && searchInput.matches(':focus'))) {
             toggleFilters();
         }
     });
@@ -616,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tracker les clics sur les produits
     productCards.forEach(card => {
         card.addEventListener('click', function() {
-            const productName = this.querySelector('.product-title').textContent;
+            const productName = this.querySelector('h3')?.textContent || 'Produit sans nom';
             trackEvent('Product', 'Click', productName);
         });
     });
@@ -630,11 +741,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ========================================
+    // GESTION DU DROPDOWN PROFIL
+    // ========================================
+    
+    const profileToggle = document.getElementById('profileToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
+    
+    if (profileToggle && profileDropdown) {
+        profileToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            profileDropdown.classList.toggle('show');
+        });
+        
+        // Fermer le dropdown si on clique ailleurs
+        window.addEventListener('click', function(e) {
+            if (!e.target.matches('.profile-icon') && !e.target.closest('.profile-icon')) {
+                if (profileDropdown && profileDropdown.classList.contains('show')) {
+                    profileDropdown.classList.remove('show');
+                }
+            }
+        });
+    }
+    
+    // ========================================
     // INITIALISATION FINALE
     // ========================================
     
     console.log('🎮 KOITA_STORE initialisé avec succès!');
-    showNotification('Bienvenue sur KOITA_STORE !', 'success');
     
     // Charger les préférences utilisateur
     loadUserPreferences();
@@ -643,6 +776,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const darkMode = localStorage.getItem('darkMode') === 'true';
         if (darkMode) {
             document.body.classList.add('dark-mode');
+        }
+        
+        // Charger d'autres préférences si nécessaire
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
         }
     }
 });
@@ -704,12 +843,12 @@ style.textContent = `
         display: none !important;
     }
     
-    .notification {
+    .custom-notification {
         font-family: "Montserrat", sans-serif;
         font-weight: 600;
     }
     
-    .notification i {
+    .custom-notification i {
         font-size: 1.5rem;
     }
     
@@ -725,5 +864,133 @@ style.textContent = `
     .filters-panel.open {
         transform: translateX(0);
     }
+    
+    .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: var(--primary-orange);
+        animation: confetti-fall 3s linear forwards;
+        z-index: 9999;
+        pointer-events: none;
+    }
+    
+    @keyframes confetti-fall {
+        0% {
+            transform: translateY(-100%) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
+    
+    .product-card-hover-particle {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: var(--primary-orange);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: particles 1s ease-out forwards;
+    }
+    
+    @keyframes particles {
+        0% {
+            opacity: 0;
+            transform: translateY(0) scale(0);
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-20px) scale(1);
+        }
+    }
+    
+    .reveal-on-scroll {
+        opacity: 0;
+        animation: reveal 0.8s ease forwards;
+    }
+    
+    @keyframes reveal {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-orange), var(--secondary-blue));
+        z-index: 9999;
+        transition: width 0.1s ease;
+    }
 `;
 document.head.appendChild(style);
+
+// ========================================
+// FONCTIONS GLOBALES
+// ========================================
+
+// Fonction pour formater les prix
+function formatPrice(price) {
+    return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'XOF'
+    }).format(price).replace('XOF', 'FCFA');
+}
+
+// Fonction pour obtenir le token CSRF (utile pour les requêtes AJAX)
+function getCSRFToken() {
+    const name = 'csrftoken';
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Fonction pour faire des requêtes AJAX
+function makeRequest(url, options = {}) {
+    const defaultOptions = {
+        headers: {
+            'X-CSRFToken': getCSRFToken(),
+            'Content-Type': 'application/json',
+        }
+    };
+    
+    return fetch(url, { ...defaultOptions, ...options })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau');
+            }
+            return response.json();
+        });
+}
+
+// Export des fonctions globales si nécessaire (pour les modules)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        formatPrice,
+        getCSRFToken,
+        makeRequest
+    };
+}

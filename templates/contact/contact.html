@@ -78,9 +78,9 @@
             <i class="fas fa-envelope"></i>
           </div>
           <h3>Email</h3>
-          <p>contact@koitastore.com</p>
-          <p>support@koitastore.com</p>
-          <a href="mailto:contact@koitastore.com" class="btn btn-secondary">
+          <p>koitastore@gmail.com</p>
+          <p>Réponse sous 2 heures</p>
+          <a href="mailto:koitastore@gmail.com" class="btn btn-secondary">
             <i class="fas fa-paper-plane"></i> Envoyer un email
           </a>
         </div>
@@ -91,9 +91,9 @@
             <i class="fas fa-phone-alt"></i>
           </div>
           <h3>Téléphone</h3>
-          <p>+221 XX XXX XX XX</p>
+          <p>+221 78 785 27 11</p>
           <p>Lundi - Dimanche: 8h - 22h</p>
-          <a href="tel:+221XXXXXXXXX" class="btn btn-secondary">
+          <a href="tel:+221787852711" class="btn btn-secondary">
             <i class="fas fa-phone"></i> Appeler
           </a>
         </div>
@@ -104,9 +104,9 @@
             <i class="fab fa-whatsapp"></i>
           </div>
           <h3>WhatsApp</h3>
-          <p>+221 XX XXX XX XX</p>
+          <p>+221 78 785 27 11</p>
           <p>Réponse rapide garantie</p>
-          <a href="https://wa.me/221XXXXXXXXX" target="_blank" class="btn btn-primary">
+          <a href="https://wa.me/221787852711" target="_blank" class="btn btn-primary">
             <i class="fab fa-whatsapp"></i> Chat WhatsApp
           </a>
         </div>
@@ -118,8 +118,8 @@
           </div>
           <h3>Adresse</h3>
           <p>Dakar, Sénégal</p>
-          <p>Quartier [Votre quartier]</p>
-          <a href="#" class="btn btn-secondary">
+          <p>Service en ligne disponible</p>
+          <a href="https://maps.google.com/?q=Dakar,Senegal" target="_blank" class="btn btn-secondary">
             <i class="fas fa-map"></i> Voir sur la carte
           </a>
         </div>
@@ -131,7 +131,7 @@
       <h2>Envoyez-nous un Message</h2>
       
       <div class="contact-form-container">
-        <form class="contact-form" action="/contact/submit/" method="POST">
+        <form class="contact-form" action="/contact/" method="POST">
           {% csrf_token %}
           
           <div class="form-row">
@@ -293,8 +293,9 @@
       </div>
       <div class="footer-section">
         <h3>Contact</h3>
-        <p><i class="fas fa-envelope"></i> contact@koitastore.com</p>
-        <p><i class="fas fa-phone"></i> +221 XX XXX XX XX</p>
+        <p><i class="fas fa-envelope"></i> koitastore@gmail.com</p>
+        <p><i class="fas fa-phone"></i> +221 78 785 27 11</p>
+        <p><i class="fab fa-whatsapp"></i> +221 78 785 27 11</p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -324,6 +325,21 @@
       const btn = this.querySelector('button[type="submit"]');
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
       btn.disabled = true;
+    });
+
+    // Ajout de confirmation avant envoi
+    document.querySelector('.contact-form')?.addEventListener('submit', function(e) {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      
+      if (!name || !email) {
+        e.preventDefault();
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+      }
+      
+      // Si tout est bon, le formulaire s'envoie
+      console.log('Envoi du formulaire de contact...');
     });
   </script>
 </body>

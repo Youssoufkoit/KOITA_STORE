@@ -8,8 +8,78 @@ from .models import Product, Category
 
 def home(request):
     """Page d'accueil avec tous les produits"""
+    # Récupérer les produits actifs
     products = Product.objects.filter(is_active=True).select_related('category')[:8]
-    return render(request, 'store/home.html', {'products': products})
+    
+    # Si aucun produit, créer des exemples temporaires
+    if not products.exists():
+        # Créer une catégorie par défaut si nécessaire
+        default_category, created = Category.objects.get_or_create(
+            name='Recharges Free Fire',
+            defaults={
+                'slug': 'recharges-free-fire',
+                'description': 'Recharges de diamants Free Fire',
+                'is_active': True
+            }
+        )
+        
+        # Produits d'exemple
+        example_products = [
+            {
+                'name': '100 Diamants Free Fire',
+                'description': 'Recharge instantanée de 100 diamants pour Free Fire',
+                'price': 1500,
+                'stock': 10,
+                'category': default_category,
+                'is_active': True
+            },
+            {
+                'name': '310 Diamants Free Fire', 
+                'description': 'Recharge instantanée de 310 diamants + bonus',
+                'price': 4500,
+                'stock': 10,
+                'category': default_category,
+                'is_active': True
+            },
+            {
+                'name': '520 Diamants Free Fire',
+                'description': 'Recharge instantanée de 520 diamants + bonus',
+                'price': 7500, 
+                'stock': 10,
+                'category': default_category,
+                'is_active': True
+            },
+            {
+                'name': '1060 Diamants Free Fire',
+                'description': 'Recharge instantanée de 1060 diamants + bonus',
+                'price': 15000,
+                'stock': 10,
+                'category': default_category,
+                'is_active': True
+            },
+            {
+                'name': '2180 Diamants Free Fire',
+                'description': 'Recharge instantanée de 2180 diamants + bonus',
+                'price': 30000,
+                'stock': 10,
+                'category': default_category,
+                'is_active': True
+            }
+        ]
+        
+        for product_data in example_products:
+            Product.objects.get_or_create(
+                name=product_data['name'],
+                defaults=product_data
+            )
+        
+        # Recharger les produits
+        products = Product.objects.filter(is_active=True).select_related('category')[:8]
+    
+    context = {
+        'products': products,
+    }
+    return render(request, 'store/home.html', context)
 
 
 def recharges(request):
@@ -162,27 +232,35 @@ def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
+        phone = request.POST.get('phone', 'Non renseigné')
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         
         # Envoyer l'email
         full_message = f"""
-Message de {name} ({email})
+Nouveau message de contact - KOITA_STORE
+
+Nom: {name}
+Email: {email}
+Téléphone: {phone}
 Sujet: {subject}
 
 Message:
 {message}
+
+---
+Cet email a été envoyé depuis le formulaire de contact de KOITA_STORE
         """
         
         try:
             send_mail(
-                subject=f"Contact KOITA_STORE: {subject}",
+                subject=f"📧 Contact KOITA_STORE: {subject}",
                 message=full_message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.DEFAULT_FROM_EMAIL],
+                recipient_list=['koitastore@gmail.com'],  # Votre email
                 fail_silently=False,
             )
-            messages.success(request, '✅ Votre message a été envoyé avec succès!')
+            messages.success(request, '✅ Votre message a été envoyé avec succès! Nous vous répondrons dans les plus brefs délais.')
         except Exception as e:
             messages.error(request, f'❌ Erreur lors de l\'envoi du message: {str(e)}')
     
