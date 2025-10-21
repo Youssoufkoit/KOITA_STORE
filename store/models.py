@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
-
 class Category(models.Model):
     """Modèle pour les catégories de produits avec image"""
     name = models.CharField(max_length=100, verbose_name="Nom de la catégorie")
@@ -244,6 +243,7 @@ class Product(models.Model):
         
         return features
 
+
 class Order(models.Model):
     """Modèle de commande"""
     STATUS_CHOICES = [
@@ -253,9 +253,15 @@ class Order(models.Model):
         ('cancelled', 'Annulée'),
     ]
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_orders')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Montant total')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    free_fire_id = models.CharField(
+        max_length=50, 
+        blank=True, 
+        verbose_name='ID Free Fire',
+        help_text='ID Free Fire du joueur pour les recharges automatiques'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -266,12 +272,24 @@ class Order(models.Model):
     
     def __str__(self):
         return f"Commande #{self.id} - {self.user.username}"
+    
+    def contains_free_fire_diamonds(self):
+        """Vérifie si la commande contient des produits Free Fire Diamant"""
+        return self.order_items.filter(
+            product__category__name__icontains='free fire diamant'
+        ).exists()
+    
+    def contains_diamond_codes(self):
+        """Vérifie si la commande contient des codes diamants"""
+        return self.order_items.filter(
+            product__category__name__icontains='code diamant'
+        ).exists()
 
 
 class OrderItem(models.Model):
     """Articles d'une commande"""
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     redeem_code = models.CharField(
@@ -300,12 +318,12 @@ class Notification(models.Model):
         ('warning', 'Avertissement'),
     ]
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_notifications')
     notification_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='info')
     title = models.CharField(max_length=200)
     message = models.TextField()
     redeem_code = models.CharField(max_length=50, blank=True)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True, related_name='order_notifications')
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     

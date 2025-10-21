@@ -7,9 +7,10 @@ Instructions rapides :
   2. pip install -r requirements.txt
   3. python manage.py migrate
   4. python manage.py createsuperuser  # pour toi (admin)
-  5. python manage.py runserver
+  5.
 Remplace SECRET_KEY et DEBUG dans koita_store/settings.py ou utilise un .env
           # envoyer sur GitHub
 git add .
 git commit -m "Mise à jour du projet"
 git push
+ python manage.py runserver

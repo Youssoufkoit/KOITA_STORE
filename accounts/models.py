@@ -22,14 +22,14 @@ class Profile(models.Model):
     
     def get_total_orders(self):
         """Retourne le nombre total de commandes"""
-        return self.user.orders.count() if hasattr(self.user, 'orders') else 0
+        return self.user.user_orders.count() if hasattr(self.user, 'user_orders') else 0  # CORRIGÉ: user_orders
     
     def get_total_spent(self):
         """Retourne le montant total dépensé"""
         from django.db.models import Sum
-        if not hasattr(self.user, 'orders'):
+        if not hasattr(self.user, 'user_orders'):  # CORRIGÉ: user_orders
             return 0
-        total = self.user.orders.filter(
+        total = self.user.user_orders.filter(  # CORRIGÉ: user_orders
             status__in=['completed', 'processing']
         ).aggregate(Sum('total_amount'))['total_amount__sum']
         return total if total else 0

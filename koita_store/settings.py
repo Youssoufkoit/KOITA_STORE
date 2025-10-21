@@ -110,3 +110,57 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'koitastore@gmail.com'  # Votre email
 EMAIL_HOST_PASSWORD = 'votre-mot-de-passe-application'  # Mot de passe d'application Gmail
 DEFAULT_FROM_EMAIL = 'KOITA_STORE <koitastore@gmail.com>'
+
+# Configuration des logs
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'koita_store.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'cart': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'store': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'accounts': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# Créer le dossier logs s'il n'existe pas
+os.makedirs(BASE_DIR / 'logs', exist_ok=True)

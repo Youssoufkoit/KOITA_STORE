@@ -65,10 +65,10 @@ def profile_view(request):
     user = request.user
     profile = user.profile
     
-    # Récupérer les commandes de l'utilisateur (adapter selon votre modèle)
+    # Récupérer les commandes de l'utilisateur (CORRIGÉ)
     orders = []
-    if hasattr(user, 'orders'):
-        orders = user.orders.all().order_by('-created_at')[:10]  # 10 dernières commandes
+    if hasattr(user, 'user_orders'):
+        orders = user.user_orders.all().order_by('-created_at')[:10]  # CORRIGÉ: user_orders
     
     # Calculer les statistiques
     total_orders = profile.get_total_orders()
@@ -223,8 +223,8 @@ def edit_profile(request):
 def order_history(request):
     """Vue pour l'historique complet des commandes"""
     orders = []
-    if hasattr(request.user, 'orders'):
-        orders = request.user.orders.all().order_by('-created_at')
+    if hasattr(request.user, 'user_orders'):  # CORRIGÉ: user_orders
+        orders = request.user.user_orders.all().order_by('-created_at')  # CORRIGÉ: user_orders
     
     # Filtrer par statut si demandé
     status_filter = request.GET.get('status')
@@ -295,10 +295,23 @@ def test_profile(request):
     }
     
     return render(request, 'accounts/test_profile.html', context)
-# accounts/views.py - AJOUTER CETTE FONCTION
 
-from store.models import Notification
 
+# ============================================
+# VUES DE NOTIFICATIONS
+# ============================================
+
+@login_required
+def notifications_view(request):
+    """Vue pour afficher toutes les notifications"""
+    notifications = request.user.user_notifications.all().order_by('-created_at')  # CORRIGÉ: user_notifications
+    unread_count = notifications.filter(is_read=False).count()
+    
+    context = {
+        'notifications': notifications,
+        'unread_count': unread_count,
+    }
+    return render(request, 'accounts/notifications.html', context)
 
 
 @login_required
@@ -314,7 +327,7 @@ def mark_notification_read(request, notification_id):
 @login_required
 def mark_all_notifications_read(request):
     """Marquer toutes les notifications comme lues"""
-    request.user.notifications.filter(is_read=False).update(is_read=True)
+    request.user.user_notifications.filter(is_read=False).update(is_read=True)  # CORRIGÉ: user_notifications
     messages.success(request, '✅ Toutes les notifications ont été marquées comme lues')
     return redirect('accounts:notifications')
 
@@ -327,14 +340,3 @@ def delete_notification(request, notification_id):
         notification.delete()
         messages.success(request, '✅ Notification supprimée')
     return redirect('accounts:notifications')
-@login_required
-def notifications_view(request):
-    """Vue pour afficher toutes les notifications"""
-    notifications = request.user.notifications.all().order_by('-created_at')
-    unread_count = notifications.filter(is_read=False).count()
-    
-    context = {
-        'notifications': notifications,
-        'unread_count': unread_count,
-    }
-    return render(request, 'accounts/notifications.html', context)

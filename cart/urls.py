@@ -12,4 +12,3 @@ urlpatterns = [
     path('order-success/<int:order_id>/', views.order_success, name='order_success'),
     path('process-order/', views.process_order, name='process_order'),
 ]
- 

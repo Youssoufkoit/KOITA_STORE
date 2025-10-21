@@ -2,6 +2,15 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Category, Product, Order, OrderItem, Notification, RechargeProduct, AccountProduct
 
+# ============================================
+# INLINES
+# ============================================
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ['product', 'quantity', 'price', 'redeem_code']
+    can_delete = False
 
 # ============================================
 # ADMIN DES CATÉGORIES
@@ -55,6 +64,60 @@ class CategoryAdmin(admin.ModelAdmin):
         return format_html('<span style="color: #999;">Aucune image</span>')
     image_preview.short_description = 'Aperçu Image'
 
+# ============================================
+# ADMIN DES PRODUITS
+# ============================================
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'price', 'stock', 'is_redeem_product', 'redeem_code_used']
+    list_filter = ['category', 'is_redeem_product', 'is_active', 'is_featured']
+    search_fields = ['name', 'description', 'redeem_code']
+    
+    fieldsets = (
+        ('Informations de base', {
+            'fields': ('name', 'category', 'description', 'price', 'stock', 'image')
+        }),
+        ('Options', {
+            'fields': ('is_active', 'is_featured')
+        }),
+        ('REDEEM Code', {
+            'fields': ('is_redeem_product', 'redeem_code', 'redeem_code_used'),
+            'description': 'Section réservée aux produits de type REDEEM Code'
+        }),
+    )
+
+# ============================================
+# ADMIN DES COMMANDES
+# ============================================
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'total_amount', 'free_fire_id', 'status', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['user__username', 'user__email', 'free_fire_id']
+    readonly_fields = ['created_at', 'updated_at']
+    inlines = [OrderItemInline]
+    
+    fieldsets = (
+        ('Informations Commande', {
+            'fields': ('user', 'total_amount', 'status', 'free_fire_id')
+        }),
+        ('Dates', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+# ============================================
+# ADMIN DES NOTIFICATIONS
+# ============================================
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'notification_type', 'is_read', 'created_at']
+    list_filter = ['notification_type', 'is_read', 'created_at']
+    search_fields = ['user__username', 'title', 'message']
+    readonly_fields = ['created_at']
 
 # ============================================
 # ADMIN DES RECHARGES AVEC SUPPORT REDEEM
@@ -147,7 +210,6 @@ class RechargeProductAdmin(admin.ModelAdmin):
         self.message_user(request, f'✅ Stock augmenté de 10 unités pour {queryset.count()} produit(s).')
     add_stock.short_description = "📦 Ajouter +10 au stock"
 
-
 # ============================================
 # ADMIN DES COMPTES
 # ============================================
@@ -161,7 +223,6 @@ class AccountProductAdmin(admin.ModelAdmin):
     list_filter = ['category', 'is_active', 'is_featured', 'stock']
     search_fields = ['name', 'description']
     
-    # AJOUTEZ CES MÉTHODES MANQUANTES :
     def price_display(self, obj):
         price_formatted = f"{float(obj.price):,.0f}"
         return format_html(
@@ -284,44 +345,6 @@ class AccountProductAdmin(admin.ModelAdmin):
         self.message_user(request, f'{updated} compte(s) retiré(s) de la vedette.')
     unmark_as_featured.short_description = "Retirer de la VEDETTE"
 
-
-# ============================================
-# ADMIN DES COMMANDES
-# ============================================
-
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
-    extra = 0
-    readonly_fields = ['product', 'quantity', 'price', 'redeem_code']
-    can_delete = False
-
-
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'total_amount', 'status', 'created_at']
-    list_filter = ['status', 'created_at']
-    search_fields = ['user__username', 'user__email']
-    readonly_fields = ['created_at', 'updated_at']
-    inlines = [OrderItemInline]
-    
-    fieldsets = (
-        ('Informations Commande', {
-            'fields': ('user', 'total_amount', 'status')
-        }),
-        ('Dates', {
-            'fields': ('created_at', 'updated_at')
-        }),
-    )
-
-
-@admin.register(Notification)
-class NotificationAdmin(admin.ModelAdmin):
-    list_display = ['title', 'user', 'notification_type', 'is_read', 'created_at']
-    list_filter = ['notification_type', 'is_read', 'created_at']
-    search_fields = ['user__username', 'title', 'message']
-    readonly_fields = ['created_at']
-
-
 # ============================================
 # PERSONNALISATION DU SITE ADMIN
 # ============================================
@@ -329,22 +352,3 @@ class NotificationAdmin(admin.ModelAdmin):
 admin.site.site_header = "🎮 KOITA_STORE - Administration"
 admin.site.site_title = "KOITA_STORE Admin"
 admin.site.index_title = "📊 Tableau de bord"
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price', 'stock', 'is_redeem_product', 'redeem_code_used']
-    list_filter = ['category', 'is_redeem_product', 'is_active', 'is_featured']
-    search_fields = ['name', 'description', 'redeem_code']
-    
-    fieldsets = (
-        ('Informations de base', {
-            'fields': ('name', 'category', 'description', 'price', 'stock', 'image')
-        }),
-        ('Options', {
-            'fields': ('is_active', 'is_featured')
-        }),
-        ('REDEEM Code', {
-            'fields': ('is_redeem_product', 'redeem_code', 'redeem_code_used'),
-            'description': 'Section réservée aux produits de type REDEEM Code'
-        }),
-        # ... autres fieldsets existants
-    )

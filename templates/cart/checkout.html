@@ -405,3 +405,39 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
+<!-- Ajouter cette section après "Informations de livraison" -->
+
+{% if requires_free_fire_id %}
+<div class="free-fire-id-section">
+    <h3><i class="fas fa-gamepad"></i> ID Free Fire Requis</h3>
+    
+    <div class="free-fire-notice">
+        <i class="fas fa-info-circle"></i>
+        <p>Pour les recharges automatiques, votre ID Free Fire est obligatoire</p>
+    </div>
+    
+    <form method="post" class="free-fire-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="free_fire_id">
+                <i class="fas fa-id-card"></i> Votre ID Free Fire
+            </label>
+            <input type="text" 
+                   id="free_fire_id" 
+                   name="free_fire_id" 
+                   value="{{ free_fire_id }}"
+                   placeholder="Exemple: 1234567890" 
+                   required
+                   pattern="[0-9]+"
+                   title="Seuls les chiffres sont autorisés">
+            <small class="form-help">
+                ⓘ Trouvez votre ID dans Free Fire → Profil → Section "Base"
+            </small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check"></i> Confirmer l'ID et Payer
+        </button>
+    </form>
+</div>
+{% endif %}
