@@ -242,6 +242,12 @@ class Product(models.Model):
             features.append(f"Win rate: {self.win_rate}%")
         
         return features
+    
+    def requires_free_fire_id(self):
+        """Vérifie si le produit nécessite un ID Free Fire (pour recharges automatiques)"""
+        if self.category:
+            return 'free fire diamant' in self.category.name.lower()
+        return False
 
 
 class Order(models.Model):

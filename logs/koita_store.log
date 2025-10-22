@@ -5,3 +5,130 @@ INFO 2025-10-21 15:32:09,893 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\koit
 INFO 2025-10-21 15:32:10,855 autoreload Watching for file changes with StatReloader
 INFO 2025-10-21 15:32:10,861 autoreload Watching for file changes with StatReloader
 INFO 2025-10-21 15:46:17,139 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 15:46:31,507 basehttp "GET / HTTP/1.1" 200 16621
+INFO 2025-10-21 15:46:31,597 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+WARNING 2025-10-21 15:46:31,608 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-21 15:46:31,723 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-21 15:46:40,464 basehttp "GET /recharges/ HTTP/1.1" 200 36720
+INFO 2025-10-21 15:46:44,417 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35626
+INFO 2025-10-21 15:46:46,979 basehttp "GET /contact/ HTTP/1.1" 200 11726
+INFO 2025-10-21 15:48:11,418 basehttp "GET /contact/ HTTP/1.1" 200 11726
+INFO 2025-10-21 15:48:14,651 basehttp "GET / HTTP/1.1" 200 16621
+WARNING 2025-10-21 15:48:14,712 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-21 15:57:44,993 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 15:57:49,088 basehttp "GET / HTTP/1.1" 200 16621
+WARNING 2025-10-21 15:57:49,203 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-21 15:57:49,340 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-21 15:57:59,866 basehttp "GET /recharges/ HTTP/1.1" 200 36720
+INFO 2025-10-21 15:58:03,883 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35626
+INFO 2025-10-21 15:58:11,833 basehttp "GET /contact/ HTTP/1.1" 200 11726
+INFO 2025-10-21 20:05:42,376 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:42,417 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:42,424 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:43,995 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:43,996 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:43,997 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:47,919 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:47,995 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:48,006 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:49,043 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:49,046 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:49,047 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:54,052 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:54,121 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:54,155 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:05:55,391 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:55,391 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:05:55,430 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:06:08,395 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:06:08,431 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:06:08,433 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-21 20:06:09,621 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:06:09,641 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:06:09,644 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:06:32,994 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-21 20:06:32,997 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-21 20:06:33,009 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-21 20:06:34,224 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:06:34,233 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:06:34,234 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:05,227 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:05,335 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:05,357 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:06,623 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:06,656 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:06,682 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:11,299 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:11,352 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:11,364 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:12,521 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:12,545 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:16,015 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:17,044 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:17,094 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\urls.py changed, reloading.
+INFO 2025-10-21 20:08:17,293 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:18,214 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:08:18,233 autoreload Watching for file changes with StatReloader
+INFO 2025-10-21 20:14:14,953 basehttp "GET / HTTP/1.1" 200 16621
+WARNING 2025-10-21 20:14:15,026 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-21 20:14:15,115 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-21 20:14:15,167 basehttp "GET /static/css/main.css HTTP/1.1" 200 48562
+INFO 2025-10-21 20:14:15,467 basehttp "GET /static/images/favicon.ico HTTP/1.1" 304 0
+INFO 2025-10-21 20:14:19,158 basehttp "GET / HTTP/1.1" 200 16621
+INFO 2025-10-21 20:14:19,225 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+WARNING 2025-10-21 20:14:19,234 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-21 20:14:22,043 basehttp "GET /recharges/ HTTP/1.1" 200 36720
+INFO 2025-10-21 20:14:22,096 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-21 20:14:26,550 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35626
+INFO 2025-10-21 20:14:26,609 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-21 20:14:29,158 basehttp "GET /contact/ HTTP/1.1" 200 11726
+INFO 2025-10-21 20:14:29,207 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 01:30:16,451 autoreload Watching for file changes with StatReloader
+WARNING 2025-10-22 01:30:28,004 base Session data corrupted
+INFO 2025-10-22 01:30:28,154 basehttp "GET / HTTP/1.1" 200 16621
+INFO 2025-10-22 01:30:28,250 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+WARNING 2025-10-22 01:30:28,265 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 01:30:28,449 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 01:30:34,641 base Session data corrupted
+INFO 2025-10-22 01:30:34,717 basehttp "GET /recharges/ HTTP/1.1" 200 36720
+INFO 2025-10-22 01:30:34,869 basehttp "GET /static/images/002.jpg HTTP/1.1" 304 0
+WARNING 2025-10-22 01:30:38,955 base Session data corrupted
+INFO 2025-10-22 01:30:39,015 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35626
+WARNING 2025-10-22 01:30:44,478 base Session data corrupted
+INFO 2025-10-22 01:30:44,495 basehttp "GET /contact/ HTTP/1.1" 200 11726
+WARNING 2025-10-22 01:30:47,691 base Session data corrupted
+INFO 2025-10-22 01:30:47,782 basehttp "GET /cart/ HTTP/1.1" 200 9130
+WARNING 2025-10-22 01:30:49,995 base Session data corrupted
+INFO 2025-10-22 01:30:50,080 basehttp "GET /recharges/ HTTP/1.1" 200 36720
+WARNING 2025-10-22 01:30:56,153 base Session data corrupted
+INFO 2025-10-22 01:30:56,178 basehttp "GET /cart/ HTTP/1.1" 200 9130
+WARNING 2025-10-22 01:30:58,266 base Session data corrupted
+INFO 2025-10-22 01:30:58,305 basehttp "GET /recharges/ HTTP/1.1" 200 36720
+WARNING 2025-10-22 01:31:00,820 base Session data corrupted
+INFO 2025-10-22 01:31:00,895 basehttp "GET /recharges/?category=recharges-free-fire HTTP/1.1" 200 35149
+WARNING 2025-10-22 01:31:04,036 base Session data corrupted
+INFO 2025-10-22 01:31:04,079 basehttp "POST /cart/add/4/ HTTP/1.1" 302 0
+WARNING 2025-10-22 01:31:04,119 base Session data corrupted
+INFO 2025-10-22 01:31:04,165 basehttp "GET /cart/ HTTP/1.1" 200 12295
+WARNING 2025-10-22 01:31:04,277 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 01:31:07,818 base Session data corrupted
+INFO 2025-10-22 01:31:07,986 basehttp "GET /accounts/login/?next=/cart/checkout/ HTTP/1.1" 200 4915
+WARNING 2025-10-22 01:31:22,965 base Session data corrupted
+INFO 2025-10-22 01:31:23,038 basehttp "POST /accounts/login/?next=/cart/checkout/ HTTP/1.1" 302 0
+INFO 2025-10-22 01:31:23,078 basehttp "GET /cart/checkout/ HTTP/1.1" 302 0
+INFO 2025-10-22 01:31:23,131 basehttp "GET /cart/ HTTP/1.1" 200 9402
+INFO 2025-10-22 01:31:26,157 basehttp "GET / HTTP/1.1" 200 16893
+WARNING 2025-10-22 01:31:26,367 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 01:31:28,819 basehttp "POST /cart/add/4/ HTTP/1.1" 302 0
+INFO 2025-10-22 01:31:28,910 basehttp "GET /cart/ HTTP/1.1" 200 11865
+WARNING 2025-10-22 01:31:29,021 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 01:31:32,136 basehttp "GET /cart/checkout/ HTTP/1.1" 200 14771
+WARNING 2025-10-22 01:31:32,305 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 01:31:42,318 basehttp "POST /cart/process-order/ HTTP/1.1" 302 0
+INFO 2025-10-22 01:31:42,421 basehttp "GET /cart/order-success/1/ HTTP/1.1" 200 7605
+INFO 2025-10-22 01:31:55,691 basehttp "GET /accounts/notifications/ HTTP/1.1" 200 10648
+INFO 2025-10-22 01:32:00,448 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 01:32:00,654 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 01:32:11,923 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 01:32:12,070 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:50:10,102 autoreload Watching for file changes with StatReloader

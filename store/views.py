@@ -1,10 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
-from .models import Product, Category
+from django.contrib.auth.decorators import login_required
+from .models import Product, Category, Order, OrderItem, Notification
+from scripts.shop2game_redeem import Shop2GameRedeemer
+import logging
 
+logger = logging.getLogger(__name__)
 
 def home(request):
     """Page d'accueil avec tous les produits"""
@@ -265,3 +269,139 @@ Cet email a été envoyé depuis le formulaire de contact de KOITA_STORE
             messages.error(request, f'❌ Erreur lors de l\'envoi du message: {str(e)}')
     
     return render(request, 'contact/contact.html')
+
+
+@login_required
+def process_order(request, order_id):
+    """Traiter la commande après paiement - NOUVELLE FONCTION"""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    
+    for order_item in order.order_items.all():
+        product = order_item.product
+        
+        # Vérifier si c'est un produit Free Fire Diamant (recharge automatique)
+        if product.requires_free_fire_id():
+            # Utiliser le script d'automatisation Shop2Game
+            redeemer = Shop2GameRedeemer()
+            success, message = redeemer.redeem_diamonds(
+                free_fire_id=order.free_fire_id,
+                redeem_code=product.redeem_code
+            )
+            
+            if success:
+                # Marquer le code comme utilisé
+                product.redeem_code_used = True
+                product.save()
+                
+                # Créer une notification de succès
+                Notification.objects.create(
+                    user=request.user,
+                    notification_type='redeem',
+                    title='✅ Recharge Free Fire Réussie',
+                    message=f'Vos {product.name} ont été ajoutés à votre compte Free Fire (ID: {order.free_fire_id})',
+                    redeem_code=product.redeem_code,
+                    order=order
+                )
+                
+                logger.info(f"Recharge automatique réussie pour {request.user.username}")
+                
+            else:
+                # Si l'automatisation échoue, envoyer le code manuellement
+                Notification.objects.create(
+                    user=request.user,
+                    notification_type='redeem',
+                    title='🎁 Code REDEEM Free Fire',
+                    message=f'Voici votre code REDEEM pour {product.name}. Utilisez-le sur shop2game.com',
+                    redeem_code=product.redeem_code,
+                    order=order
+                )
+                
+                logger.warning(f"Recharge automatique échouée, envoi manuel pour {request.user.username}")
+        
+        # Pour les codes diamants (envoi simple du code)
+        elif 'code diamant' in product.category.name.lower() and product.is_redeem_product:
+            Notification.objects.create(
+                user=request.user,
+                notification_type='redeem', 
+                title='🎁 Code Diamant Free Fire',
+                message=f'Voici votre code REDEEM pour {product.name}',
+                redeem_code=product.redeem_code,
+                order=order
+            )
+            
+            # Marquer le code comme utilisé
+            product.redeem_code_used = True
+            product.save()
+    
+    # Marquer la commande comme complétée
+    order.status = 'completed'
+    order.save()
+    
+    return redirect('cart:order_success', order_id=order.id)
+
+
+def get_cart_items(request):
+    """Fonction utilitaire pour récupérer les items du panier"""
+    # Cette fonction simule la récupération des items du panier
+    # À adapter selon votre implémentation du panier
+    if hasattr(request, 'cart_items'):
+        return request.cart_items
+    return []
+
+
+def checkout(request):
+    """Vue checkout mise à jour avec ID Free Fire"""
+    cart_items = get_cart_items(request)
+    
+    # Vérifier si un ID Free Fire est requis
+    requires_free_fire_id = any(
+        item.product.requires_free_fire_id() for item in cart_items
+    )
+    
+    if request.method == 'POST':
+        # Traitement du formulaire de checkout
+        free_fire_id = request.POST.get('free_fire_id', '').strip()
+        payment_method = request.POST.get('payment_method', 'wave')
+        
+        # Validation
+        if requires_free_fire_id and not free_fire_id:
+            messages.error(request, '❌ L\'ID Free Fire est requis pour les recharges automatiques.')
+            return render(request, 'cart/checkout.html', {
+                'cart_items': cart_items,
+                'requires_free_fire_id': requires_free_fire_id,
+                'free_fire_id': free_fire_id
+            })
+        
+        # Créer la commande
+        try:
+            total_amount = sum(item.total_price() for item in cart_items)
+            
+            order = Order.objects.create(
+                user=request.user,
+                total_amount=total_amount,
+                free_fire_id=free_fire_id if requires_free_fire_id else '',
+                status='pending'
+            )
+            
+            # Créer les OrderItems
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.product.price,
+                    redeem_code=item.product.redeem_code if item.product.is_redeem_product else ''
+                )
+            
+            # Rediriger vers le traitement de la commande
+            return redirect('store:process_order', order_id=order.id)
+            
+        except Exception as e:
+            logger.error(f"Erreur lors de la création de commande: {str(e)}")
+            messages.error(request, '❌ Erreur lors de la création de la commande.')
+    
+    context = {
+        'cart_items': cart_items,
+        'requires_free_fire_id': requires_free_fire_id,
+    }
+    return render(request, 'cart/checkout.html', context)
