@@ -40,6 +40,7 @@ def cart_view(request):
         'cart_total': cart_total,
     }
     return render(request, 'cart/cart.html', context)
+
 def add_to_cart(request, product_id):
     """Ajoute un produit au panier avec vérification du stock et de l'ID joueur"""
     if request.method == 'POST':
@@ -51,6 +52,7 @@ def add_to_cart(request, product_id):
             return redirect('store:home')
         
         # Vérifier l'ID joueur si requis
+        player_id = ''
         if product.requires_player_id:
             player_id = request.POST.get('player_id', '').strip()
             if not player_id:
@@ -82,7 +84,6 @@ def add_to_cart(request, product_id):
         
         # Stocker l'ID joueur dans la session si fourni
         if product.requires_player_id and player_id:
-            # Créer une clé unique pour ce produit dans le panier
             player_id_key = f'player_id_{product_id}'
             request.session[player_id_key] = player_id
             logger.info(f"ID joueur stocké: {player_id} pour le produit {product.name}")
@@ -132,13 +133,20 @@ def checkout(request):
         messages.warning(request, 'Votre panier est vide !')
         return redirect('cart:cart_view')
     
-    # Vérifier si des produits nécessitent l'ID Free Fire
+    # Vérifier si des produits nécessitent l'ID Free Fire (UNIQUEMENT pour recharges automatiques)
     requires_free_fire_id = any(
         item.product.category and 
-        ('free fire diamant' in item.product.category.name.lower() or 
-         item.product.category.slug == 'free-fire-diamant')
+        ('free fire diamant' in item.product.category.name.lower())
         for item in cart_items
     )
+    
+    # Récupérer les IDs joueur déjà saisis depuis la session et les attacher aux items
+    for item in cart_items:
+        if item.product.requires_player_id:
+            player_id_key = f'player_id_{item.product.id}'
+            item.saved_player_id = request.session.get(player_id_key, '')
+        else:
+            item.saved_player_id = ''
     
     cart_total = sum(item.total_price() for item in cart_items)
     
@@ -336,7 +344,7 @@ def handle_manual_fallback(user, product, redeem_code, order, free_fire_id, erro
             f'Erreur fallback: {str(fallback_error)}\n\n'
             f'Action requise IMMÉDIATEMENT!',
             settings.DEFAULT_FROM_EMAIL,
-            ['admin@koitastore.com'],  # Remplacez par votre email admin
+            ['admin@koitastore.com'],
             fail_silently=False,
         )
 
@@ -463,3 +471,49 @@ def process_order(request):
     
     logger.warning("❌ Méthode non POST pour process_order")
     return redirect('cart:checkout')
+@login_required
+def checkout(request):
+    """Page de validation avec demande d'ID Free Fire si nécessaire"""
+    cart = get_or_create_cart(request)
+    cart_items = cart.items.all()
+    
+    if not cart_items:
+        messages.warning(request, 'Votre panier est vide !')
+        return redirect('cart:cart_view')
+    
+    # Vérifier si des produits nécessitent l'ID Free Fire (UNIQUEMENT pour recharges automatiques)
+    requires_free_fire_id = any(
+        item.product.category and 
+        ('free fire diamant' in item.product.category.name.lower())
+        for item in cart_items
+    )
+    
+    # Récupérer les IDs joueur déjà saisis depuis la session et les attacher aux items
+    for item in cart_items:
+        if item.product.requires_player_id:
+            player_id_key = f'player_id_{item.product.id}'
+            item.saved_player_id = request.session.get(player_id_key, '')
+        else:
+            item.saved_player_id = ''
+    
+    cart_total = sum(item.total_price() for item in cart_items)
+    
+    if request.method == 'POST' and requires_free_fire_id:
+        free_fire_id = request.POST.get('free_fire_id', '').strip()
+        payment_method = request.POST.get('payment_method', 'wave')  # Récupérer la méthode de paiement
+        
+        if not free_fire_id:
+            messages.error(request, '❌ ID Free Fire requis pour les recharges automatiques!')
+        else:
+            # Stocker l'ID et la méthode de paiement dans la session
+            request.session['free_fire_id'] = free_fire_id
+            request.session['payment_method'] = payment_method
+            return redirect('cart:process_order')
+    
+    context = {
+        'cart_items': cart_items,
+        'cart_total': cart_total,
+        'requires_free_fire_id': requires_free_fire_id,
+        'free_fire_id': request.session.get('free_fire_id', ''),
+    }
+    return render(request, 'cart/checkout.html', context)

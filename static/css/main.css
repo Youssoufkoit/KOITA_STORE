@@ -2422,3 +2422,75 @@ textarea:focus-visible {
     font-size: 0.9rem;
     font-style: italic;
 }
+/* Styles supplémentaires pour le checkout */
+.checkout-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.checkout-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.checkout-header h1 {
+    color: var(--dark-gray);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 2px;
+}
+
+.checkout-steps {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #999;
+    font-weight: 600;
+}
+
+.step.active {
+    color: var(--primary-orange);
+}
+
+.step span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    font-size: 0.9rem;
+}
+
+.step.active span {
+    background: var(--primary-orange);
+    color: var(--white);
+}
+
+.checkout-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .checkout-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .checkout-steps {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+}

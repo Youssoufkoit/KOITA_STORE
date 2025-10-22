@@ -1684,3 +1684,93 @@ style.textContent = `
 document.head.appendChild(style);
 </script>
 {% endblock %}
+<!-- Section ID Joueur si requis -->
+{% if product.requires_player_id %}
+<div class="player-id-section">
+    <h3><i class="fas fa-user"></i> ID Joueur Requis</h3>
+    <div class="player-id-notice">
+        <i class="fas fa-info-circle"></i>
+        <p>Ce produit nécessite votre ID joueur pour la livraison.</p>
+    </div>
+    
+    <form method="POST" action="{% url 'cart:add_to_cart' product.id %}" class="player-id-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="player_id">
+                <i class="fas fa-id-card"></i> Votre ID Joueur
+            </label>
+            <input type="text" 
+                   id="player_id" 
+                   name="player_id" 
+                   placeholder="Ex: 1234567890" 
+                   required
+                   pattern="[0-9]+"
+                   title="L'ID joueur doit contenir uniquement des chiffres">
+            <small class="form-help">Votre ID joueur se trouve dans les paramètres du jeu</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-large">
+            <i class="fas fa-cart-plus"></i> Ajouter au panier avec cet ID
+        </button>
+    </form>
+</div>
+
+<style>
+.player-id-section {
+    background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+    border: 2px solid #4caf50;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.player-id-notice {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #4caf50;
+}
+
+.player-id-notice i {
+    color: #4caf50;
+    font-size: 1.2rem;
+}
+
+.player-id-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.player-id-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2e7d32;
+}
+
+.player-id-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.player-id-form input:focus {
+    outline: none;
+    border-color: #2e7d32;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+</style>
+{% else %}
+<!-- Bouton d'ajout normal si pas d'ID requis -->
+<form method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-large">
+        <i class="fas fa-cart-plus"></i> Ajouter au panier
+    </button>
+</form>
+{% endif %}
