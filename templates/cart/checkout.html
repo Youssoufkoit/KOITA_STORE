@@ -51,7 +51,12 @@
                 </div>
                 {% endif %}
             </div>
-            
+           <!-- Dans templates/cart/checkout.html ligne 54 -->
+{% if requires_free_fire_id %}
+<div class="free-fire-id-section">
+    <!-- Formulaire ID -->
+</div>
+{% endif %} 
             <div class="delivery-note">
                 <i class="fas fa-info-circle"></i>
                 <p>Les codes REDEEM seront envoyés par email et disponibles dans vos notifications après paiement.</p>

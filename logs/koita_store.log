@@ -132,3 +132,290 @@ WARNING 2025-10-22 01:32:00,654 basehttp "GET /static/images/default-product.jpg
 INFO 2025-10-22 01:32:11,923 basehttp "GET / HTTP/1.1" 200 16892
 WARNING 2025-10-22 01:32:12,070 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
 INFO 2025-10-22 12:50:10,102 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 12:50:19,084 basehttp "GET / HTTP/1.1" 200 16892
+INFO 2025-10-22 12:50:19,156 basehttp "GET /static/images/logo.png HTTP/1.1" 304 0
+WARNING 2025-10-22 12:50:19,201 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 12:50:19,323 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:50:19,347 basehttp "GET /static/css/main.css HTTP/1.1" 200 48562
+INFO 2025-10-22 12:50:24,179 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 12:50:24,237 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 12:50:24,267 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:50:27,120 basehttp "GET /recharges/ HTTP/1.1" 200 36991
+INFO 2025-10-22 12:50:32,696 basehttp "POST /cart/add/3/ HTTP/1.1" 302 0
+INFO 2025-10-22 12:50:32,764 basehttp "GET /cart/ HTTP/1.1" 200 11861
+WARNING 2025-10-22 12:50:32,840 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:50:35,375 basehttp "GET /cart/checkout/ HTTP/1.1" 200 14767
+WARNING 2025-10-22 12:50:35,445 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:50:45,765 basehttp "GET /recharges/ HTTP/1.1" 200 36991
+INFO 2025-10-22 12:50:45,814 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:51:26,962 basehttp "GET /recharges/?category=recharges-free-fire HTTP/1.1" 200 35420
+INFO 2025-10-22 12:51:27,018 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:51:30,328 basehttp "POST /cart/add/5/ HTTP/1.1" 302 0
+INFO 2025-10-22 12:51:30,357 basehttp "GET /cart/ HTTP/1.1" 200 13484
+WARNING 2025-10-22 12:51:30,396 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:51:59,517 basehttp "POST /cart/update/5/ HTTP/1.1" 302 0
+INFO 2025-10-22 12:51:59,541 basehttp "GET /cart/ HTTP/1.1" 200 13484
+INFO 2025-10-22 12:51:59,604 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+WARNING 2025-10-22 12:51:59,612 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:52:07,670 basehttp "GET /cart/checkout/ HTTP/1.1" 200 15321
+WARNING 2025-10-22 12:52:07,721 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 12:52:07,743 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:52:15,535 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 12:52:15,598 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 12:52:15,631 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 12:52:20,622 basehttp "GET /admin/ HTTP/1.1" 200 13606
+INFO 2025-10-22 12:52:20,661 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,666 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,667 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,787 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,796 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,796 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,799 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,813 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,813 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:20,813 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+WARNING 2025-10-22 12:52:24,376 log Not Found: /favicon.ico
+WARNING 2025-10-22 12:52:24,377 basehttp "GET /favicon.ico HTTP/1.1" 404 4890
+INFO 2025-10-22 12:52:34,914 basehttp "GET /admin/store/rechargeproduct/add/ HTTP/1.1" 200 20060
+INFO 2025-10-22 12:52:34,960 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,968 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,970 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,973 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,976 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,976 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,980 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,981 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,982 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,984 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,985 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:34,994 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:35,000 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-10-22 12:52:35,030 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 12:52:44,510 basehttp "GET /admin/ HTTP/1.1" 200 13271
+INFO 2025-10-22 12:54:04,362 basehttp "GET /admin/store/rechargeproduct/add/ HTTP/1.1" 200 20060
+INFO 2025-10-22 12:54:04,408 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 13:08:36,407 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\koita_store\settings.py changed, reloading.
+INFO 2025-10-22 13:08:37,175 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:08:43,447 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\koita_store\settings.py changed, reloading.
+INFO 2025-10-22 13:08:44,199 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:08:48,215 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\koita_store\settings.py changed, reloading.
+INFO 2025-10-22 13:08:48,927 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:08:51,916 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\koita_store\settings.py changed, reloading.
+INFO 2025-10-22 13:08:52,628 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:10:21,843 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\scripts\shop2game_redeem.py changed, reloading.
+INFO 2025-10-22 13:10:22,573 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:28:37,420 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:28:45,070 basehttp "GET / HTTP/1.1" 200 16620
+INFO 2025-10-22 13:28:45,137 basehttp "GET /static/images/logo.png HTTP/1.1" 304 0
+WARNING 2025-10-22 13:28:45,138 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:28:45,314 basehttp "GET /static/css/main.css HTTP/1.1" 200 48562
+INFO 2025-10-22 13:28:45,630 basehttp "GET /static/images/carousel/slide3.jpg HTTP/1.1" 200 3419203
+INFO 2025-10-22 13:28:45,648 basehttp "GET /static/images/carousel/slide1.jpg HTTP/1.1" 200 3419203
+INFO 2025-10-22 13:28:45,664 basehttp "GET /static/images/carousel/slide2.jpg HTTP/1.1" 200 3419203
+INFO 2025-10-22 13:28:51,920 basehttp "GET /recharges/ HTTP/1.1" 200 36719
+INFO 2025-10-22 13:28:51,971 basehttp "GET /static/images/002.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 13:28:54,989 basehttp "GET /recharges/?category=recharges-free-fire HTTP/1.1" 200 35148
+INFO 2025-10-22 13:28:58,068 basehttp "POST /cart/add/5/ HTTP/1.1" 302 0
+INFO 2025-10-22 13:28:58,114 basehttp "GET /cart/ HTTP/1.1" 200 12295
+WARNING 2025-10-22 13:28:58,165 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:29:02,408 basehttp "GET /accounts/login/?next=/cart/checkout/ HTTP/1.1" 200 4915
+INFO 2025-10-22 13:29:24,631 basehttp "POST /accounts/login/?next=/cart/checkout/ HTTP/1.1" 302 0
+INFO 2025-10-22 13:29:24,683 basehttp "GET /cart/checkout/ HTTP/1.1" 200 15373
+WARNING 2025-10-22 13:29:24,723 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:29:36,937 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 13:29:36,982 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:30:36,042 basehttp "GET /recharges/ HTTP/1.1" 200 36991
+INFO 2025-10-22 13:30:40,926 basehttp "POST /cart/add/5/ HTTP/1.1" 302 0
+INFO 2025-10-22 13:30:41,008 basehttp "GET /cart/ HTTP/1.1" 200 13484
+WARNING 2025-10-22 13:30:41,092 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:30:44,649 basehttp "POST /cart/remove/4/ HTTP/1.1" 302 0
+INFO 2025-10-22 13:30:44,707 basehttp "GET /cart/ HTTP/1.1" 200 11865
+WARNING 2025-10-22 13:30:44,755 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:30:46,194 basehttp "POST /cart/remove/5/ HTTP/1.1" 302 0
+INFO 2025-10-22 13:30:46,251 basehttp "GET /cart/ HTTP/1.1" 200 9402
+INFO 2025-10-22 13:30:48,218 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 13:30:48,248 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:30:53,634 basehttp "POST /cart/add/5/ HTTP/1.1" 302 0
+INFO 2025-10-22 13:30:53,684 basehttp "GET /cart/ HTTP/1.1" 200 11865
+WARNING 2025-10-22 13:30:53,742 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:30:57,847 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 13:30:57,889 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:31:01,515 basehttp "GET /recharges/ HTTP/1.1" 200 36991
+INFO 2025-10-22 13:31:04,135 basehttp "GET /product/5/ HTTP/1.1" 200 37844
+WARNING 2025-10-22 13:31:04,216 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:34:38,394 basehttp "GET / HTTP/1.1" 200 16892
+INFO 2025-10-22 13:34:38,518 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+WARNING 2025-10-22 13:34:38,519 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 13:34:38,673 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 13:34:41,778 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 13:54:38,638 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:38,659 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:39,969 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:39,973 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:46,843 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:46,911 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:48,042 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:48,095 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:50,712 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:50,714 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:51,686 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:51,696 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:53,202 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:53,211 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:54,317 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:54,318 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:56,791 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:56,799 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:54:57,762 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:54:57,762 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:55:01,396 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:55:01,406 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 13:55:02,596 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 13:55:02,597 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 14:38:34,825 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 14:38:38,556 basehttp "GET / HTTP/1.1" 200 16892
+INFO 2025-10-22 14:38:38,654 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+WARNING 2025-10-22 14:38:38,666 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+WARNING 2025-10-22 14:38:38,834 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 14:38:43,556 basehttp "GET /recharges/ HTTP/1.1" 200 36991
+INFO 2025-10-22 14:38:47,203 basehttp "GET /recharges/?category=recharges-free-fire HTTP/1.1" 200 35420
+INFO 2025-10-22 14:38:50,475 basehttp "POST /cart/add/5/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:38:50,590 basehttp "GET /cart/ HTTP/1.1" 200 11865
+WARNING 2025-10-22 14:38:50,671 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 14:38:55,988 basehttp "GET /cart/checkout/ HTTP/1.1" 200 14823
+WARNING 2025-10-22 14:38:56,083 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 14:39:03,237 basehttp "GET / HTTP/1.1" 200 16892
+WARNING 2025-10-22 14:39:03,335 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 14:39:25,356 basehttp "GET /admin/ HTTP/1.1" 200 13430
+INFO 2025-10-22 14:39:32,540 basehttp "GET /admin/store/product/ HTTP/1.1" 200 19563
+INFO 2025-10-22 14:39:32,609 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-10-22 14:39:32,631 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:39:32,631 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-10-22 14:39:32,632 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-10-22 14:39:32,641 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-10-22 14:39:32,660 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-10-22 14:39:50,276 basehttp "POST /admin/store/product/ HTTP/1.1" 200 14341
+INFO 2025-10-22 14:39:50,518 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO 2025-10-22 14:39:52,414 basehttp "POST /admin/store/product/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:39:52,454 basehttp "GET /admin/store/product/ HTTP/1.1" 200 14794
+INFO 2025-10-22 14:39:52,515 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:40:24,055 basehttp "GET /admin/ HTTP/1.1" 200 14970
+INFO 2025-10-22 14:40:24,122 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-10-22 14:40:27,963 basehttp "GET /admin/store/category/ HTTP/1.1" 200 18838
+INFO 2025-10-22 14:40:28,056 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:40:28,082 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-10-22 14:40:36,528 basehttp "GET /admin/store/category/add/ HTTP/1.1" 200 19348
+INFO 2025-10-22 14:40:36,589 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:41:54,174 basehttp "POST /admin/store/category/add/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:41:54,214 basehttp "GET /admin/store/category/add/ HTTP/1.1" 200 19648
+INFO 2025-10-22 14:41:54,278 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:42:19,156 basehttp "POST /admin/store/category/add/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:42:19,222 basehttp "GET /admin/store/category/add/ HTTP/1.1" 200 19645
+INFO 2025-10-22 14:42:19,311 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:42:45,312 basehttp "POST /admin/store/category/add/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:42:45,365 basehttp "GET /admin/store/category/add/ HTTP/1.1" 200 19643
+INFO 2025-10-22 14:42:45,422 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:43:14,857 basehttp "POST /admin/store/category/add/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:43:14,952 basehttp "GET /admin/store/category/ HTTP/1.1" 200 23012
+INFO 2025-10-22 14:43:15,054 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:43:15,073 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 200 64316
+INFO 2025-10-22 14:43:15,093 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 200 509403
+INFO 2025-10-22 14:43:15,138 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 200 337396
+INFO 2025-10-22 14:43:15,170 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 200 509403
+INFO 2025-10-22 14:43:25,276 basehttp "GET /admin/ HTTP/1.1" 200 16414
+INFO 2025-10-22 14:43:28,083 basehttp "GET /admin/store/ HTTP/1.1" 200 8742
+INFO 2025-10-22 14:44:52,876 basehttp "GET /admin/store/rechargeproduct/ HTTP/1.1" 200 15376
+INFO 2025-10-22 14:44:52,925 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:44:59,444 basehttp "GET /admin/store/rechargeproduct/add/ HTTP/1.1" 200 20248
+INFO 2025-10-22 14:44:59,518 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:45:07,679 basehttp "GET /admin/store/rechargeproduct/ HTTP/1.1" 200 15376
+INFO 2025-10-22 14:45:16,307 basehttp "GET /admin/store HTTP/1.1" 301 0
+INFO 2025-10-22 14:45:16,331 basehttp "GET /admin/store/ HTTP/1.1" 200 8742
+INFO 2025-10-22 14:45:18,676 basehttp "GET /admin/store/product/add/ HTTP/1.1" 200 23368
+INFO 2025-10-22 14:45:18,727 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:46:05,571 basehttp "POST /admin/store/product/add/ HTTP/1.1" 200 23682
+INFO 2025-10-22 14:46:05,625 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:46:28,467 basehttp "POST /admin/store/product/add/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:46:28,529 basehttp "GET /admin/store/product/add/ HTTP/1.1" 200 23667
+INFO 2025-10-22 14:46:28,611 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:47:06,936 basehttp "POST /admin/store/product/add/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:47:06,969 basehttp "GET /admin/store/product/add/ HTTP/1.1" 200 23667
+INFO 2025-10-22 14:47:07,030 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:48:01,212 basehttp "POST /admin/store/product/add/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:48:01,260 basehttp "GET /admin/store/product/ HTTP/1.1" 200 19063
+INFO 2025-10-22 14:48:01,339 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:48:06,052 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 14:48:06,415 basehttp "GET /static/images/favicon.ico HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:08,178 basehttp "GET /recharges/ HTTP/1.1" 200 36724
+INFO 2025-10-22 14:48:08,239 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:08,244 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:08,244 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:08,249 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:08,268 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 200 142498
+INFO 2025-10-22 14:48:08,269 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 200 142498
+INFO 2025-10-22 14:48:22,671 basehttp "GET / HTTP/1.1" 200 14517
+INFO 2025-10-22 14:48:22,720 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:22,723 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+WARNING 2025-10-22 14:48:22,736 basehttp "GET /static/images/default-product.jpg HTTP/1.1" 404 2005
+INFO 2025-10-22 14:48:27,899 basehttp "GET /recharges/ HTTP/1.1" 200 36724
+INFO 2025-10-22 14:48:27,948 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:38,166 basehttp "GET /recharges/?category=recharges-free-fire HTTP/1.1" 200 29543
+INFO 2025-10-22 14:48:38,231 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:48:51,110 basehttp "GET /admin/store/product/6/change/ HTTP/1.1" 200 23729
+INFO 2025-10-22 14:48:51,166 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:49:08,984 basehttp "POST /admin/store/product/6/change/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:49:09,014 basehttp "GET /admin/store/product/ HTTP/1.1" 200 19062
+INFO 2025-10-22 14:49:09,070 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:49:11,297 basehttp "GET /admin/store/product/7/change/ HTTP/1.1" 200 24052
+INFO 2025-10-22 14:49:11,347 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:49:18,991 basehttp "POST /admin/store/product/7/change/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:49:19,026 basehttp "GET /admin/store/product/ HTTP/1.1" 200 19060
+INFO 2025-10-22 14:49:19,088 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 14:49:22,560 basehttp "GET /recharges/?category=recharges-free-fire HTTP/1.1" 200 25428
+INFO 2025-10-22 14:49:25,021 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 14:49:25,071 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:49:25,072 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 14:49:25,090 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:49:25,091 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:49:25,091 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:49:25,104 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:49:25,121 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 200 142498
+INFO 2025-10-22 14:49:31,166 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29520
+INFO 2025-10-22 14:49:31,219 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:49:34,582 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:49:34,709 basehttp "GET /product/7/ HTTP/1.1" 200 44348
+INFO 2025-10-22 14:49:34,768 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:03,036 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 14:50:03,097 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:03,099 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:03,116 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:03,119 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:03,123 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:15,021 basehttp "GET /recharges/?category=code-redeem-free-fire HTTP/1.1" 200 27222
+INFO 2025-10-22 14:50:18,834 basehttp "POST /cart/add/8/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:50:18,855 basehttp "GET /cart/ HTTP/1.1" 200 11865
+INFO 2025-10-22 14:50:18,916 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:24,542 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 14:50:24,597 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:24,597 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:24,608 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:24,613 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:24,618 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:26,745 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29520
+INFO 2025-10-22 14:50:29,043 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:50:29,073 basehttp "GET /product/7/ HTTP/1.1" 200 44348
+INFO 2025-10-22 14:50:34,719 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:50:34,751 basehttp "GET /product/7/ HTTP/1.1" 200 44348
+INFO 2025-10-22 14:50:34,823 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 14:50:38,118 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 14:50:38,150 basehttp "GET /product/7/ HTTP/1.1" 200 44348
+INFO 2025-10-22 14:54:13,040 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 14:54:13,969 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 14:54:18,902 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 14:54:19,656 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 14:54:21,621 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 14:54:22,363 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 14:54:24,997 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 14:54:25,846 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 14:54:29,557 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 14:54:30,328 autoreload Watching for file changes with StatReloader

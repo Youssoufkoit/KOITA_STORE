@@ -23,9 +23,16 @@ def get_or_create_cart(request):
     return cart
 
 def cart_view(request):
-    """Affiche le panier - CORRECTION: le nom doit être cart_view et non cart_detail"""
+    """Affiche le panier avec les IDs joueur"""
     cart = get_or_create_cart(request)
     cart_items = cart.items.all()
+    
+    # Récupérer les IDs joueur depuis la session
+    for item in cart_items:
+        if item.product.requires_player_id and not item.player_id:
+            player_id_key = f'player_id_{item.product.id}'
+            item.player_id = request.session.get(player_id_key, '')
+    
     cart_total = sum(item.total_price() for item in cart_items)
     
     context = {
@@ -33,9 +40,8 @@ def cart_view(request):
         'cart_total': cart_total,
     }
     return render(request, 'cart/cart.html', context)
-
 def add_to_cart(request, product_id):
-    """Ajoute un produit au panier avec vérification du stock"""
+    """Ajoute un produit au panier avec vérification du stock et de l'ID joueur"""
     if request.method == 'POST':
         product = get_object_or_404(Product, id=product_id)
         
@@ -43,6 +49,18 @@ def add_to_cart(request, product_id):
         if not product.is_available():
             messages.error(request, f'Désolé, {product.name} n\'est plus disponible !')
             return redirect('store:home')
+        
+        # Vérifier l'ID joueur si requis
+        if product.requires_player_id:
+            player_id = request.POST.get('player_id', '').strip()
+            if not player_id:
+                messages.error(request, f'❌ ID joueur requis pour {product.name}!')
+                return redirect('store:product_detail', pk=product_id)
+            
+            # Validation basique de l'ID
+            if not player_id.isdigit():
+                messages.error(request, '❌ L\'ID joueur doit contenir uniquement des chiffres!')
+                return redirect('store:product_detail', pk=product_id)
         
         cart = get_or_create_cart(request)
         
@@ -62,7 +80,14 @@ def add_to_cart(request, product_id):
             cart_item.quantity += 1
             cart_item.save()
         
-        messages.success(request, f'{product.name} ajouté au panier !')
+        # Stocker l'ID joueur dans la session si fourni
+        if product.requires_player_id and player_id:
+            # Créer une clé unique pour ce produit dans le panier
+            player_id_key = f'player_id_{product_id}'
+            request.session[player_id_key] = player_id
+            logger.info(f"ID joueur stocké: {player_id} pour le produit {product.name}")
+        
+        messages.success(request, f'✅ {product.name} ajouté au panier !')
         return redirect('cart:cart_view')
     
     return redirect('store:home')

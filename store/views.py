@@ -405,3 +405,5 @@ def checkout(request):
         'requires_free_fire_id': requires_free_fire_id,
     }
     return render(request, 'cart/checkout.html', context)
+
+ 

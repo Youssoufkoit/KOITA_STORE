@@ -144,6 +144,29 @@
                 {% if product.is_available %}
                 <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="purchase-form">
                     {% csrf_token %}
+                    
+                    <!-- SECTION ID JOUEUR - AJOUT IMPORTANT -->
+                    {% if product.requires_player_id %}
+                    <div class="player-id-section">
+                        <div class="form-group">
+                            <label for="player_id">
+                                <i class="fas fa-id-card"></i> 🆔 ID du joueur
+                            </label>
+                            <input type="text" 
+                                   id="player_id" 
+                                   name="player_id" 
+                                   class="player-id-input"
+                                   placeholder="Entrez votre ID Free Fire/PUBG/Blood Strike"
+                                   required
+                                   pattern="[0-9]+"
+                                   title="L'ID doit contenir uniquement des chiffres">
+                            <small class="form-help">
+                                <i class="fas fa-info-circle"></i> ID requis pour la recharge automatique
+                            </small>
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <div class="quantity-selector-modern">
                         <label>Quantité :</label>
                         <div class="quantity-controls">
@@ -418,6 +441,52 @@
     --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
     --shadow-medium: 0 15px 50px rgba(0, 0, 0, 0.15);
     --shadow-heavy: 0 25px 80px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles pour la section ID Joueur */
+.player-id-section {
+    background: linear-gradient(135deg, #fff3e0, #ffecb3);
+    border: 2px solid #ff9800;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
+    }
+}
+
+.player-id-input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #ff9800;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.player-id-input:focus {
+    outline: none;
+    border-color: #e65100;
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
+    transform: scale(1.02);
+}
+
+.form-help {
+    display: block;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
 }
 
 /* Navigation améliorée */
@@ -1412,6 +1481,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Validation de l'ID joueur
+    const playerIdInput = document.getElementById('player_id');
+    if (playerIdInput) {
+        playerIdInput.addEventListener('input', function() {
+            const value = this.value.trim();
+            if (value && !/^\d+$/.test(value)) {
+                this.style.borderColor = '#e74c3c';
+                this.style.boxShadow = '0 0 10px rgba(231, 76, 60, 0.5)';
+            } else {
+                this.style.borderColor = '#ff9800';
+                this.style.boxShadow = '0 0 10px rgba(255, 152, 0, 0.3)';
+            }
+        });
+    }
+    
     // Animation des étapes du processus
     const processSteps = document.querySelectorAll('.process-step');
     processSteps.forEach((step, index) => {
@@ -1497,6 +1581,29 @@ document.addEventListener('DOMContentLoaded', function() {
             info: 'info-circle'
         };
         return icons[type] || 'info-circle';
+    }
+    
+    // Validation du formulaire avant soumission
+    const purchaseForm = document.querySelector('.purchase-form');
+    if (purchaseForm) {
+        purchaseForm.addEventListener('submit', function(e) {
+            const playerIdInput = document.getElementById('player_id');
+            if (playerIdInput && '{{ product.requires_player_id }}' === 'True') {
+                const playerId = playerIdInput.value.trim();
+                if (!playerId) {
+                    e.preventDefault();
+                    showNotification('❌ ID joueur requis pour ce produit!', 'error');
+                    playerIdInput.focus();
+                    return;
+                }
+                if (!/^\d+$/.test(playerId)) {
+                    e.preventDefault();
+                    showNotification('❌ L\'ID joueur doit contenir uniquement des chiffres!', 'error');
+                    playerIdInput.focus();
+                    return;
+                }
+            }
+        });
     }
 });
 

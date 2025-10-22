@@ -75,12 +75,13 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description', 'redeem_code']
     
     fieldsets = (
-        ('Informations de base', {
-            'fields': ('name', 'category', 'description', 'price', 'stock', 'image')
-        }),
-        ('Options', {
-            'fields': ('is_active', 'is_featured')
-        }),
+    ('Informations de base', {
+        'fields': ('name', 'category', 'description', 'price', 'stock', 'image')
+    }),
+    ('Options', {
+        'fields': ('is_active', 'is_featured', 'requires_player_id')
+    }),
+
         ('REDEEM Code', {
             'fields': ('is_redeem_product', 'redeem_code', 'redeem_code_used'),
             'description': 'Section réservée aux produits de type REDEEM Code'
@@ -126,7 +127,22 @@ class NotificationAdmin(admin.ModelAdmin):
 @admin.register(RechargeProduct)
 class RechargeProductAdmin(admin.ModelAdmin):
     """Administration des RECHARGES avec support REDEEM CODE"""
+    list_display = ['name', 'category', 'price', 'stock', 'requires_player_id', 'is_redeem_product', 'redeem_code_used']
+    list_filter = ['category', 'requires_player_id', 'is_redeem_product', 'is_active', 'is_featured']
+    search_fields = ['name', 'description', 'redeem_code']
     
+    fieldsets = (
+        ('Informations de base', {
+            'fields': ('name', 'category', 'description', 'price', 'stock', 'image')
+        }),
+        ('Options', {
+            'fields': ('is_active', 'is_featured', 'requires_player_id')  # AJOUT ICI
+        }),
+        ('REDEEM Code', {
+            'fields': ('is_redeem_product', 'redeem_code', 'redeem_code_used'),
+            'description': 'Section réservée aux produits de type REDEEM Code'
+        }),
+    )
     list_display = [
         'name', 
         'category', 

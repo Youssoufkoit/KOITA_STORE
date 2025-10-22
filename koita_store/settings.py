@@ -108,7 +108,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'koitastore@gmail.com'  # Votre email
-EMAIL_HOST_PASSWORD = 'votre-mot-de-passe-application'  # Mot de passe d'application Gmail
+EMAIL_HOST_PASSWORD = '#koitagaming31#'  # Mot de passe d'application Gmail
 DEFAULT_FROM_EMAIL = 'KOITA_STORE <koitastore@gmail.com>'
 
 # Configuration des logs

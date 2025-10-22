@@ -45,7 +45,21 @@ class Category(models.Model):
 
 class Product(models.Model):
     """Modèle pour les produits (recharges ET comptes)"""
+    class Product(models.Model):
+    # ... champs existants ...
     
+    # ===== NOUVEAU CHAMP =====
+     requires_player_id = models.BooleanField(
+        default=False,
+        verbose_name='Requiert ID joueur',
+        help_text='Afficher le champ ID joueur pour ce produit'
+    )
+    
+    # ... reste des champs existants ...
+    
+    def requires_free_fire_id(self):
+        """Vérifie si le produit nécessite un ID Free Fire (pour recharges automatiques)"""
+        return self.requires_player_id
     # Champs communs
     name = models.CharField(max_length=200, verbose_name="Nom du produit")
     description = models.TextField(verbose_name="Description")
@@ -60,7 +74,11 @@ class Product(models.Model):
     stock = models.IntegerField(default=0, verbose_name="Stock disponible")
     is_active = models.BooleanField(default=True, verbose_name="Actif")
     is_featured = models.BooleanField(default=False, verbose_name="Produit vedette")
-    
+    requires_player_id = models.BooleanField(
+        default=False,
+        verbose_name='Requiert ID joueur',
+        help_text='Afficher le champ ID joueur pour ce produit'
+    )
     # ===== CHAMPS SPÉCIFIQUES POUR LES COMPTES =====
     
     # Informations du compte
@@ -360,3 +378,4 @@ class AccountProduct(Product):
         proxy = True
         verbose_name = "Compte de Jeu"
         verbose_name_plural = "🎮 Comptes de Jeux"
+

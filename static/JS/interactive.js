@@ -994,3 +994,34 @@ if (typeof module !== 'undefined' && module.exports) {
         makeRequest
     };
 }
+// Validation de l'ID joueur
+function validatePlayerId(input) {
+    const playerId = input.value.trim();
+    const productRequiresId = document.getElementById('player_id') !== null;
+    
+    if (productRequiresId && !playerId) {
+        showNotification('❌ ID joueur requis pour ce produit!', 'error');
+        return false;
+    }
+    
+    if (playerId && !/^\d+$/.test(playerId)) {
+        showNotification('❌ L\'ID joueur doit contenir uniquement des chiffres!', 'error');
+        return false;
+    }
+    
+    return true;
+}
+
+// Écouter la soumission du formulaire d'ajout au panier
+document.addEventListener('DOMContentLoaded', function() {
+    const addToCartForm = document.querySelector('form[action*="add_to_cart"]');
+    if (addToCartForm) {
+        addToCartForm.addEventListener('submit', function(e) {
+            const playerIdInput = document.getElementById('player_id');
+            if (playerIdInput && !validatePlayerId(playerIdInput)) {
+                e.preventDefault();
+                playerIdInput.focus();
+            }
+        });
+    }
+});

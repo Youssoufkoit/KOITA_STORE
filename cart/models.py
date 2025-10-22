@@ -21,10 +21,17 @@ class Cart(models.Model):
         return sum(item.total_price() for item in self.items.all())
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')  # Retirer null=True, blank=True
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    player_id = models.CharField(
+        max_length=50, 
+        blank=True, 
+        verbose_name='ID Joueur',
+        help_text='ID du joueur pour les recharges automatiques'
+    )
     added_at = models.DateTimeField(auto_now_add=True)
+    
     class Meta:
         verbose_name = "Article du panier"
         verbose_name_plural = "Articles du panier"
