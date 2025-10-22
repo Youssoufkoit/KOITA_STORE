@@ -2,1014 +2,784 @@
 {% load static %}
 
 {% block content %}
-<div class="checkout-wrapper">
-    <!-- En-tête avec progression -->
+<section class="checkout-section">
     <div class="checkout-header">
-        <div class="header-content">
-            <h1><i class="fas fa-shopping-bag"></i> Finaliser votre commande</h1>
-            <div class="progress-steps">
-                <div class="step completed">
-                    <div class="step-icon"><i class="fas fa-check"></i></div>
-                    <span>Panier</span>
-                </div>
-                <div class="step-line completed"></div>
-                <div class="step active">
-                    <div class="step-icon">2</div>
-                    <span>Paiement</span>
-                </div>
-                <div class="step-line"></div>
-                <div class="step">
-                    <div class="step-icon">3</div>
-                    <span>Confirmation</span>
-                </div>
-            </div>
-        </div>
+        <h2><i class="fas fa-shopping-bag"></i> Validation de Commande</h2>
+        <p>Vérifiez vos informations avant de finaliser</p>
     </div>
-
+    
     <div class="checkout-container">
-        <!-- Colonne gauche: Récapitulatif -->
-        <div class="checkout-left">
-            <!-- Récapitulatif de la commande -->
-            <section class="card order-summary">
-                <div class="card-header">
-                    <i class="fas fa-list-alt"></i>
-                    <h3>Récapitulatif de la commande</h3>
-                    <span class="item-count">{{ cart_items.count }} article{{ cart_items.count|pluralize }}</span>
-                </div>
+        <!-- Récapitulatif de la commande -->
+        <div class="order-summary-section">
+            <div class="section-card">
+                <h3><i class="fas fa-receipt"></i> Récapitulatif de votre commande</h3>
                 
-                <div class="order-items">
+                <div class="cart-items-summary">
                     {% for item in cart_items %}
-                    <div class="order-item">
-                        <div class="item-image">
+                    <div class="summary-item">
+                        <div class="item-image-small">
                             {% if item.product.image %}
                                 <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
                             {% else %}
-                                <div class="no-image"><i class="fas fa-image"></i></div>
+                                <div class="placeholder-image">
+                                    <i class="fas fa-image"></i>
+                                </div>
                             {% endif %}
                         </div>
-                        <div class="item-info">
+                        <div class="item-details-small">
                             <h4>{{ item.product.name }}</h4>
-                            <div class="item-details">
-                                <span class="quantity">Qté: {{ item.quantity }}</span>
-                                <span class="separator">×</span>
-                                <span class="unit-price">{{ item.product.price|floatformat:0 }} FCFA</span>
-                            </div>
+                            <p class="item-quantity">
+                                <i class="fas fa-times"></i> {{ item.quantity }}
+                            </p>
                         </div>
-                        <div class="item-price">
+                        <div class="item-price-small">
                             {{ item.total_price|floatformat:0 }} FCFA
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-
-                <div class="order-totals">
+                
+                <div class="summary-total">
                     <div class="total-row subtotal">
                         <span>Sous-total</span>
                         <span>{{ cart_total|floatformat:0 }} FCFA</span>
                     </div>
-                    <div class="total-row discount">
-                        <span><i class="fas fa-tag"></i> Réduction</span>
-                        <span class="discount-value">0 FCFA</span>
-                    </div>
                     <div class="total-row shipping">
-                        <span><i class="fas fa-shipping-fast"></i> Livraison</span>
-                        <span class="free-badge">GRATUITE</span>
+                        <span><i class="fas fa-truck"></i> Livraison</span>
+                        <span class="free-badge">Gratuit</span>
                     </div>
-                    <div class="total-row grand-total">
-                        <strong>Total à payer</strong>
-                        <strong class="total-amount">{{ cart_total|floatformat:0 }} FCFA</strong>
+                    <div class="total-row final-total">
+                        <span>Total à payer</span>
+                        <span class="total-amount">{{ cart_total|floatformat:0 }} FCFA</span>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Informations client -->
-            <section class="card user-info">
-                <div class="card-header">
-                    <i class="fas fa-user"></i>
-                    <h3>Vos informations</h3>
-                </div>
+            <!-- Informations utilisateur -->
+            <div class="section-card user-info-card">
+                <h3><i class="fas fa-user-circle"></i> Vos Informations</h3>
                 
                 <div class="info-grid">
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fas fa-user-circle"></i></div>
+                    <div class="info-item">
+                        <i class="fas fa-user"></i>
                         <div class="info-content">
-                            <span class="label">Nom complet</span>
-                            <span class="value">{{ user.get_full_name|default:user.username }}</span>
+                            <strong>Nom</strong>
+                            <span>{{ user.get_full_name|default:user.username }}</span>
                         </div>
                     </div>
-                    <div class="info-card">
-                        <div class="info-icon email"><i class="fas fa-envelope"></i></div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
                         <div class="info-content">
-                            <span class="label">Email</span>
-                            <span class="value">{{ user.email }}</span>
+                            <strong>Email</strong>
+                            <span>{{ user.email }}</span>
                         </div>
                     </div>
                     {% if user.profile.phone %}
-                    <div class="info-card">
-                        <div class="info-icon phone"><i class="fas fa-phone"></i></div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
                         <div class="info-content">
-                            <span class="label">Téléphone</span>
-                            <span class="value">{{ user.profile.phone }}</span>
+                            <strong>Téléphone</strong>
+                            <span>{{ user.profile.phone }}</span>
                         </div>
                     </div>
                     {% endif %}
                 </div>
-
-                <div class="delivery-method">
-                    <div class="method-card">
-                        <i class="fas fa-bolt"></i>
-                        <div>
-                            <strong>Livraison instantanée</strong>
-                            <p>Recevez vos codes par email et notification</p>
-                        </div>
-                    </div>
+                
+                <div class="info-note">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Les codes REDEEM seront envoyés par email et disponibles dans vos notifications</p>
                 </div>
-            </section>
+            </div>
         </div>
 
-        <!-- Colonne droite: Paiement -->
-        <div class="checkout-right">
-            <!-- Section ID Free Fire -->
+        <!-- Formulaire de paiement -->
+        <div class="payment-section">
+            <!-- ID Free Fire si nécessaire -->
             {% if requires_free_fire_id %}
-            <section class="card free-fire-card">
-                <div class="card-header {% if free_fire_id %}success{% else %}warning{% endif %}">
-                    <i class="fas fa-gamepad"></i>
-                    <h3>ID Free Fire</h3>
-                    <span class="status-pill {% if free_fire_id %}saved{% else %}required{% endif %}">
+            <div class="section-card free-fire-card">
+                <div class="card-header-special">
+                    <div class="header-icon fire">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="header-content">
+                        <h3>ID Free Fire Requis</h3>
+                        <p>Nécessaire pour la recharge automatique</p>
+                    </div>
+                </div>
+                
+                <form method="post" class="free-fire-form" id="freeFireForm">
+                    {% csrf_token %}
+                    
+                    <div class="free-fire-input-group">
+                        <label for="free_fire_id">
+                            <i class="fas fa-id-card"></i>
+                            Votre ID Free Fire
+                        </label>
+                        <div class="input-with-status">
+                            <input 
+                                type="text" 
+                                id="free_fire_id" 
+                                name="free_fire_id" 
+                                value="{{ free_fire_id }}"
+                                placeholder="Exemple: 1234567890" 
+                                required
+                                pattern="[0-9]+"
+                                title="Seuls les chiffres sont autorisés"
+                                class="free-fire-input"
+                            >
+                            {% if free_fire_id %}
+                            <div class="input-status success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <small class="input-help">
+                            <i class="fas fa-info-circle"></i>
+                            L'ID se trouve dans Free Fire → Profil → Base
+                        </small>
+                    </div>
+                    
+                    <button type="submit" class="btn-confirm-id">
+                        <i class="fas fa-check"></i>
                         {% if free_fire_id %}
-                        <i class="fas fa-check-circle"></i> Sauvegardé
+                            Modifier et Continuer
                         {% else %}
-                        <i class="fas fa-exclamation-circle"></i> Requis
+                            Confirmer l'ID et Continuer
                         {% endif %}
-                    </span>
-                </div>
-
-                {% if free_fire_id %}
-                <!-- ID Sauvegardé -->
-                <div class="id-saved" id="idSaved">
-                    <div class="saved-card">
-                        <div class="saved-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="saved-content">
-                            <span class="saved-label">Votre ID enregistré</span>
-                            <span class="saved-value">{{ free_fire_id }}</span>
-                            <span class="saved-info">Utilisé pour la recharge automatique</span>
-                        </div>
-                        <button type="button" class="btn-edit-id" onclick="editID()">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Formulaire d'édition -->
-                <div class="id-edit" id="idEdit" style="display: none;">
-                    <form method="post" action="{% url 'cart:checkout' %}" class="edit-form">
-                        {% csrf_token %}
-                        <div class="form-field">
-                            <label><i class="fas fa-id-card"></i> Modifier l'ID</label>
-                            <input type="text" 
-                                   name="free_fire_id" 
-                                   value="{{ free_fire_id }}"
-                                   placeholder="1234567890"
-                                   pattern="[0-9]+"
-                                   required
-                                   class="id-input"
-                                   id="editInput">
-                            <span class="field-hint">
-                                <i class="fas fa-info-circle"></i>
-                                Numérique uniquement (10 chiffres)
-                            </span>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-save">
-                                <i class="fas fa-save"></i>
-                                Enregistrer
-                            </button>
-                            <button type="button" class="btn btn-cancel" onclick="cancelEdit()">
-                                Annuler
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                {% else %}
-                <!-- Formulaire initial -->
-                <div class="id-required">
-                    <div class="alert-box">
-                        <i class="fas fa-info-circle"></i>
-                        <div>
-                            <strong>Pourquoi avons-nous besoin de votre ID ?</strong>
-                            <p>Pour créditer automatiquement vos diamants sur votre compte Free Fire</p>
-                        </div>
-                    </div>
-
-                    <form method="post" action="{% url 'cart:checkout' %}" class="id-form">
-                        {% csrf_token %}
-                        <div class="form-field">
-                            <label><i class="fas fa-id-card"></i> Votre ID Free Fire</label>
-                            <input type="text" 
-                                   name="free_fire_id" 
-                                   placeholder="Entrez votre ID (ex: 1234567890)"
-                                   pattern="[0-9]+"
-                                   required
-                                   class="id-input"
-                                   autofocus>
-                            <span class="field-hint">
-                                <i class="fas fa-question-circle"></i>
-                                Trouvez votre ID dans: Free Fire → Profil → Base
-                            </span>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">
-                            <i class="fas fa-arrow-right"></i>
-                            Continuer
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
-            </section>
+                    </button>
+                </form>
+            </div>
             {% endif %}
-
+            
             <!-- Méthodes de paiement -->
-            <section class="card payment-card">
-                <div class="card-header">
-                    <i class="fas fa-credit-card"></i>
-                    <h3>Mode de paiement</h3>
-                </div>
-
-                <div class="payment-methods">
-                    <label class="payment-method">
-                        <input type="radio" name="payment" value="wave" checked>
-                        <div class="method-card">
-                            <div class="method-icon wave">
+            <div class="section-card payment-methods-card">
+                <h3><i class="fas fa-credit-card"></i> Méthode de Paiement</h3>
+                
+                <div class="payment-options-grid">
+                    <div class="payment-option">
+                        <input type="radio" id="wave" name="payment_method" value="wave" checked>
+                        <label for="wave">
+                            <div class="payment-icon wave">
                                 <i class="fas fa-mobile-alt"></i>
                             </div>
-                            <div class="method-info">
+                            <div class="payment-info">
                                 <strong>Wave</strong>
-                                <span>Paiement mobile sécurisé</span>
+                                <span>Paiement mobile</span>
                             </div>
-                            <div class="method-check">
+                            <div class="payment-check">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                        </div>
-                    </label>
-
-                    <label class="payment-method">
-                        <input type="radio" name="payment" value="orange">
-                        <div class="method-card">
-                            <div class="method-icon orange">
+                        </label>
+                    </div>
+                    
+                    <div class="payment-option">
+                        <input type="radio" id="orange_money" name="payment_method" value="orange_money">
+                        <label for="orange_money">
+                            <div class="payment-icon orange">
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
-                            <div class="method-info">
+                            <div class="payment-info">
                                 <strong>Orange Money</strong>
-                                <span>Paiement mobile rapide</span>
+                                <span>Paiement mobile</span>
                             </div>
-                            <div class="method-check">
+                            <div class="payment-check">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                        </div>
-                    </label>
-
-                    <label class="payment-method">
-                        <input type="radio" name="payment" value="binance">
-                        <div class="method-card">
-                            <div class="method-icon crypto">
+                        </label>
+                    </div>
+                    
+                    <div class="payment-option">
+                        <input type="radio" id="binance" name="payment_method" value="binance">
+                        <label for="binance">
+                            <div class="payment-icon crypto">
                                 <i class="fab fa-bitcoin"></i>
                             </div>
-                            <div class="method-info">
-                                <strong>Binance / Bybit</strong>
-                                <span>Paiement crypto</span>
+                            <div class="payment-info">
+                                <strong>Binance</strong>
+                                <span>Crypto-monnaie</span>
                             </div>
-                            <div class="method-check">
+                            <div class="payment-check">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                        </div>
-                    </label>
-                </div>
-            </section>
-
-            <!-- Actions finales -->
-            <section class="card checkout-actions">
-                {% if requires_free_fire_id and not free_fire_id %}
-                <div class="warning-banner">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>
-                        <strong>Action requise</strong>
-                        <p>Veuillez entrer votre ID Free Fire pour continuer</p>
+                        </label>
+                    </div>
+                    
+                    <div class="payment-option">
+                        <input type="radio" id="bybit" name="payment_method" value="bybit">
+                        <label for="bybit">
+                            <div class="payment-icon crypto">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="payment-info">
+                                <strong>Bybit</strong>
+                                <span>Crypto-monnaie</span>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </label>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-checkout" disabled>
-                    <i class="fas fa-lock"></i>
-                    <span>ID Free Fire requis</span>
-                </button>
-                {% else %}
-                <form action="{% url 'cart:process_order' %}" method="post" id="checkoutForm">
+            </div>
+
+            <!-- Validation finale -->
+            <div class="section-card final-validation-card">
+                <form action="{% url 'cart:process_order' %}" method="post" class="checkout-final-form" id="checkoutForm">
                     {% csrf_token %}
-                    <input type="hidden" name="payment_method" id="paymentMethod" value="wave">
-
-                    <label class="checkbox-custom">
-                        <input type="checkbox" id="terms" name="terms" required>
-                        <span class="checkmark"></span>
-                        <span class="label-text">
-                            J'accepte les <a href="#" target="_blank">conditions générales</a>
+                    <input type="hidden" name="payment_method" id="selected_payment" value="wave">
+                    
+                    <div class="terms-section">
+                        <label class="terms-checkbox">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span class="checkmark"></span>
+                            <span class="terms-text">
+                                J'accepte les 
+                                <a href="#" target="_blank">conditions générales de vente</a>
+                                et la 
+                                <a href="#" target="_blank">politique de confidentialité</a>
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-pay-now" id="payButton">
+                        <span class="btn-icon">
+                            <i class="fas fa-lock"></i>
                         </span>
-                    </label>
-
-                    <button type="submit" class="btn btn-primary btn-checkout">
-                        <i class="fas fa-shield-alt"></i>
-                        <div class="btn-content">
-                            <span class="btn-text">Payer en toute sécurité</span>
-                            <span class="btn-amount">{{ cart_total|floatformat:0 }} FCFA</span>
-                        </div>
+                        <span class="btn-text">Payer Maintenant</span>
+                        <span class="btn-amount">{{ cart_total|floatformat:0 }} FCFA</span>
                     </button>
-
+                    
                     <div class="security-badges">
-                        <div class="badge"><i class="fas fa-lock"></i> SSL Sécurisé</div>
-                        <div class="badge"><i class="fas fa-shield-check"></i> Paiement protégé</div>
+                        <div class="badge-item">
+                            <i class="fas fa-shield-check"></i>
+                            <span>SSL Sécurisé</span>
+                        </div>
+                        <div class="badge-item">
+                            <i class="fas fa-user-shield"></i>
+                            <span>Données Cryptées</span>
+                        </div>
+                        <div class="badge-item">
+                            <i class="fas fa-check-double"></i>
+                            <span>Paiement Vérifié</span>
+                        </div>
                     </div>
                 </form>
-                {% endif %}
-
-                <a href="{% url 'cart:cart_view' %}" class="btn btn-secondary btn-block">
-                    <i class="fas fa-arrow-left"></i>
-                    Retour au panier
+                
+                <a href="{% url 'cart:cart_view' %}" class="btn-back-to-cart">
+                    <i class="fas fa-arrow-left"></i> Retour au panier
                 </a>
-            </section>
+            </div>
         </div>
     </div>
-
-    <!-- Bande de garanties -->
-    <div class="guarantees-banner">
-        <div class="guarantee">
-            <i class="fas fa-bolt"></i>
-            <span>Livraison instantanée</span>
-        </div>
-        <div class="guarantee">
-            <i class="fas fa-shield-alt"></i>
-            <span>Paiement 100% sécurisé</span>
-        </div>
-        <div class="guarantee">
-            <i class="fas fa-headset"></i>
-            <span>Support 24/7</span>
-        </div>
-        <div class="guarantee">
-            <i class="fas fa-undo"></i>
-            <span>Garantie remboursement</span>
-        </div>
-    </div>
-</div>
+</section>
 
 <style>
+/* ========================================
+   CHECKOUT - STYLES MODERNES
+======================================== */
+
 :root {
-    --primary: #ff6b35;
-    --primary-dark: #e55528;
-    --primary-light: #fff1eb;
-    --secondary: #004e89;
-    --success: #27ae60;
-    --success-light: #d4edda;
-    --warning: #f39c12;
-    --warning-light: #fef5e7;
-    --danger: #e74c3c;
-    --dark: #2c3e50;
-    --gray: #6c757d;
-    --light: #f8f9fa;
-    --white: #ffffff;
-    --border: #e9ecef;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-    --shadow: 0 4px 16px rgba(0,0,0,0.08);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-    --radius: 12px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --checkout-primary: #667eea;
+    --checkout-secondary: #764ba2;
+    --checkout-success: #2ecc71;
+    --checkout-warning: #f39c12;
+    --checkout-danger: #e74c3c;
+    --checkout-shadow: 0 10px 40px rgba(102, 126, 234, 0.15);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.checkout-section {
+    animation: fadeInUp 0.8s ease;
+    padding: 2rem 0;
 }
 
-.checkout-wrapper {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    padding-bottom: 3rem;
-}
-
-/* ===== HEADER ===== */
 .checkout-header {
-    background: linear-gradient(135deg, var(--secondary) 0%, #1a659e 100%);
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--checkout-primary), var(--checkout-secondary));
+    border-radius: 20px;
     color: white;
-    padding: 2rem 1rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--checkout-shadow);
 }
 
-.header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.header-content h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.progress-steps {
+.checkout-header h2 {
+    font-size: 2.5rem;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 3px;
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.step-icon {
-    width: 40px;
-    height: 40px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    border: 2px solid rgba(255,255,255,0.3);
-    transition: var(--transition);
-}
-
-.step.completed .step-icon,
-.step.active .step-icon {
-    background: var(--primary);
-    border-color: var(--primary);
-    transform: scale(1.1);
-}
-
-.step span {
-    font-size: 0.85rem;
-    opacity: 0.8;
-}
-
-.step.active span {
-    opacity: 1;
-    font-weight: 600;
-}
-
-.step-line {
-    width: 80px;
-    height: 2px;
-    background: rgba(255,255,255,0.2);
-    margin: 0 0.5rem;
-}
-
-.step-line.completed {
-    background: var(--primary);
-}
-
-/* ===== CONTAINER ===== */
-.checkout-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 2rem;
-    align-items: start;
-}
-
-/* ===== CARTES ===== */
-.card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1.25rem;
-    border-bottom: 2px solid var(--light);
-    background: linear-gradient(to right, var(--light), var(--white));
-}
-
-.card-header i {
-    color: var(--primary);
-    font-size: 1.25rem;
-}
-
-.card-header h3 {
-    flex: 1;
+.checkout-header p {
     font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin: 0;
+    opacity: 0.95;
 }
 
-.card-header.success {
-    background: linear-gradient(to right, var(--success-light), var(--white));
+/* Container principal */
+.checkout-container {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.card-header.success i {
-    color: var(--success);
-}
-
-.card-header.warning {
-    background: linear-gradient(to right, var(--warning-light), var(--white));
-}
-
-.card-header.warning i {
-    color: var(--warning);
-}
-
-.item-count {
-    background: var(--primary);
-    color: white;
-    padding: 0.3rem 0.75rem;
+/* Cartes de section */
+.section-card {
+    background: var(--white);
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    padding: 2rem;
+    box-shadow: var(--checkout-shadow);
+    border: 2px solid var(--border-color);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
 }
 
-.status-pill {
-    padding: 0.4rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
+.section-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.2);
+}
+
+.section-card h3 {
+    font-size: 1.5rem;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    color: var(--secondary-blue);
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.8rem;
 }
 
-.status-pill.saved {
-    background: var(--success-light);
-    color: var(--success);
+/* Récapitulatif de commande */
+.order-summary-section {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
 }
 
-.status-pill.required {
-    background: var(--warning-light);
-    color: var(--warning);
-}
-
-/* ===== ORDER SUMMARY ===== */
-.order-items {
-    padding: 1rem;
+.cart-items-summary {
     max-height: 400px;
     overflow-y: auto;
+    margin-bottom: 1.5rem;
+    padding-right: 0.5rem;
 }
 
-.order-items::-webkit-scrollbar {
+.cart-items-summary::-webkit-scrollbar {
     width: 6px;
 }
 
-.order-items::-webkit-scrollbar-track {
-    background: var(--light);
+.cart-items-summary::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
 }
 
-.order-items::-webkit-scrollbar-thumb {
-    background: var(--gray);
-    border-radius: 3px;
+.cart-items-summary::-webkit-scrollbar-thumb {
+    background: var(--checkout-primary);
+    border-radius: 10px;
 }
 
-.order-item {
+.summary-item {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    border-bottom: 1px solid var(--border);
-    transition: var(--transition);
+    background: var(--light-gray);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
 }
 
-.order-item:hover {
-    background: var(--light);
-    transform: translateX(4px);
+.summary-item:hover {
+    background: #e8eaf0;
+    transform: translateX(5px);
 }
 
-.order-item:last-child {
-    border-bottom: none;
-}
-
-.item-image {
-    width: 60px;
-    height: 60px;
+.item-image-small {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    overflow: hidden;
     flex-shrink: 0;
 }
 
-.item-image img,
-.no-image {
+.item-image-small img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
-    border: 2px solid var(--border);
 }
 
-.no-image {
-    background: var(--light);
+.placeholder-image {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--gray);
-    font-size: 1.5rem;
+    background: #ddd;
+    color: #999;
+    font-size: 2rem;
 }
 
-.item-info {
+.item-details-small {
     flex: 1;
-    min-width: 0;
 }
 
-.item-info h4 {
-    font-size: 0.95rem;
+.item-details-small h4 {
+    font-size: 1rem;
     font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 0.4rem;
-    line-height: 1.3;
+    color: var(--dark-gray);
+    margin-bottom: 0.3rem;
 }
 
-.item-details {
+.item-quantity {
+    font-size: 0.9rem;
+    color: #666;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--gray);
-    font-size: 0.85rem;
+    gap: 0.3rem;
 }
 
-.separator {
+.item-price-small {
+    font-size: 1.1rem;
     font-weight: 700;
+    color: var(--primary-orange);
+    font-family: "Bebas Neue", sans-serif;
 }
 
-.item-price {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--primary);
-    white-space: nowrap;
-}
-
-.order-totals {
-    padding: 1rem 1.25rem;
-    background: var(--light);
+/* Total */
+.summary-total {
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border-color);
 }
 
 .total-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
-    color: var(--gray);
-    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
 }
 
-.total-row.discount {
-    color: var(--success);
-}
-
-.total-row.shipping span:first-child {
+.total-row span {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
+.total-row.subtotal {
+    color: #666;
+}
+
+.total-row.shipping {
+    color: var(--checkout-success);
+}
+
 .free-badge {
-    background: var(--success);
+    background: var(--checkout-success);
     color: white;
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
     font-weight: 700;
 }
 
-.total-row.grand-total {
-    border-top: 2px solid var(--border);
+.total-row.final-total {
+    margin-top: 1rem;
     padding-top: 1rem;
-    margin-top: 0.5rem;
-    font-size: 1.1rem;
-    color: var(--dark);
+    border-top: 2px dashed var(--border-color);
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 .total-amount {
-    font-size: 1.5rem;
-    color: var(--primary);
+    font-size: 1.8rem;
+    font-family: "Bebas Neue", sans-serif;
+    color: var(--primary-orange);
+    letter-spacing: 1px;
 }
 
-/* ===== USER INFO ===== */
+/* Informations utilisateur */
+.user-info-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
 .info-grid {
-    padding: 1.25rem;
     display: grid;
     gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.info-card {
+.info-item {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: var(--light);
-    border-radius: 8px;
-    border-left: 3px solid var(--primary);
-    transition: var(--transition);
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.info-card:hover {
-    background: var(--primary-light);
-    transform: translateX(4px);
-}
-
-.info-icon {
-    width: 45px;
-    height: 45px;
-    background: var(--primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.info-icon.email {
-    background: #3498db;
-}
-
-.info-icon.phone {
-    background: #27ae60;
+.info-item i {
+    font-size: 1.5rem;
+    color: var(--checkout-primary);
 }
 
 .info-content {
     flex: 1;
+}
+
+.info-content strong {
+    display: block;
+    color: var(--dark-gray);
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.info-content span {
+    color: #666;
+    font-size: 1rem;
+}
+
+.info-note {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: rgba(52, 152, 219, 0.1);
+    border-left: 4px solid #3498db;
+    border-radius: 8px;
 }
 
-.info-content .label {
-    font-size: 0.75rem;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
-
-.info-content .value {
-    font-size: 0.95rem;
-    color: var(--dark);
-    font-weight: 600;
+.info-note i {
+    color: #3498db;
+    font-size: 1.2rem;
     margin-top: 0.2rem;
 }
 
-.delivery-method {
-    padding: 0 1.25rem 1.25rem;
-}
-
-.method-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--white) 100%);
-    border-radius: 8px;
-    border: 2px solid var(--primary);
-}
-
-.method-card i {
-    font-size: 1.5rem;
-    color: var(--primary);
-}
-
-.method-card strong {
-    display: block;
-    color: var(--dark);
-    margin-bottom: 0.2rem;
-}
-
-.method-card p {
+.info-note p {
     margin: 0;
-    font-size: 0.85rem;
-    color: var(--gray);
+    color: #2c3e50;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
-/* ===== FREE FIRE ID ===== */
-.id-saved {
-    padding: 1.25rem;
+/* Carte Free Fire */
+.free-fire-card {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border: 3px solid #ff9800;
+    box-shadow: 0 10px 30px rgba(255, 152, 0, 0.2);
 }
 
-.saved-card {
+.card-header-special {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.5rem;
-    background: linear-gradient(135deg, var(--success-light) 0%, #e8f8f5 100%);
-    border-radius: 10px;
-    border: 2px solid var(--success);
-    position: relative;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(255, 152, 0, 0.3);
 }
 
-.saved-icon {
-    width: 50px;
-    height: 50px;
-    background: var(--success);
-    color: white;
+.header-icon.fire {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ff9800, #f57c00);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.saved-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.saved-label {
-    font-size: 0.8rem;
-    color: var(--gray);
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-}
-
-.saved-value {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--success);
-    font-family: 'Courier New', monospace;
-    letter-spacing: 2px;
-    margin-bottom: 0.3rem;
-}
-
-.saved-info {
-    font-size: 0.75rem;
-    color: var(--gray);
-}
-
-.btn-edit-id {
-    width: 40px;
-    height: 40px;
-    background: white;
-    border: 2px solid var(--success);
-    border-radius: 50%;
-    color: var(--success);
-    font-size: 1rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-edit-id:hover {
-    background: var(--success);
+    font-size: 1.8rem;
     color: white;
-    transform: rotate(10deg) scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+    animation: firePulse 2s infinite;
 }
 
-.id-edit,
-.id-required {
-    padding: 1.25rem;
+@keyframes firePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(255, 152, 0, 0.6);
+    }
 }
 
-.alert-box {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--warning-light);
-    border-radius: 8px;
-    border-left: 4px solid var(--warning);
+.header-content h3 {
+    margin: 0 0 0.3rem 0;
+    color: #e65100;
+    font-size: 1.4rem;
+}
+
+.header-content p {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.free-fire-form {
+    margin-top: 1.5rem;
+}
+
+.free-fire-input-group {
     margin-bottom: 1.5rem;
 }
 
-.alert-box i {
-    color: var(--warning);
-    font-size: 1.5rem;
-    margin-top: 0.2rem;
-}
-
-.alert-box strong {
-    display: block;
-    color: var(--dark);
-    margin-bottom: 0.3rem;
-}
-
-.alert-box p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--gray);
-}
-
-.form-field {
-    margin-bottom: 1.25rem;
-}
-
-.form-field label {
+.free-fire-input-group label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
+    font-weight: 700;
+    color: #e65100;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
 }
 
-.id-input {
+.input-with-status {
+    position: relative;
+}
+
+.free-fire-input {
     width: 100%;
-    padding: 0.9rem 1rem;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: 1rem;
-    font-family: 'Courier New', monospace;
-    letter-spacing: 1px;
-    transition: var(--transition);
+    padding: 1.2rem;
+    border: 3px solid #ff9800;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: white;
 }
 
-.id-input:focus {
+.free-fire-input:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px var(--primary-light);
+    border-color: #e65100;
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.3);
+    transform: translateY(-2px);
 }
 
-.field-hint {
+.input-status {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+}
+
+.input-status.success {
+    color: #2ecc71;
+    animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: translateY(-50%) scale(0);
+    }
+    to {
+        transform: translateY(-50%) scale(1);
+    }
+}
+
+.input-help {
+    display: block;
+    margin-top: 0.8rem;
+    color: #666;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    color: var(--gray);
-    margin-top: 0.5rem;
+    gap: 0.5rem;
 }
 
-.field-hint i {
-    color: var(--primary);
-}
-
-.form-actions {
+.btn-confirm-id {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
     display: flex;
-    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    box-shadow: 0 5px 20px rgba(255, 152, 0, 0.3);
 }
 
-/* ===== PAYMENT METHODS ===== */
-.payment-methods {
-    padding: 1rem;
+.btn-confirm-id:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(255, 152, 0, 0.5);
+}
+
+/* Méthodes de paiement */
+.payment-methods-card h3 {
+    color: var(--checkout-primary);
+}
+
+.payment-options-grid {
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
 }
 
-.payment-method {
-    cursor: pointer;
+.payment-option {
+    position: relative;
 }
 
-.payment-method input[type="radio"] {
+.payment-option input[type="radio"] {
     display: none;
 }
 
-.payment-method .method-card {
+.payment-option label {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.25rem;
-    background: var(--light);
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    transition: var(--transition);
+    padding: 1.2rem;
+    background: var(--light-gray);
+    border: 3px solid var(--border-color);
+    border-radius: 15px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.payment-method input:checked + .method-card {
-    background: var(--primary-light);
-    border-color: var(--primary);
-    transform: scale(1.02);
+.payment-option label::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    transition: left 0.5s ease;
 }
 
-.payment-method .method-card:hover {
-    border-color: var(--primary);
-    box-shadow: var(--shadow);
+.payment-option label:hover::before {
+    left: 100%;
 }
 
-.method-icon {
+.payment-option label:hover {
+    border-color: var(--checkout-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.payment-option input[type="radio"]:checked + label {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-color: var(--checkout-primary);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+}
+
+.payment-icon {
     width: 50px;
     height: 50px;
-    border-radius: 10px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1018,410 +788,459 @@
     flex-shrink: 0;
 }
 
-.method-icon.wave {
-    background: linear-gradient(135deg, #00bfff 0%, #1e90ff 100%);
+.payment-icon.wave {
+    background: linear-gradient(135deg, #00B8D4, #0097A7);
 }
 
-.method-icon.orange {
-    background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+.payment-icon.orange {
+    background: linear-gradient(135deg, #FF9800, #F57C00);
 }
 
-.method-icon.crypto {
-    background: linear-gradient(135deg, #f7931a 0%, #ffa633 100%);
+.payment-icon.crypto {
+    background: linear-gradient(135deg, #F7931A, #E67E22);
 }
 
-.method-info {
+.payment-info {
     flex: 1;
 }
 
-.method-info strong {
+.payment-info strong {
     display: block;
-    color: var(--dark);
+    color: var(--dark-gray);
     font-size: 1rem;
     margin-bottom: 0.2rem;
 }
 
-.method-info span {
+.payment-info span {
+    color: #666;
     font-size: 0.85rem;
-    color: var(--gray);
 }
 
-.method-check {
+.payment-check {
     font-size: 1.5rem;
-    color: var(--border);
-    transition: var(--transition);
+    color: #ddd;
+    transition: all 0.3s ease;
 }
 
-.payment-method input:checked + .method-card .method-check {
-    color: var(--primary);
+.payment-option input[type="radio"]:checked + label .payment-check {
+    color: var(--checkout-success);
     transform: scale(1.2);
 }
 
-/* ===== CHECKOUT ACTIONS ===== */
-.checkout-actions {
-    padding: 1.25rem;
+/* Validation finale */
+.final-validation-card {
+    background: linear-gradient(135deg, #f8f9fa, white);
 }
 
-.warning-banner {
+.terms-section {
+    margin-bottom: 2rem;
+}
+
+.terms-checkbox {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    padding: 1rem;
-    background: var(--warning-light);
-    border-radius: 8px;
-    border-left: 4px solid var(--warning);
-    margin-bottom: 1.25rem;
-}
-
-.warning-banner i {
-    color: var(--warning);
-    font-size: 1.5rem;
-    margin-top: 0.2rem;
-}
-
-.warning-banner strong {
-    display: block;
-    color: var(--dark);
-    margin-bottom: 0.3rem;
-}
-
-.warning-banner p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--gray);
-}
-
-.checkbox-custom {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
     cursor: pointer;
-    margin-bottom: 1.25rem;
-    user-select: none;
+    position: relative;
+    padding-left: 2.5rem;
 }
 
-.checkbox-custom input[type="checkbox"] {
-    display: none;
+.terms-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .checkmark {
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 24px;
+    width: 24px;
+    background-color: white;
+    border: 3px solid var(--border-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
-.checkbox-custom input:checked + .checkmark {
-    background: var(--primary);
-    border-color: var(--primary);
+.terms-checkbox:hover .checkmark {
+    border-color: var(--checkout-primary);
 }
 
-.checkbox-custom input:checked + .checkmark::after {
-    content: '✓';
-    color: white;
-    font-weight: 700;
+.terms-checkbox input:checked ~ .checkmark {
+    background: linear-gradient(135deg, var(--checkout-primary), var(--checkout-secondary));
+    border-color: var(--checkout-primary);
 }
 
-.label-text {
-    font-size: 0.9rem;
-    color: var(--gray);
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
 }
 
-.label-text a {
-    color: var(--primary);
+.terms-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.terms-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.terms-text a {
+    color: var(--checkout-primary);
     text-decoration: none;
     font-weight: 600;
 }
 
-.label-text a:hover {
+.terms-text a:hover {
     text-decoration: underline;
 }
 
-/* ===== BUTTONS ===== */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.9rem 1.5rem;
+.btn-pay-now {
+    width: 100%;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, var(--checkout-primary), var(--checkout-secondary));
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
     cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-    text-align: center;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.btn-primary:disabled {
-    background: var(--gray);
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.btn-secondary {
-    background: var(--light);
-    color: var(--dark);
-    border: 2px solid var(--border);
-}
-
-.btn-secondary:hover {
-    background: var(--white);
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.btn-save {
-    background: var(--success);
-    color: white;
-    flex: 1;
-}
-
-.btn-save:hover {
-    background: #229954;
-    transform: translateY(-2px);
-}
-
-.btn-cancel {
-    background: var(--light);
-    color: var(--gray);
-    border: 2px solid var(--border);
-}
-
-.btn-cancel:hover {
-    border-color: var(--danger);
-    color: var(--danger);
-}
-
-.btn-block {
-    width: 100%;
+    transition: all 0.3s ease;
     display: flex;
-}
-
-.btn-checkout {
-    width: 100%;
-    padding: 1.25rem 1.5rem;
-    font-size: 1.05rem;
-    margin-bottom: 1rem;
-}
-
-.btn-content {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    margin-bottom: 1.5rem;
 }
 
-.btn-text {
-    font-size: 1.05rem;
+.btn-pay-now:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+
+.btn-pay-now:active {
+    transform: translateY(-1px);
+}
+
+.btn-icon {
+    font-size: 1.5rem;
 }
 
 .btn-amount {
-    font-size: 1.3rem;
-    font-weight: 700;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1.2rem;
+    border-radius: 10px;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 1px;
 }
 
 .security-badges {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
+    gap: 2rem;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: 10px;
+    margin-bottom: 1rem;
 }
 
-.badge {
+.badge-item {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    color: var(--gray);
+    gap: 0.5rem;
+    color: var(--checkout-success);
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
-.badge i {
-    color: var(--success);
+.badge-item i {
+    font-size: 1.2rem;
 }
 
-/* ===== GUARANTEES BANNER ===== */
-.guarantees-banner {
-    max-width: 1200px;
-    margin: 3rem auto 0;
-    padding: 0 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.guarantee {
+.btn-back-to-cart {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    padding: 1.25rem;
+    gap: 0.8rem;
+    padding: 1rem;
     background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-}
-
-.guarantee:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-}
-
-.guarantee i {
-    font-size: 1.5rem;
-    color: var(--primary);
-}
-
-.guarantee span {
-    font-size: 0.9rem;
+    border: 2px solid var(--border-color);
+    color: var(--dark-gray);
+    text-decoration: none;
+    border-radius: 10px;
     font-weight: 600;
-    color: var(--dark);
+    transition: all 0.3s ease;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 968px) {
+.btn-back-to-cart:hover {
+    border-color: var(--checkout-primary);
+    color: var(--checkout-primary);
+    transform: translateX(-5px);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+@media (max-width: 1200px) {
     .checkout-container {
         grid-template-columns: 1fr;
     }
-
-    .checkout-right {
-        order: -1;
-    }
-
-    .guarantees-banner {
-        grid-template-columns: repeat(2, 1fr);
+    
+    .order-summary-section {
+        position: relative;
+        top: 0;
     }
 }
 
-@media (max-width: 576px) {
-    .checkout-header {
-        padding: 1.5rem 1rem;
-    }
-
-    .header-content h1 {
-        font-size: 1.4rem;
-    }
-
-    .progress-steps {
-        gap: 0.25rem;
-    }
-
-    .step span {
-        font-size: 0.7rem;
-    }
-
-    .step-icon {
-        width: 35px;
-        height: 35px;
-        font-size: 0.85rem;
-    }
-
-    .step-line {
-        width: 40px;
-    }
-
-    .card-header h3 {
-        font-size: 1rem;
-    }
-
-    .order-items {
-        max-height: 300px;
-    }
-
-    .order-item {
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-
-    .item-image {
-        width: 50px;
-        height: 50px;
-    }
-
-    .item-price {
-        width: 100%;
-        text-align: right;
-        margin-top: 0.5rem;
-        padding-top: 0.5rem;
-        border-top: 1px solid var(--border);
-    }
-
-    .total-amount {
-        font-size: 1.2rem;
-    }
-
-    .guarantees-banner {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-
-    .guarantee {
-        padding: 1rem;
-    }
-
-    .guarantee i {
-        font-size: 1.25rem;
-    }
-
-    .guarantee span {
-        font-size: 0.85rem;
-    }
-
-    .form-actions {
+@media (max-width: 768px) {
+    .checkout-header h2 {
+        font-size: 2rem;
         flex-direction: column;
     }
+    
+    .payment-options-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .security-badges {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .cart-items-summary {
+        max-height: 300px;
+    }
+}
 
-    .btn-save,
-    .btn-cancel {
-        width: 100%;
+@media (max-width: 480px) {
+    .section-card {
+        padding: 1.5rem;
+    }
+    
+    .checkout-header {
+        padding: 1.5rem;
+    }
+    
+    .checkout-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .btn-pay-now {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .info-grid {
+        gap: 0.8rem;
     }
 }
 </style>
 
 <script>
-function editID() {
-    document.getElementById('idSaved').style.display = 'none';
-    document.getElementById('idEdit').style.display = 'block';
-    document.getElementById('editInput').focus();
-}
-
-function cancelEdit() {
-    document.getElementById('idSaved').style.display = 'block';
-    document.getElementById('idEdit').style.display = 'none';
-}
-
-// Synchroniser le mode de paiement sélectionné
-document.querySelectorAll('input[name="payment"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-        document.getElementById('paymentMethod').value = this.value;
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion des méthodes de paiement
+    const paymentOptions = document.querySelectorAll('input[name="payment_method"]');
+    const selectedPaymentInput = document.getElementById('selected_payment');
+    
+    paymentOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            selectedPaymentInput.value = this.value;
+        });
+    });
+    
+    // Validation du formulaire ID Free Fire
+    const freeFireForm = document.getElementById('freeFireForm');
+    if (freeFireForm) {
+        freeFireForm.addEventListener('submit', function(e) {
+            const freeFireId = document.getElementById('free_fire_id').value;
+            
+            if (!freeFireId || !freeFireId.match(/^[0-9]+$/)) {
+                e.preventDefault();
+                alert('❌ Veuillez entrer un ID Free Fire valide (chiffres uniquement)');
+                return false;
+            }
+        });
+    }
+    
+    // Validation du formulaire final
+    const checkoutForm = document.getElementById('checkoutForm');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function(e) {
+            const termsChecked = document.getElementById('terms').checked;
+            
+            if (!termsChecked) {
+                e.preventDefault();
+                alert('❌ Veuillez accepter les conditions générales de vente');
+                return false;
+            }
+            
+            // Désactiver le bouton et afficher un loader
+            const payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+            payButton.innerHTML = `
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Traitement en cours...</span>
+            `;
+        });
+    }
+    
+    // Animation des cartes au scroll
+    const cards = document.querySelectorAll('.section-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.5s ease';
+        observer.observe(card);
+    });
+    
+    // Validation en temps réel de l'ID Free Fire
+    const freeFireInput = document.getElementById('free_fire_id');
+    if (freeFireInput) {
+        freeFireInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            const statusDiv = document.querySelector('.input-status');
+            
+            // Retirer les caractères non numériques
+            e.target.value = value.replace(/[^0-9]/g, '');
+            
+            // Valider
+            if (e.target.value.length >= 8) {
+                e.target.style.borderColor = '#2ecc71';
+                if (statusDiv) {
+                    statusDiv.classList.add('success');
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i>';
+                }
+            } else {
+                e.target.style.borderColor = '#ff9800';
+                if (statusDiv) {
+                    statusDiv.classList.remove('success');
+                    statusDiv.innerHTML = '';
+                }
+            }
+        });
+    }
+    
+    // Effet de hover sur les options de paiement
+    const paymentLabels = document.querySelectorAll('.payment-option label');
+    paymentLabels.forEach(label => {
+        label.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px) scale(1.02)';
+        });
+        
+        label.addEventListener('mouseleave', function() {
+            if (!this.previousElementSibling.checked) {
+                this.style.transform = '';
+            }
+        });
     });
 });
 
-// Animation d'entrée des cartes
-window.addEventListener('load', function() {
-    const cards = document.querySelectorAll('.card');
-    cards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-    });
-});
+// Fonction pour afficher une notification
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification-toast ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${getNotificationIcon(type)}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('show'), 100);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-circle',
+        warning: 'exclamation-triangle',
+        info: 'info-circle'
+    };
+    return icons[type] || 'info-circle';
+}
+
+// CSS pour les notifications
+const style = document.createElement('style');
+style.textContent = `
+    .notification-toast {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        z-index: 10000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        border-left: 4px solid;
+    }
+    
+    .notification-toast.show {
+        transform: translateX(0);
+    }
+    
+    .notification-toast.success {
+        border-left-color: #2ecc71;
+    }
+    
+    .notification-toast.warning {
+        border-left-color: #f39c12;
+    }
+    
+    .notification-toast.error {
+        border-left-color: #e74c3c;
+    }
+    
+    .notification-toast.info {
+        border-left-color: #3498db;
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .notification-content i {
+        font-size: 1.2rem;
+    }
+    
+    .notification-toast.success i { color: #2ecc71; }
+    .notification-toast.warning i { color: #f39c12; }
+    .notification-toast.error i { color: #e74c3c; }
+    .notification-toast.info i { color: #3498db; }
+`;
+document.head.appendChild(style);
 </script>
-
 {% endblock %}

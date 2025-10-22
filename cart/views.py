@@ -23,18 +23,9 @@ def get_or_create_cart(request):
     return cart
 
 def cart_view(request):
-    """Affiche le panier avec les IDs joueur"""
+    """Affiche le panier"""
     cart = get_or_create_cart(request)
     cart_items = cart.items.all()
-    
-    # Récupérer les IDs joueur depuis les CartItems ou la session
-    for item in cart_items:
-        if item.product.requires_player_id:
-            # Priorité à l'ID stocké dans CartItem
-            if not item.player_id:
-                player_id_key = f'player_id_{item.product.id}'
-                item.player_id = request.session.get(player_id_key, '')
-    
     cart_total = sum(item.total_price() for item in cart_items)
     
     context = {
@@ -44,7 +35,7 @@ def cart_view(request):
     return render(request, 'cart/cart.html', context)
 
 def add_to_cart(request, product_id):
-    """Ajoute un produit au panier avec vérification du stock et de l'ID joueur"""
+    """Ajoute un produit au panier avec vérification du stock et gestion ID Free Fire"""
     if request.method == 'POST':
         product = get_object_or_404(Product, id=product_id)
         
@@ -53,31 +44,13 @@ def add_to_cart(request, product_id):
             messages.error(request, f'Désolé, {product.name} n\'est plus disponible !')
             return redirect('store:home')
         
-        # Vérifier l'ID joueur si requis
-        player_id = ''
-        if product.requires_player_id:
-            player_id = request.POST.get('player_id', '').strip()
-            if not player_id:
-                messages.error(request, f'❌ ID joueur requis pour {product.name}!')
-                return redirect('store:product_detail', pk=product_id)
-            
-            # Validation de l'ID - uniquement des chiffres
-            if not player_id.isdigit():
-                messages.error(request, '❌ L\'ID joueur doit contenir uniquement des chiffres!')
-                return redirect('store:product_detail', pk=product_id)
-            
-            # Validation de la longueur (généralement entre 7 et 15 chiffres)
-            if len(player_id) < 7 or len(player_id) > 15:
-                messages.error(request, '❌ L\'ID Free Fire doit contenir entre 7 et 15 chiffres!')
-                return redirect('store:product_detail', pk=product_id)
-        
         cart = get_or_create_cart(request)
         
         # Vérifier la quantité en stock
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             product=product,
-            defaults={'quantity': 1, 'player_id': player_id}
+            defaults={'quantity': 1}
         )
         
         if not created:
@@ -87,18 +60,16 @@ def add_to_cart(request, product_id):
                 return redirect('cart:cart_view')
             
             cart_item.quantity += 1
-            # Mettre à jour l'ID joueur si fourni
-            if player_id:
-                cart_item.player_id = player_id
             cart_item.save()
         
-        # Stocker l'ID joueur dans la session si fourni
-        if product.requires_player_id and player_id:
-            player_id_key = f'player_id_{product_id}'
-            request.session[player_id_key] = player_id
-            logger.info(f"ID joueur stocké: {player_id} pour le produit {product.name}")
+        # Gérer l'ID Free Fire si fourni
+        free_fire_id = request.POST.get('free_fire_id', '').strip()
+        if free_fire_id:
+            # Sauvegarder dans la session
+            request.session['free_fire_id'] = free_fire_id
+            logger.info(f"ID Free Fire sauvegardé pour {request.user.username if request.user.is_authenticated else 'anonyme'}: {free_fire_id}")
         
-        messages.success(request, f'✅ {product.name} ajouté au panier !')
+        messages.success(request, f'{product.name} ajouté au panier !')
         return redirect('cart:cart_view')
     
     return redirect('store:home')
@@ -135,7 +106,7 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def checkout(request):
-    """Page de validation avec demande d'ID Free Fire si nécessaire"""
+    """Page de validation avec gestion de l'ID Free Fire"""
     cart = get_or_create_cart(request)
     cart_items = cart.items.all()
     
@@ -153,54 +124,47 @@ def checkout(request):
     
     cart_total = sum(item.total_price() for item in cart_items)
     
-    # Récupérer l'ID Free Fire depuis la session s'il existe déjà
+    # Récupérer l'ID Free Fire depuis la session
     free_fire_id = request.session.get('free_fire_id', '')
+    
+    # Traitement de la soumission du formulaire
+    if request.method == 'POST':
+        if requires_free_fire_id:
+            new_free_fire_id = request.POST.get('free_fire_id', '').strip()
+            
+            if not new_free_fire_id:
+                messages.error(request, '❌ ID Free Fire requis pour les recharges automatiques!')
+                context = {
+                    'cart_items': cart_items,
+                    'cart_total': cart_total,
+                    'requires_free_fire_id': requires_free_fire_id,
+                    'free_fire_id': free_fire_id,
+                }
+                return render(request, 'cart/checkout.html', context)
+            
+            # Valider que l'ID ne contient que des chiffres
+            if not new_free_fire_id.isdigit():
+                messages.error(request, '❌ L\'ID Free Fire doit contenir uniquement des chiffres!')
+                context = {
+                    'cart_items': cart_items,
+                    'cart_total': cart_total,
+                    'requires_free_fire_id': requires_free_fire_id,
+                    'free_fire_id': new_free_fire_id,
+                }
+                return render(request, 'cart/checkout.html', context)
+            
+            # Stocker l'ID dans la session
+            request.session['free_fire_id'] = new_free_fire_id
+            messages.success(request, '✅ ID Free Fire enregistré avec succès!')
+        
+        # Rediriger vers le traitement de la commande
+        return redirect('cart:process_order')
     
     context = {
         'cart_items': cart_items,
         'cart_total': cart_total,
         'requires_free_fire_id': requires_free_fire_id,
         'free_fire_id': free_fire_id,
-    }
-    return render(request, 'cart/checkout.html', context)
-    
-    # Si l'ID Free Fire est déjà fourni pour tous les produits nécessaires, passer directement au traitement
-    all_ids_provided = True
-    if requires_free_fire_id:
-        for item in cart_items:
-            if item.product.requires_player_id and not item.saved_player_id:
-                all_ids_provided = False
-                break
-    
-    if all_ids_provided and requires_free_fire_id:
-        # Tous les IDs sont fournis, passer directement au traitement
-        return redirect('cart:process_order')
-    
-    if request.method == 'POST' and requires_free_fire_id:
-        free_fire_id = request.POST.get('free_fire_id', '').strip()
-        payment_method = request.POST.get('payment_method', 'wave')
-        
-        if not free_fire_id:
-            messages.error(request, '❌ ID Free Fire requis pour les recharges automatiques!')
-        else:
-            # Stocker l'ID et la méthode de paiement dans la session
-            request.session['free_fire_id'] = free_fire_id
-            request.session['payment_method'] = payment_method
-            
-            # Mettre à jour l'ID joueur dans tous les CartItems qui en ont besoin
-            for item in cart_items:
-                if item.product.requires_player_id:
-                    item.player_id = free_fire_id
-                    item.save()
-            
-            return redirect('cart:process_order')
-    
-    context = {
-        'cart_items': cart_items,
-        'cart_total': cart_total,
-        'requires_free_fire_id': requires_free_fire_id,
-        'free_fire_id': request.session.get('free_fire_id', ''),
-        'all_ids_provided': all_ids_provided,
     }
     return render(request, 'cart/checkout.html', context)
 
@@ -299,22 +263,18 @@ L'équipe KOITA_STORE
     )
 
 def handle_automatic_recharge(user, product, redeem_code, order, free_fire_id):
-    """
-    Gère la recharge automatique avec gestion robuste des erreurs
-    """
+    """Gère la recharge automatique avec gestion robuste des erreurs"""
     try:
         from scripts.shop2game_redeem import Shop2GameRedeemer
         redeemer = Shop2GameRedeemer()
         
         logger.info(f"🔄 Tentative de recharge automatique - Produit: {product.name}, ID: {free_fire_id}")
         
-        # Tentative de recharge automatique
         success, message = redeemer.redeem_diamonds(free_fire_id, redeem_code)
         
         if success:
             logger.info(f"✅ Recharge automatique réussie - {message}")
             
-            # Notification de succès
             Notification.objects.create(
                 user=user,
                 notification_type='redeem',
@@ -324,7 +284,6 @@ def handle_automatic_recharge(user, product, redeem_code, order, free_fire_id):
                 order=order
             )
             
-            # Email de confirmation
             send_mail(
                 f'✅ Recharge réussie - {product.name}',
                 f'Vos {product.name} ont été ajoutés avec succès à votre compte Free Fire (ID: {free_fire_id}).',
@@ -335,27 +294,19 @@ def handle_automatic_recharge(user, product, redeem_code, order, free_fire_id):
             
         else:
             logger.warning(f"⚠️ Recharge automatique échouée - {message}")
-            
-            # Fallback manuel
             handle_manual_fallback(user, product, redeem_code, order, free_fire_id, message)
             
     except Exception as e:
         logger.error(f"❌ Erreur critique lors de la recharge automatique: {str(e)}", exc_info=True)
-        
-        # Fallback manuel en cas d'erreur critique
         handle_manual_fallback(user, product, redeem_code, order, free_fire_id, f"Erreur système: {str(e)}")
 
 def handle_manual_fallback(user, product, redeem_code, order, free_fire_id, error_message):
-    """
-    Gère le fallback manuel en cas d'échec de la recharge automatique
-    """
+    """Gère le fallback manuel en cas d'échec de la recharge automatique"""
     try:
         logger.info(f"🔄 Activation du mode manuel - Raison: {error_message}")
         
-        # Email de fallback avec instructions manuelles
         send_redeem_fallback_email(user, product, redeem_code, order, free_fire_id, error_message)
         
-        # Notification pour l'utilisateur
         Notification.objects.create(
             user=user,
             notification_type='redeem',
@@ -370,7 +321,6 @@ def handle_manual_fallback(user, product, redeem_code, order, free_fire_id, erro
     except Exception as fallback_error:
         logger.critical(f"💥 ERREUR CRITIQUE: Échec du fallback manuel - {str(fallback_error)}", exc_info=True)
         
-        # Dernier recours - notification admin
         send_mail(
             '🚨 ERREUR CRITIQUE - Système de recharge KOITA_STORE',
             f'Erreur critique dans le système de recharge:\n\n'
@@ -389,7 +339,6 @@ def handle_manual_fallback(user, product, redeem_code, order, free_fire_id, erro
 def process_order(request):
     """Traiter la commande avec support des deux catégories"""
     
-    # Début du traitement
     logger.info(f"🚀 Début du traitement de commande - Utilisateur: {request.user.username}")
     
     if request.method == 'POST':
@@ -403,11 +352,9 @@ def process_order(request):
             messages.error(request, 'Votre panier est vide!')
             return redirect('cart:cart_view')
         
-        # Récupérer l'ID Free Fire si nécessaire
-        free_fire_id = request.session.pop('free_fire_id', '')
-        payment_method = request.session.pop('payment_method', 'wave')
+        # Récupérer l'ID Free Fire depuis la session
+        free_fire_id = request.session.get('free_fire_id', '')
         logger.info(f"🎮 ID Free Fire récupéré: {free_fire_id}")
-        logger.info(f"💳 Méthode de paiement: {payment_method}")
         
         # Créer la commande
         total = sum(item.total_price() for item in cart_items)
@@ -415,7 +362,6 @@ def process_order(request):
             user=request.user,
             total_amount=total,
             free_fire_id=free_fire_id,
-            payment_method=payment_method,
             status='processing'
         )
         
@@ -459,14 +405,11 @@ def process_order(request):
             product.save()
             logger.info(f"📦 Stock mis à jour: {product.name} -> {product.stock} unités")
             
-            # === TRAITEMENT SPÉCIFIQUE PAR CATÉGORIE ===
-            
-            # Catégorie "Free Fire Diamant" - Recharge automatique
+            # Traitement spécifique par catégorie
             if 'free fire diamant' in category_name and free_fire_id and redeem_code_sent:
                 logger.info(f"🔄 Déclenchement recharge automatique pour {product.name}")
                 handle_automatic_recharge(request.user, product, redeem_code_sent, order, free_fire_id)
             
-            # Catégorie "Code Diamant FF" - Envoi simple du code
             elif 'code diamant' in category_name and redeem_code_sent:
                 logger.info(f"📧 Envoi simple code REDEEM pour {product.name}")
                 try:
@@ -484,7 +427,6 @@ def process_order(request):
                     
                 except Exception as e:
                     logger.error(f"❌ Erreur envoi email code: {str(e)}", exc_info=True)
-                    # Fallback - notification uniquement
                     Notification.objects.create(
                         user=request.user,
                         notification_type='redeem',
@@ -498,6 +440,10 @@ def process_order(request):
         cart_items_count = cart_items.count()
         cart_items.delete()
         logger.info(f"🛒 Panier vidé - {cart_items_count} articles supprimés")
+        
+        # Nettoyer l'ID Free Fire de la session
+        if 'free_fire_id' in request.session:
+            del request.session['free_fire_id']
         
         # Marquer la commande comme complétée
         order.status = 'completed'

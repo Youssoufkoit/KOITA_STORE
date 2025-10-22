@@ -145,27 +145,56 @@
                 <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="purchase-form">
                     {% csrf_token %}
                     
-                  <!-- Dans la section du formulaire d'ajout au panier -->
-{% if product.requires_player_id %}
-<div class="form-group">
-    <label for="player_id">
-        <i class="fas fa-id-card"></i> Votre ID Free Fire
-    </label>
-    <input type="text" 
-           id="player_id" 
-           name="player_id" 
-           value="{{ saved_player_id }}"
-           placeholder="Ex: 1234567890" 
-           required 
-           pattern="[0-9]+" 
-           title="L'ID Free Fire doit contenir uniquement des chiffres"
-           class="form-control">
-    <small class="form-help">
-        <i class="fas fa-info-circle"></i> 
-        🔍 Où trouver mon ID Free Fire ? Dans le jeu → Profil → Base (chiffres uniquement)
-    </small>
-</div>
-{% endif %}
+                    <!-- Section ID Free Fire pour recharge automatique -->
+                    {% if product.category and 'free fire diamant' in product.category.name.lower %}
+                    <div class="free-fire-id-section-detail">
+                        <div class="section-header-fire">
+                            <div class="fire-icon-animated">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="header-text">
+                                <h3>Recharge Automatique</h3>
+                                <p>Entrez votre ID Free Fire pour une livraison instantanée</p>
+                            </div>
+                        </div>
+                        
+                        <div class="free-fire-form-group">
+                            <label for="free_fire_id_detail">
+                                <i class="fas fa-id-card"></i>
+                                Votre ID Free Fire
+                            </label>
+                            <input 
+                                type="text" 
+                                id="free_fire_id_detail" 
+                                name="free_fire_id"
+                                value="{{ request.session.free_fire_id|default:'' }}"
+                                placeholder="Exemple: 1234567890"
+                                pattern="[0-9]+"
+                                title="Seuls les chiffres sont autorisés"
+                                class="free-fire-input-detail"
+                            >
+                            <small class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Trouvez votre ID dans Free Fire → Profil → Base
+                            </small>
+                        </div>
+                        
+                        <div class="free-fire-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-bolt"></i>
+                                <span>Livraison en 2 minutes</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-shield-check"></i>
+                                <span>100% Sécurisé</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-redo"></i>
+                                <span>Modifiable au checkout</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
 
                     <div class="quantity-selector-modern">
                         <label>Quantité :</label>
@@ -179,7 +208,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <button type="submit" class="add-to-cart-btn-modern">
                         <span class="btn-icon">
                             <i class="fas fa-cart-plus"></i>
@@ -444,7 +473,7 @@
 }
 
 /* Styles pour la section ID Free Fire */
-.free-fire-id-section {
+.free-fire-id-section-detail {
     background: linear-gradient(135deg, #fff3e0, #ffecb3);
     border: 2px solid #ff9800;
     border-radius: 10px;
@@ -1509,9 +1538,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Validation de l'ID Free Fire
-    const playerIdInput = document.getElementById('player_id');
-    if (playerIdInput) {
-        playerIdInput.addEventListener('input', function() {
+    const freeFireInput = document.getElementById('free_fire_id_detail');
+    if (freeFireInput) {
+        freeFireInput.addEventListener('input', function() {
             const value = this.value.trim();
             if (value && !/^\d+$/.test(value)) {
                 this.style.borderColor = '#e74c3c';
@@ -1614,19 +1643,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const purchaseForm = document.querySelector('.purchase-form');
     if (purchaseForm) {
         purchaseForm.addEventListener('submit', function(e) {
-            const playerIdInput = document.getElementById('player_id');
-            if (playerIdInput && '{{ product.requires_player_id }}' === 'True') {
-                const playerId = playerIdInput.value.trim();
-                if (!playerId) {
-                    e.preventDefault();
-                    showNotification('❌ ID Free Fire requis pour ce produit!', 'error');
-                    playerIdInput.focus();
-                    return;
-                }
-                if (!/^\d+$/.test(playerId)) {
+            const freeFireInput = document.getElementById('free_fire_id_detail');
+            if (freeFireInput) {
+                const freeFireId = freeFireInput.value.trim();
+                if (freeFireId && !/^\d+$/.test(freeFireId)) {
                     e.preventDefault();
                     showNotification('❌ L\'ID Free Fire doit contenir uniquement des chiffres!', 'error');
-                    playerIdInput.focus();
+                    freeFireInput.focus();
                     return;
                 }
             }

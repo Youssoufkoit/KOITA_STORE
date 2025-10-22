@@ -1655,3 +1655,46 @@ INFO 2025-10-22 22:13:58,542 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart
 INFO 2025-10-22 22:13:59,501 autoreload Watching for file changes with StatReloader
 INFO 2025-10-22 22:14:01,982 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
 INFO 2025-10-22 22:14:02,994 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 22:17:34,476 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 22:17:34,675 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 22:17:34,679 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 22:17:34,679 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 22:17:34,688 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 22:17:34,698 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 22:17:34,700 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 22:17:34,701 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 22:17:36,894 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 22:17:39,468 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:17:39,508 basehttp "GET /product/7/ HTTP/1.1" 200 48045
+INFO 2025-10-22 22:19:11,007 views ID joueur stocké: 11233333333 pour le produit 583 DIAMANTS
+INFO 2025-10-22 22:19:11,018 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:19:11,058 basehttp "GET /cart/ HTTP/1.1" 200 13705
+INFO 2025-10-22 22:19:13,763 basehttp "GET /cart/checkout/ HTTP/1.1" 200 36661
+INFO 2025-10-22 22:38:05,030 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 22:38:06,043 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 22:38:08,507 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 22:38:09,410 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 22:38:14,831 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 22:38:15,739 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 22:41:21,451 basehttp "GET /cart/checkout/ HTTP/1.1" 200 41728
+INFO 2025-10-22 22:41:21,541 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+ERROR 2025-10-22 22:43:04,942 basehttp "POST /cart/process-order/ HTTP/1.1" 500 269838
+INFO 2025-10-22 22:45:06,884 basehttp "POST /cart/checkout/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:45:06,932 basehttp "GET /cart/process-order/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:45:06,972 basehttp "GET /cart/checkout/ HTTP/1.1" 200 41728
+INFO 2025-10-22 22:45:13,048 basehttp "GET /recharges/ HTTP/1.1" 200 35978
+INFO 2025-10-22 22:45:14,471 basehttp "GET /cart/ HTTP/1.1" 200 13705
+INFO 2025-10-22 22:45:16,828 basehttp "POST /cart/remove/20/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:45:16,870 basehttp "GET /cart/ HTTP/1.1" 200 10804
+INFO 2025-10-22 22:45:19,345 basehttp "GET /recharges/ HTTP/1.1" 200 35978
+INFO 2025-10-22 22:45:21,109 basehttp "GET /recharges/?category=blood-strike HTTP/1.1" 200 25414
+INFO 2025-10-22 22:45:27,886 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29691
+INFO 2025-10-22 22:45:34,732 basehttp "POST /cart/add/6/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:45:34,791 basehttp "GET /cart/ HTTP/1.1" 200 13442
+INFO 2025-10-22 22:45:38,000 basehttp "GET /cart/checkout/ HTTP/1.1" 200 41724
+INFO 2025-10-22 22:46:00,167 basehttp "GET /recharges/ HTTP/1.1" 200 35978
+INFO 2025-10-22 22:46:07,723 basehttp "GET /cart/ HTTP/1.1" 200 13442
+INFO 2025-10-22 22:46:10,383 basehttp "GET /cart/checkout/ HTTP/1.1" 200 41724
+INFO 2025-10-22 22:48:56,757 basehttp "GET /cart/checkout/ HTTP/1.1" 200 37640
+INFO 2025-10-22 23:07:32,295 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 23:07:33,796 autoreload Watching for file changes with StatReloader
