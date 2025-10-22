@@ -143,23 +143,26 @@ def checkout(request):
         messages.warning(request, 'Votre panier est vide !')
         return redirect('cart:cart_view')
     
-    # Vérifier si des produits nécessitent l'ID Free Fire (UNIQUEMENT pour recharges automatiques)
+    # Vérifier si des produits nécessitent l'ID Free Fire
     requires_free_fire_id = any(
-        item.product.requires_player_id and 
         item.product.category and 
-        ('free fire diamant' in item.product.category.name.lower())
+        ('free fire diamant' in item.product.category.name.lower() or 
+         item.product.category.slug == 'free-fire-diamant')
         for item in cart_items
     )
     
-    # Récupérer les IDs joueur déjà saisis depuis la session et les attacher aux items
-    for item in cart_items:
-        if item.product.requires_player_id:
-            player_id_key = f'player_id_{item.product.id}'
-            item.saved_player_id = request.session.get(player_id_key, '')
-        else:
-            item.saved_player_id = ''
-    
     cart_total = sum(item.total_price() for item in cart_items)
+    
+    # Récupérer l'ID Free Fire depuis la session s'il existe déjà
+    free_fire_id = request.session.get('free_fire_id', '')
+    
+    context = {
+        'cart_items': cart_items,
+        'cart_total': cart_total,
+        'requires_free_fire_id': requires_free_fire_id,
+        'free_fire_id': free_fire_id,
+    }
+    return render(request, 'cart/checkout.html', context)
     
     # Si l'ID Free Fire est déjà fourni pour tous les produits nécessaires, passer directement au traitement
     all_ids_provided = True

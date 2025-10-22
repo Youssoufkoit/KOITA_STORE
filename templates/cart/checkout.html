@@ -88,15 +88,16 @@
             </div>
 
             <!-- Section ID Free Fire UNIQUEMENT pour les recharges automatiques -->
-            {% if requires_free_fire_id and not all_ids_provided %}
-            <div class="form-section free-fire-section">
-                <h3><i class="fas fa-id-card"></i> ID Free Fire Requis</h3>
-                <div class="alert">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>Votre commande contient des recharges automatiques. Veuillez saisir votre ID Free Fire pour procéder à la recharge.</p>
+            {% if requires_free_fire_id %}
+            <div class="form-section free-fire-id-section">
+                <h3><i class="fas fa-gamepad"></i> ID Free Fire Requis</h3>
+                
+                <div class="free-fire-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Pour les recharges automatiques, votre ID Free Fire est obligatoire</p>
                 </div>
                 
-                <form method="POST" class="free-fire-form">
+                <form method="post" action="{% url 'cart:checkout' %}" class="free-fire-form">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="free_fire_id">
@@ -106,188 +107,168 @@
                                id="free_fire_id" 
                                name="free_fire_id" 
                                value="{{ free_fire_id }}"
-                               placeholder="Ex: 1234567890" 
-                               required 
-                               pattern="[0-9]{7,15}"
-                               title="L'ID Free Fire doit contenir entre 7 et 15 chiffres">
+                               placeholder="Exemple: 1234567890" 
+                               required
+                               pattern="[0-9]+"
+                               title="Seuls les chiffres sont autorisés">
                         <small class="form-help">
-                            <i class="fas fa-info-circle"></i> 
-                            Votre ID Free Fire se trouve dans les paramètres de jeu (Profil → Base) - Chiffres uniquement
+                            ⓘ Trouvez votre ID dans Free Fire → Profil → Section "Base"
                         </small>
                     </div>
                     
-                    <!-- Section méthode de paiement -->
-                    <div class="payment-methods">
-                        <h4><i class="fas fa-credit-card"></i> Méthode de paiement</h4>
-                        <div class="payment-options">
-                            <div class="payment-option">
-                                <input type="radio" id="wave" name="payment_method" value="wave" checked>
-                                <label for="wave">
-                                    <i class="fas fa-mobile-alt"></i> Wave
-                                </label>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" id="orange_money" name="payment_method" value="orange_money">
-                                <label for="orange_money">
-                                    <i class="fas fa-money-bill-wave"></i> Orange Money
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <button type="submit" class="btn btn-primary btn-large">
-                        <i class="fas fa-lock"></i> Procéder au paiement
+                        <i class="fas fa-arrow-right"></i> Continuer vers le paiement
                     </button>
                 </form>
             </div>
-            {% else %}
-            <!-- Si l'ID est déjà fourni ou non requis, afficher directement le formulaire de paiement -->
+            {% endif %}
+
+            <!-- Section Méthode de Paiement -->
             <div class="form-section payment-section">
                 <h3><i class="fas fa-credit-card"></i> Méthode de Paiement</h3>
                 <p class="section-subtitle">Choisissez votre méthode de paiement préférée</p>
                 
-                <form method="POST" action="{% url 'cart:process_order' %}">
-                    {% csrf_token %}
-                    
-                    <div class="payment-methods">
-                        <!-- Wave -->
-                        <div class="payment-method">
-                            <input type="radio" id="wave" name="payment_method" value="wave" checked>
-                            <label for="wave">
-                                <div class="payment-icon wave">
-                                    <i class="fas fa-mobile-alt"></i>
-                                </div>
-                                <div class="payment-info">
-                                    <span class="payment-name">Wave</span>
-                                    <span class="payment-desc">Paiement mobile Sénégal</span>
-                                </div>
-                                <div class="payment-check">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- Orange Money -->
-                        <div class="payment-method">
-                            <input type="radio" id="orange_money" name="payment_method" value="orange_money">
-                            <label for="orange_money">
-                                <div class="payment-icon orange">
-                                    <i class="fas fa-money-bill-wave"></i>
-                                </div>
-                                <div class="payment-info">
-                                    <span class="payment-name">Orange Money</span>
-                                    <span class="payment-desc">Paiement mobile Orange</span>
-                                </div>
-                                <div class="payment-check">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- Binance -->
-                        <div class="payment-method">
-                            <input type="radio" id="binance" name="payment_method" value="binance">
-                            <label for="binance">
-                                <div class="payment-icon binance">
-                                    <i class="fab fa-bitcoin"></i>
-                                </div>
-                                <div class="payment-info">
-                                    <span class="payment-name">Binance Pay</span>
-                                    <span class="payment-desc">Crypto & P2P</span>
-                                </div>
-                                <div class="payment-check">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- Bybit -->
-                        <div class="payment-method">
-                            <input type="radio" id="bybit" name="payment_method" value="bybit">
-                            <label for="bybit">
-                                <div class="payment-icon bybit">
-                                    <i class="fas fa-wallet"></i>
-                                </div>
-                                <div class="payment-info">
-                                    <span class="payment-name">Bybit Pay</span>
-                                    <span class="payment-desc">Crypto & Trading</span>
-                                </div>
-                                <div class="payment-check">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- Carte Bancaire -->
-                        <div class="payment-method">
-                            <input type="radio" id="carte_bancaire" name="payment_method" value="carte_bancaire">
-                            <label for="carte_bancaire">
-                                <div class="payment-icon card">
-                                    <i class="fas fa-credit-card"></i>
-                                </div>
-                                <div class="payment-info">
-                                    <span class="payment-name">Carte Bancaire</span>
-                                    <span class="payment-desc">VISA / Mastercard</span>
-                                </div>
-                                <div class="payment-check">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Instructions de paiement -->
-                    <div class="payment-instructions">
-                        <div class="instruction" data-method="wave">
-                            <h4><i class="fas fa-info-circle"></i> Instructions pour Wave</h4>
-                            <p>1. Ouvrez l'application Wave<br>2. Allez dans "Payer"<br>3. Scannez le QR code qui apparaîtra<br>4. Confirmez le paiement</p>
-                        </div>
-                        <div class="instruction" data-method="orange_money">
-                            <h4><i class="fas fa-info-circle"></i> Instructions pour Orange Money</h4>
-                            <p>1. Composez #144#<br>2. Sélectionnez "Paiement de services"<br>3. Entrez le code marchand<br>4. Confirmez avec votre code secret</p>
-                        </div>
-                        <div class="instruction" data-method="binance">
-                            <h4><i class="fas fa-info-circle"></i> Instructions pour Binance</h4>
-                            <p>1. Ouvrez Binance App<br>2. Allez dans "Binance Pay"<br>3. Scannez le QR code<br>4. Confirmez la transaction</p>
-                        </div>
-                        <div class="instruction" data-method="bybit">
-                            <h4><i class="fas fa-info-circle"></i> Instructions pour Bybit</h4>
-                            <p>1. Ouvrez Bybit App<br>2. Accédez à "Bybit Pay"<br>3. Scannez le QR code<br>4. Validez la transaction</p>
-                        </div>
-                        <div class="instruction" data-method="carte_bancaire">
-                            <h4><i class="fas fa-info-circle"></i> Instructions Carte Bancaire</h4>
-                            <p>1. Vous serez redirigé vers une page sécurisée<br>2. Entrez vos informations de carte<br>3. Confirmez avec le code 3D Secure<br>4. Transaction cryptée et sécurisée</p>
-                        </div>
-                    </div>
-
-                    <!-- Bouton de Validation -->
-                    <div class="checkout-actions">
-                        <button type="submit" class="btn btn-primary btn-checkout">
-                            <i class="fas fa-lock"></i>
-                            <span>Payer {{ cart_total }} FCFA</span>
-                            <small>Validation sécurisée SSL</small>
-                        </button>
-
-                        <div class="security-guarantee">
-                            <div class="security-badges">
-                                <div class="badge">
-                                    <i class="fas fa-shield-alt"></i>
-                                    <span>Paiement 100% sécurisé</span>
-                                </div>
-                                <div class="badge">
-                                    <i class="fas fa-bolt"></i>
-                                    <span>Livraison instantanée</span>
-                                </div>
-                                <div class="badge">
-                                    <i class="fas fa-headset"></i>
-                                    <span>Support 24h/24</span>
-                                </div>
+                <div class="payment-methods">
+                    <!-- Wave -->
+                    <div class="payment-method">
+                        <input type="radio" id="wave" name="payment_method" value="wave" checked>
+                        <label for="wave">
+                            <div class="payment-icon wave">
+                                <i class="fas fa-mobile-alt"></i>
                             </div>
-                        </div>
+                            <div class="payment-info">
+                                <span class="payment-name">Wave</span>
+                                <span class="payment-desc">Paiement mobile Sénégal</span>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </label>
                     </div>
-                </form>
+
+                    <!-- Orange Money -->
+                    <div class="payment-method">
+                        <input type="radio" id="orange_money" name="payment_method" value="orange_money">
+                        <label for="orange_money">
+                            <div class="payment-icon orange">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="payment-info">
+                                <span class="payment-name">Orange Money</span>
+                                <span class="payment-desc">Paiement mobile Orange</span>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Binance -->
+                    <div class="payment-method">
+                        <input type="radio" id="binance" name="payment_method" value="binance">
+                        <label for="binance">
+                            <div class="payment-icon binance">
+                                <i class="fab fa-bitcoin"></i>
+                            </div>
+                            <div class="payment-info">
+                                <span class="payment-name">Binance Pay</span>
+                                <span class="payment-desc">Crypto & P2P</span>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Bybit -->
+                    <div class="payment-method">
+                        <input type="radio" id="bybit" name="payment_method" value="bybit">
+                        <label for="bybit">
+                            <div class="payment-icon bybit">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="payment-info">
+                                <span class="payment-name">Bybit Pay</span>
+                                <span class="payment-desc">Crypto & Trading</span>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Carte Bancaire -->
+                    <div class="payment-method">
+                        <input type="radio" id="carte_bancaire" name="payment_method" value="carte_bancaire">
+                        <label for="carte_bancaire">
+                            <div class="payment-icon card">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="payment-info">
+                                <span class="payment-name">Carte Bancaire</span>
+                                <span class="payment-desc">VISA / Mastercard</span>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Instructions de paiement -->
+                <div class="payment-instructions">
+                    <div class="instruction" data-method="wave">
+                        <h4><i class="fas fa-info-circle"></i> Instructions pour Wave</h4>
+                        <p>1. Ouvrez l'application Wave<br>2. Allez dans "Payer"<br>3. Scannez le QR code qui apparaîtra<br>4. Confirmez le paiement</p>
+                    </div>
+                    <div class="instruction" data-method="orange_money">
+                        <h4><i class="fas fa-info-circle"></i> Instructions pour Orange Money</h4>
+                        <p>1. Composez #144#<br>2. Sélectionnez "Paiement de services"<br>3. Entrez le code marchand<br>4. Confirmez avec votre code secret</p>
+                    </div>
+                    <div class="instruction" data-method="binance">
+                        <h4><i class="fas fa-info-circle"></i> Instructions pour Binance</h4>
+                        <p>1. Ouvrez Binance App<br>2. Allez dans "Binance Pay"<br>3. Scannez le QR code<br>4. Confirmez la transaction</p>
+                    </div>
+                    <div class="instruction" data-method="bybit">
+                        <h4><i class="fas fa-info-circle"></i> Instructions pour Bybit</h4>
+                        <p>1. Ouvrez Bybit App<br>2. Accédez à "Bybit Pay"<br>3. Scannez le QR code<br>4. Validez la transaction</p>
+                    </div>
+                    <div class="instruction" data-method="carte_bancaire">
+                        <h4><i class="fas fa-info-circle"></i> Instructions Carte Bancaire</h4>
+                        <p>1. Vous serez redirigé vers une page sécurisée<br>2. Entrez vos informations de carte<br>3. Confirmez avec le code 3D Secure<br>4. Transaction cryptée et sécurisée</p>
+                    </div>
+                </div>
+
+                <!-- Validation finale -->
+                <div class="checkout-actions">
+                    <form action="{% url 'cart:process_order' %}" method="post" class="checkout-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="payment_method" id="selected_payment" value="wave">
+                        
+                        {% if requires_free_fire_id and not free_fire_id %}
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Veuillez d'abord entrer votre ID Free Fire ci-dessus</p>
+                        </div>
+                        {% else %}
+                        <div class="terms-agreement">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <label for="terms">
+                                J'accepte les <a href="#" target="_blank">conditions générales de vente</a>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large checkout-btn">
+                            <i class="fas fa-lock"></i> Payer {{ cart_total }} FCFA
+                        </button>
+                        {% endif %}
+                    </form>
+                    
+                    <a href="{% url 'cart:cart_view' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour au panier
+                    </a>
+                </div>
             </div>
-            {% endif %}
         </div>
     </div>
 </div>
@@ -576,7 +557,7 @@
 }
 
 /* Section Free Fire */
-.free-fire-section {
+.free-fire-id-section {
     background: linear-gradient(135deg, #fff3e0, #ffecb3);
     border: 2px solid #ff9800;
     border-radius: 12px;
@@ -584,7 +565,7 @@
     margin: 1.5rem 0;
 }
 
-.alert {
+.free-fire-notice {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
@@ -595,13 +576,13 @@
     margin-bottom: 1.5rem;
 }
 
-.alert i {
+.free-fire-notice i {
     color: #ff9800;
     font-size: 1.2rem;
     margin-top: 0.2rem;
 }
 
-.alert p {
+.free-fire-notice p {
     margin: 0;
     color: #e65100;
     font-weight: 500;
@@ -778,7 +759,7 @@
     margin-top: 2rem;
 }
 
-.btn-checkout {
+.checkout-btn {
     width: 100%;
     padding: 1.5rem 2rem;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -795,39 +776,69 @@
     gap: 0.5rem;
 }
 
-.btn-checkout:hover {
+.checkout-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
 }
 
-.btn-checkout small {
+.checkout-btn small {
     font-size: 0.9rem;
     font-weight: normal;
     opacity: 0.9;
 }
 
-.security-guarantee {
-    margin-top: 1.5rem;
+/* Warning Box */
+.warning-box {
+    background: rgba(243, 156, 18, 0.1);
+    border: 2px solid #f39c12;
+    border-radius: 12px;
+    padding: 1.5rem;
     text-align: center;
+    margin-bottom: 1rem;
 }
 
-.security-badges {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+.warning-box i {
+    color: #f39c12;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
-.badge {
+.warning-box p {
+    color: #e67e22;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Terms Agreement */
+.terms-agreement {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: #666;
-    font-size: 0.85rem;
+    gap: 0.8rem;
 }
 
-.badge i {
-    color: var(--success);
+.terms-agreement input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.terms-agreement label {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.terms-agreement a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.terms-agreement a:hover {
+    text-decoration: underline;
 }
 
 /* Responsive */
@@ -842,11 +853,6 @@
         gap: 1rem;
     }
     
-    .security-badges {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
     .payment-method label {
         padding: 1rem;
     }
@@ -856,6 +862,12 @@
         height: 40px;
         font-size: 1.2rem;
     }
+    
+    .terms-agreement {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
 }
 </style>
 
@@ -864,6 +876,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gestion des méthodes de paiement
     const paymentMethods = document.querySelectorAll('.payment-method input');
     const instructions = document.querySelectorAll('.instruction');
+    const selectedPaymentInput = document.getElementById('selected_payment');
     
     // Afficher les instructions pour la méthode sélectionnée par défaut (Wave)
     showInstructions('wave');
@@ -873,6 +886,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.checked) {
                 const methodValue = this.value;
                 showInstructions(methodValue);
+                selectedPaymentInput.value = methodValue;
                 
                 // Animation de sélection
                 const label = this.closest('.payment-method').querySelector('label');
@@ -915,9 +929,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     return false;
                 }
                 
-                if (!/^\d{7,15}$/.test(freeFireValue)) {
+                if (!/^\d+$/.test(freeFireValue)) {
                     e.preventDefault();
-                    showError(freeFireInput, "L'ID Free Fire doit contenir entre 7 et 15 chiffres");
+                    showError(freeFireInput, "L'ID Free Fire doit contenir uniquement des chiffres");
                     return false;
                 }
             }
@@ -937,12 +951,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Validation du formulaire de paiement direct
-    const paymentForm = document.querySelector('form[action*="process_order"]');
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', function(e) {
+    // Validation du formulaire de paiement final
+    const checkoutForm = document.querySelector('form[action*="process_order"]');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function(e) {
+            // Vérifier si les conditions sont acceptées
+            const termsCheckbox = document.getElementById('terms');
+            if (termsCheckbox && !termsCheckbox.checked) {
+                e.preventDefault();
+                showError(termsCheckbox, "Veuillez accepter les conditions générales de vente");
+                return false;
+            }
+            
             // Animation de chargement
-            const button = this.querySelector('.btn-checkout');
+            const button = this.querySelector('.checkout-btn');
             const originalHTML = button.innerHTML;
             button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Traitement en cours...</span>';
             button.disabled = true;
