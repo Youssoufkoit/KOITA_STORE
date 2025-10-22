@@ -61,9 +61,14 @@ def add_to_cart(request, product_id):
                 messages.error(request, f'❌ ID joueur requis pour {product.name}!')
                 return redirect('store:product_detail', pk=product_id)
             
-            # Validation basique de l'ID
+            # Validation de l'ID - uniquement des chiffres
             if not player_id.isdigit():
                 messages.error(request, '❌ L\'ID joueur doit contenir uniquement des chiffres!')
+                return redirect('store:product_detail', pk=product_id)
+            
+            # Validation de la longueur (généralement entre 7 et 15 chiffres)
+            if len(player_id) < 7 or len(player_id) > 15:
+                messages.error(request, '❌ L\'ID Free Fire doit contenir entre 7 et 15 chiffres!')
                 return redirect('store:product_detail', pk=product_id)
         
         cart = get_or_create_cart(request)
@@ -140,6 +145,7 @@ def checkout(request):
     
     # Vérifier si des produits nécessitent l'ID Free Fire (UNIQUEMENT pour recharges automatiques)
     requires_free_fire_id = any(
+        item.product.requires_player_id and 
         item.product.category and 
         ('free fire diamant' in item.product.category.name.lower())
         for item in cart_items
@@ -155,9 +161,21 @@ def checkout(request):
     
     cart_total = sum(item.total_price() for item in cart_items)
     
+    # Si l'ID Free Fire est déjà fourni pour tous les produits nécessaires, passer directement au traitement
+    all_ids_provided = True
+    if requires_free_fire_id:
+        for item in cart_items:
+            if item.product.requires_player_id and not item.saved_player_id:
+                all_ids_provided = False
+                break
+    
+    if all_ids_provided and requires_free_fire_id:
+        # Tous les IDs sont fournis, passer directement au traitement
+        return redirect('cart:process_order')
+    
     if request.method == 'POST' and requires_free_fire_id:
         free_fire_id = request.POST.get('free_fire_id', '').strip()
-        payment_method = request.POST.get('payment_method', 'wave')  # Récupérer la méthode de paiement
+        payment_method = request.POST.get('payment_method', 'wave')
         
         if not free_fire_id:
             messages.error(request, '❌ ID Free Fire requis pour les recharges automatiques!')
@@ -179,6 +197,7 @@ def checkout(request):
         'cart_total': cart_total,
         'requires_free_fire_id': requires_free_fire_id,
         'free_fire_id': request.session.get('free_fire_id', ''),
+        'all_ids_provided': all_ids_provided,
     }
     return render(request, 'cart/checkout.html', context)
 

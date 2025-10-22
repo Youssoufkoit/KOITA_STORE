@@ -145,34 +145,27 @@
                 <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="purchase-form">
                     {% csrf_token %}
                     
-                    <!-- SECTION ID JOUEUR - AJOUT IMPORTANT -->
-                    {% if product.requires_player_id %}
-                    <div class="free-fire-id-section">
-                        <div class="free-fire-notice">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p><strong>Attention :</strong> Ce produit nécessite votre ID Free Fire pour la recharge automatique</p>
-                        </div>
-                        
-                        <div class="free-fire-form">
-                            <div class="form-group">
-                                <label for="player_id">
-                                    <i class="fas fa-user"></i> Votre ID Free Fire *
-                                </label>
-                                <input type="text" 
-                                       id="player_id" 
-                                       name="player_id" 
-                                       value="{{ saved_player_id }}"  <!-- Pré-remplissage -->
-                                       placeholder="Ex: 1234567890" 
-                                       required
-                                       pattern="[0-9]+"
-                                       title="L'ID Free Fire doit contenir uniquement des chiffres">
-                                <small class="form-help">
-                                    🔍 Où trouver mon ID Free Fire ? Dans le jeu → Profil → Voir l'ID (chiffres uniquement)
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
+                  <!-- Dans la section du formulaire d'ajout au panier -->
+{% if product.requires_player_id %}
+<div class="form-group">
+    <label for="player_id">
+        <i class="fas fa-id-card"></i> Votre ID Free Fire
+    </label>
+    <input type="text" 
+           id="player_id" 
+           name="player_id" 
+           value="{{ saved_player_id }}"
+           placeholder="Ex: 1234567890" 
+           required 
+           pattern="[0-9]+" 
+           title="L'ID Free Fire doit contenir uniquement des chiffres"
+           class="form-control">
+    <small class="form-help">
+        <i class="fas fa-info-circle"></i> 
+        🔍 Où trouver mon ID Free Fire ? Dans le jeu → Profil → Base (chiffres uniquement)
+    </small>
+</div>
+{% endif %}
 
                     <div class="quantity-selector-modern">
                         <label>Quantité :</label>

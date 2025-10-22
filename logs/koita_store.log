@@ -942,3 +942,59 @@ INFO 2025-10-22 19:21:31,090 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\stor
 INFO 2025-10-22 19:21:31,904 autoreload Watching for file changes with StatReloader
 INFO 2025-10-22 19:22:21,385 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
 INFO 2025-10-22 19:22:22,052 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 19:33:21,349 basehttp "GET /cart/checkout/ HTTP/1.1" 200 30599
+INFO 2025-10-22 19:33:21,414 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:21,414 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:31,180 basehttp "GET / HTTP/1.1" 200 25220
+INFO 2025-10-22 19:33:31,231 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:31,231 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:31,323 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:31,324 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:31,328 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:31,330 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 19:33:35,995 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 19:33:37,572 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 19:33:39,998 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 19:33:41,720 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 19:33:44,725 basehttp "POST /cart/add/6/ HTTP/1.1" 302 0
+INFO 2025-10-22 19:33:44,809 basehttp "GET /product/6/ HTTP/1.1" 200 48956
+INFO 2025-10-22 19:37:08,323 basehttp "GET /product/6/ HTTP/1.1" 200 48956
+INFO 2025-10-22 19:37:12,896 basehttp "GET / HTTP/1.1" 200 25220
+INFO 2025-10-22 19:37:17,835 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 19:37:20,186 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 19:37:23,987 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 19:37:24,009 basehttp "GET /product/7/ HTTP/1.1" 200 48957
+INFO 2025-10-22 19:38:37,481 views ID joueur stocké: 11233333333 pour le produit 583 DIAMANTS
+INFO 2025-10-22 19:38:37,493 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 19:38:37,545 basehttp "GET /cart/ HTTP/1.1" 200 13705
+INFO 2025-10-22 19:38:37,737 basehttp "GET /static/css/main.css HTTP/1.1" 200 57468
+INFO 2025-10-22 19:38:45,501 basehttp "GET /cart/checkout/ HTTP/1.1" 200 30599
+INFO 2025-10-22 19:39:26,682 basehttp "GET / HTTP/1.1" 200 25220
+INFO 2025-10-22 19:39:26,732 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 19:39:33,724 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 19:39:37,352 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 19:39:38,528 basehttp "GET /contact/ HTTP/1.1" 200 11729
+INFO 2025-10-22 19:39:40,107 basehttp "GET /cart/ HTTP/1.1" 200 13705
+INFO 2025-10-22 19:40:04,681 basehttp "GET /cart/checkout/ HTTP/1.1" 200 30599
+INFO 2025-10-22 19:40:04,737 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 19:51:42,114 views ID joueur stocké: 11233333333 pour le produit 583 DIAMANTS
+INFO 2025-10-22 19:51:42,125 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 19:51:42,150 basehttp "GET /cart/ HTTP/1.1" 200 13707
+INFO 2025-10-22 19:51:42,211 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 19:51:44,507 basehttp "GET /cart/checkout/ HTTP/1.1" 200 30603
+INFO 2025-10-22 19:53:05,358 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 19:53:07,454 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 19:53:10,711 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 19:53:10,734 basehttp "GET /product/7/ HTTP/1.1" 200 48957
+INFO 2025-10-22 19:58:08,917 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 19:58:09,856 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 19:58:12,925 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 19:58:13,777 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 20:00:15,313 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 20:00:16,112 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 20:00:18,511 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 20:00:19,304 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 20:00:21,714 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 20:00:22,532 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 20:03:29,640 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 20:03:30,528 autoreload Watching for file changes with StatReloader

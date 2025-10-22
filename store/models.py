@@ -261,12 +261,16 @@ class Product(models.Model):
         
         return features
     
-    def requires_free_fire_id(self):
-        """Vérifie si le produit nécessite un ID Free Fire (pour recharges automatiques)"""
-        if self.category:
-            return 'free fire diamant' in self.category.name.lower()
-        return False
-
+def requires_free_fire_id(self):
+    """Vérifie si le produit nécessite un ID Free Fire (pour recharges automatiques)"""
+    # Vérifier d'abord le champ booléen spécifique
+    if self.requires_player_id:
+        return True
+    
+    # Ensuite vérifier la catégorie pour la rétrocompatibilité
+    if self.category:
+        return 'free fire diamant' in self.category.name.lower()
+    return False
 
 class Order(models.Model):
     """Modèle de commande"""
