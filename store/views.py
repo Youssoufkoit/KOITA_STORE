@@ -11,77 +11,20 @@ import logging
 logger = logging.getLogger(__name__)
 
 def home(request):
-    """Page d'accueil avec tous les produits"""
+    """Page d'accueil avec tous les produits et catégories"""
     # Récupérer les produits actifs
     products = Product.objects.filter(is_active=True).select_related('category')[:8]
     
-    # Si aucun produit, créer des exemples temporaires
-    if not products.exists():
-        # Créer une catégorie par défaut si nécessaire
-        default_category, created = Category.objects.get_or_create(
-            name='Recharges Free Fire',
-            defaults={
-                'slug': 'recharges-free-fire',
-                'description': 'Recharges de diamants Free Fire',
-                'is_active': True
-            }
-        )
-        
-        # Produits d'exemple
-        example_products = [
-            {
-                'name': '100 Diamants Free Fire',
-                'description': 'Recharge instantanée de 100 diamants pour Free Fire',
-                'price': 1500,
-                'stock': 10,
-                'category': default_category,
-                'is_active': True
-            },
-            {
-                'name': '310 Diamants Free Fire', 
-                'description': 'Recharge instantanée de 310 diamants + bonus',
-                'price': 4500,
-                'stock': 10,
-                'category': default_category,
-                'is_active': True
-            },
-            {
-                'name': '520 Diamants Free Fire',
-                'description': 'Recharge instantanée de 520 diamants + bonus',
-                'price': 7500, 
-                'stock': 10,
-                'category': default_category,
-                'is_active': True
-            },
-            {
-                'name': '1060 Diamants Free Fire',
-                'description': 'Recharge instantanée de 1060 diamants + bonus',
-                'price': 15000,
-                'stock': 10,
-                'category': default_category,
-                'is_active': True
-            },
-            {
-                'name': '2180 Diamants Free Fire',
-                'description': 'Recharge instantanée de 2180 diamants + bonus',
-                'price': 30000,
-                'stock': 10,
-                'category': default_category,
-                'is_active': True
-            }
-        ]
-        
-        for product_data in example_products:
-            Product.objects.get_or_create(
-                name=product_data['name'],
-                defaults=product_data
-            )
-        
-        # Recharger les produits
-        products = Product.objects.filter(is_active=True).select_related('category')[:8]
+    # Récupérer les catégories de recharges (exclure les comptes) pour l'accueil
+    recharge_categories = Category.objects.filter(
+        is_active=True
+    ).exclude(
+        Q(slug__icontains='compte') | Q(name__icontains='compte')
+    ).order_by('order', 'name')[:10]  # Limiter à 10 catégories max
     
     context = {
         'products': products,
+        'recharge_categories': recharge_categories,
     }
     return render(request, 'store/home.html', context)
 
@@ -405,5 +348,3 @@ def checkout(request):
         'requires_free_fire_id': requires_free_fire_id,
     }
     return render(request, 'cart/checkout.html', context)
-
- 

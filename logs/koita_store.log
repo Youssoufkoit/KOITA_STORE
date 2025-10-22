@@ -419,3 +419,73 @@ INFO 2025-10-22 14:54:24,997 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart
 INFO 2025-10-22 14:54:25,846 autoreload Watching for file changes with StatReloader
 INFO 2025-10-22 14:54:29,557 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
 INFO 2025-10-22 14:54:30,328 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 15:24:06,367 basehttp "GET /product/7/ HTTP/1.1" 200 47972
+INFO 2025-10-22 15:24:06,426 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:06,430 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:06,495 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:13,453 basehttp "GET / HTTP/1.1" 200 14529
+INFO 2025-10-22 15:24:13,502 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:17,506 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 15:24:17,567 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:17,573 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:17,575 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:17,575 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:24:21,542 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29520
+INFO 2025-10-22 15:24:25,563 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 15:24:25,600 basehttp "GET /product/7/ HTTP/1.1" 200 47972
+INFO 2025-10-22 15:25:03,547 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 15:25:08,469 basehttp "GET /recharges/?category=code-redeem-free-fire HTTP/1.1" 200 27222
+INFO 2025-10-22 15:25:11,672 basehttp "POST /cart/add/8/ HTTP/1.1" 302 0
+INFO 2025-10-22 15:25:11,721 basehttp "GET /cart/ HTTP/1.1" 200 11867
+INFO 2025-10-22 15:25:19,722 basehttp "GET /cart/checkout/ HTTP/1.1" 200 14826
+INFO 2025-10-22 15:26:24,527 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 15:26:26,646 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 15:26:28,629 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29520
+INFO 2025-10-22 15:26:31,719 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 15:26:31,751 basehttp "GET /product/7/ HTTP/1.1" 200 47972
+INFO 2025-10-22 15:26:40,729 views ID joueur stocké: 11233333333 pour le produit 583 DIAMANTS
+INFO 2025-10-22 15:26:40,738 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 15:26:40,771 basehttp "GET /cart/ HTTP/1.1" 200 13488
+INFO 2025-10-22 15:35:43,646 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 15:35:43,784 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 15:35:43,790 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:35:43,794 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:35:43,794 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:35:43,794 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:35:43,796 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:35:43,796 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:36:54,245 basehttp "GET /admin/store HTTP/1.1" 301 0
+INFO 2025-10-22 15:36:54,340 basehttp "GET /admin/store/ HTTP/1.1" 200 9658
+INFO 2025-10-22 15:58:20,603 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-22 15:58:24,456 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 15:58:39,924 basehttp "GET /recharges/ HTTP/1.1" 200 36705
+INFO 2025-10-22 15:58:39,978 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:40,038 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:40,039 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:40,046 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:40,047 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:40,048 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:40,052 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:40,052 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 15:58:43,195 basehttp "GET / HTTP/1.1" 200 14529
+INFO 2025-10-22 15:58:51,900 basehttp "GET /admin/ HTTP/1.1" 200 16907
+INFO 2025-10-22 15:58:58,302 basehttp "GET /admin/ HTTP/1.1" 200 16907
+INFO 2025-10-22 15:59:02,561 basehttp "GET /admin/store/rechargeproduct/ HTTP/1.1" 200 20023
+INFO 2025-10-22 15:59:02,641 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 15:59:12,964 basehttp "GET /admin/ HTTP/1.1" 200 16907
+INFO 2025-10-22 15:59:29,044 basehttp "GET /admin/store/category/ HTTP/1.1" 200 22780
+INFO 2025-10-22 15:59:29,102 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 15:59:43,078 basehttp "POST /admin/store/category/ HTTP/1.1" 200 13100
+INFO 2025-10-22 15:59:44,443 basehttp "POST /admin/store/category/ HTTP/1.1" 302 0
+INFO 2025-10-22 15:59:44,506 basehttp "GET /admin/store/category/ HTTP/1.1" 200 22018
+INFO 2025-10-22 15:59:44,559 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 15:59:49,923 basehttp "GET /admin/store/category/ HTTP/1.1" 200 21865
+INFO 2025-10-22 15:59:49,972 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 8634
+INFO 2025-10-22 15:59:58,321 basehttp "GET /admin/ HTTP/1.1" 200 16895
+INFO 2025-10-22 16:00:03,606 basehttp "GET / HTTP/1.1" 200 14529
+INFO 2025-10-22 16:00:06,435 basehttp "GET /recharges/ HTTP/1.1" 200 35807
+INFO 2025-10-22 16:00:32,732 basehttp "GET / HTTP/1.1" 200 14529
+INFO 2025-10-22 16:07:01,982 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-22 16:07:02,846 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 16:11:34,716 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-22 16:11:35,531 autoreload Watching for file changes with StatReloader
