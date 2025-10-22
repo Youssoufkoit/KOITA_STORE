@@ -790,3 +790,155 @@ INFO 2025-10-22 17:30:22,030 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart
 INFO 2025-10-22 17:30:23,039 autoreload Watching for file changes with StatReloader
 INFO 2025-10-22 17:30:26,958 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
 INFO 2025-10-22 17:30:27,756 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 17:31:56,629 basehttp "POST /cart/checkout/ HTTP/1.1" 200 31401
+ERROR 2025-10-22 17:36:29,542 log Internal Server Error: /cart/checkout/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py", line 519, in checkout
+    return render(request, 'cart/checkout.html', context)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'settings' not found. 'settings' is not a valid view function or pattern name.
+ERROR 2025-10-22 17:36:29,555 basehttp "POST /cart/checkout/ HTTP/1.1" 500 170119
+INFO 2025-10-22 17:37:14,511 basehttp "GET /cart/checkout/ HTTP/1.1" 200 31401
+INFO 2025-10-22 17:37:14,572 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:14,639 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:14,703 basehttp "GET /static/css/main.css HTTP/1.1" 200 49779
+INFO 2025-10-22 17:37:21,626 basehttp "POST /cart/checkout/ HTTP/1.1" 200 31401
+INFO 2025-10-22 17:37:21,683 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:45,083 basehttp "GET / HTTP/1.1" 200 19988
+INFO 2025-10-22 17:37:45,139 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:45,140 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:45,216 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:45,224 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:45,225 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:45,228 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:37:59,231 basehttp "GET /accounts/notifications/ HTTP/1.1" 200 10648
+INFO 2025-10-22 17:37:59,281 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 17:38:02,209 basehttp "GET / HTTP/1.1" 200 19988
+INFO 2025-10-22 17:40:15,466 basehttp "POST /cart/checkout/ HTTP/1.1" 200 31401
+INFO 2025-10-22 17:40:15,534 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 17:40:17,988 basehttp "GET / HTTP/1.1" 200 19988
+INFO 2025-10-22 17:40:30,438 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 17:44:54,005 basehttp "GET / HTTP/1.1" 200 19988
+INFO 2025-10-22 17:44:54,044 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 17:55:12,444 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 17:55:12,497 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 17:55:17,285 basehttp "GET / HTTP/1.1" 200 19988
+INFO 2025-10-22 17:55:17,352 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:55:17,352 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:55:17,353 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 17:55:17,426 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 17:55:17,426 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 18:21:03,669 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-22 18:21:07,046 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 18:21:25,328 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 18:21:26,153 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 18:23:41,305 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\models.py changed, reloading.
+INFO 2025-10-22 18:23:42,207 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 18:23:45,369 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-22 18:23:46,195 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 18:28:10,442 basehttp "GET / HTTP/1.1" 200 18026
+INFO 2025-10-22 18:28:10,510 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 18:28:10,588 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 18:28:10,593 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 18:28:10,656 basehttp "GET /static/css/main.css HTTP/1.1" 200 55146
+INFO 2025-10-22 18:28:10,712 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 18:28:10,712 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 18:28:10,714 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 18:28:10,716 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 18:30:04,069 basehttp "GET / HTTP/1.1" 200 18026
+INFO 2025-10-22 18:30:04,113 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 18:31:45,986 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 18:31:46,051 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 18:31:51,526 basehttp "GET /product/7/ HTTP/1.1" 200 47972
+INFO 2025-10-22 18:31:56,903 views ID joueur stocké: 11233333333 pour le produit 583 DIAMANTS
+INFO 2025-10-22 18:31:56,914 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 18:31:56,965 basehttp "GET /cart/ HTTP/1.1" 200 13491
+INFO 2025-10-22 18:32:00,225 basehttp "GET /cart/checkout/ HTTP/1.1" 200 31405
+INFO 2025-10-22 18:32:44,381 basehttp "POST /cart/checkout/ HTTP/1.1" 200 31405
+INFO 2025-10-22 18:32:44,447 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 18:42:53,194 basehttp "GET / HTTP/1.1" 200 25220
+INFO 2025-10-22 18:42:53,264 basehttp "GET /static/css/main.css HTTP/1.1" 200 57085
+INFO 2025-10-22 18:45:47,993 basehttp "GET /cart/ HTTP/1.1" 200 13491
+INFO 2025-10-22 18:45:48,045 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 18:45:50,159 basehttp "POST /cart/remove/12/ HTTP/1.1" 302 0
+INFO 2025-10-22 18:45:50,179 basehttp "GET /cart/ HTTP/1.1" 200 11867
+INFO 2025-10-22 18:45:51,867 basehttp "POST /cart/remove/13/ HTTP/1.1" 302 0
+INFO 2025-10-22 18:45:51,889 basehttp "GET /cart/ HTTP/1.1" 200 9402
+INFO 2025-10-22 18:45:57,290 basehttp "GET / HTTP/1.1" 200 25220
+INFO 2025-10-22 18:46:05,549 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 18:46:12,273 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 18:46:12,303 basehttp "GET /product/7/ HTTP/1.1" 200 47972
+INFO 2025-10-22 18:46:12,355 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 18:46:18,811 views ID joueur stocké: 11233333333 pour le produit 583 DIAMANTS
+INFO 2025-10-22 18:46:18,821 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 18:46:18,842 basehttp "GET /cart/ HTTP/1.1" 200 11865
+INFO 2025-10-22 18:46:21,298 basehttp "GET /cart/checkout/ HTTP/1.1" 200 30599
+INFO 2025-10-22 18:47:42,351 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 18:47:42,408 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 18:47:44,138 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 18:47:48,436 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 18:47:48,458 basehttp "GET /product/7/ HTTP/1.1" 200 47972
+INFO 2025-10-22 18:59:13,134 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 18:59:14,731 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 18:59:17,428 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 18:59:18,636 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 19:10:32,303 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 19:10:33,236 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 19:18:56,515 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 19:18:57,318 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 19:21:31,090 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-22 19:21:31,904 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 19:22:21,385 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\store\views.py changed, reloading.
+INFO 2025-10-22 19:22:22,052 autoreload Watching for file changes with StatReloader

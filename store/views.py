@@ -160,6 +160,10 @@ def product_detail(request, pk):
     """Page de détail d'un produit avec support REDEEM"""
     product = get_object_or_404(Product, pk=pk)
     
+    # Récupérer l'ID Free Fire stocké en session pour ce produit
+    player_id_key = f'player_id_{product.id}'
+    saved_player_id = request.session.get(player_id_key, '')
+    
     # Produits similaires de la même catégorie
     related_products = Product.objects.filter(
         category=product.category,
@@ -170,6 +174,7 @@ def product_detail(request, pk):
         'product': product,
         'related_products': related_products,
         'is_redeem_product': product.is_redeem_product,
+        'saved_player_id': saved_player_id,  # Ajouté
     }
     return render(request, 'store/product_detail.html', context)
 

@@ -2494,3 +2494,346 @@ textarea:focus-visible {
         gap: 1rem;
     }
 }
+/* ========================================
+   STYLES POUR LES CATÉGORIES ACCUEIL - PLEINE LARGEUR
+======================================== */
+
+.home-categories-section {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    border: 3px solid var(--border-color);
+    box-shadow: 0 8px 30px var(--shadow-light);
+    width: 100%;
+    max-width: 100%;
+}
+
+.home-categories-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 1rem 0;
+}
+
+.home-categories-scroll {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    min-width: min-content;
+    padding: 0.5rem;
+}
+
+.home-category-card {
+    background: var(--white);
+    border-radius: 15px;
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 5px 15px var(--shadow-light);
+    position: relative;
+}
+
+.home-category-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    border-color: var(--primary-orange);
+    box-shadow: 0 12px 30px var(--shadow-medium);
+}
+
+.home-category-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    text-align: center;
+    height: 100%;
+}
+
+.home-category-image {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    position: relative;
+}
+
+.home-category-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.home-category-card:hover .home-category-image img {
+    transform: scale(1.15);
+}
+
+.home-category-icon {
+    font-size: 2.5rem;
+    color: var(--primary-orange);
+    transition: all 0.4s ease;
+}
+
+.home-category-card:hover .home-category-icon {
+    transform: scale(1.2) rotate(10deg);
+    color: var(--secondary-blue);
+}
+
+.home-category-info {
+    padding: 1rem 0.8rem;
+    background: var(--white);
+}
+
+.home-category-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin: 0;
+    line-height: 1.3;
+    font-family: "Montserrat", sans-serif;
+    transition: color 0.3s ease;
+}
+
+.home-category-card:hover .home-category-info h3 {
+    color: var(--primary-orange);
+}
+
+/* Effet de bordure colorée en haut */
+.home-category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-orange), var(--secondary-blue));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.home-category-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Animation d'entrée */
+@keyframes categorySlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.home-category-card {
+    animation: categorySlideIn 0.6s ease forwards;
+}
+
+/* Délais d'animation pour chaque carte */
+.home-category-card:nth-child(1) { animation-delay: 0.1s; }
+.home-category-card:nth-child(2) { animation-delay: 0.2s; }
+.home-category-card:nth-child(3) { animation-delay: 0.3s; }
+.home-category-card:nth-child(4) { animation-delay: 0.4s; }
+.home-category-card:nth-child(5) { animation-delay: 0.5s; }
+.home-category-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Scrollbar personnalisée */
+.home-categories-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.home-categories-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.home-categories-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-orange), var(--secondary-blue));
+    border-radius: 10px;
+}
+
+.home-categories-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--dark-orange), var(--light-blue));
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .home-categories-scroll {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-categories-section {
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .home-categories-scroll {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+    
+    .home-category-image {
+        height: 90px;
+    }
+    
+    .home-category-info {
+        padding: 0.8rem 0.6rem;
+    }
+    
+    .home-category-info h3 {
+        font-size: 0.9rem;
+    }
+    
+    .home-category-icon {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-categories-scroll {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 0.8rem;
+    }
+    
+    .home-category-image {
+        height: 80px;
+    }
+    
+    .home-category-info {
+        padding: 0.7rem 0.5rem;
+    }
+    
+    .home-category-info h3 {
+        font-size: 0.85rem;
+    }
+    
+    .home-category-icon {
+        font-size: 1.8rem;
+    }
+}
+
+/* Pour les très petits écrans */
+@media (max-width: 360px) {
+    .home-categories-scroll {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 0.6rem;
+    }
+    
+    .home-category-image {
+        height: 70px;
+    }
+    
+    .home-category-info h3 {
+        font-size: 0.8rem;
+    }
+}
+/* ========================================
+   STYLES POUR LE HEADER DES CATÉGORIES ACCUEIL
+======================================== */
+
+.home-categories-section .section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 0 1rem;
+}
+
+.home-categories-section .section-header h2 {
+    color: var(--secondary-blue);
+    font-size: 2.5rem;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    position: relative;
+    animation: slideInFromLeft 0.8s ease;
+}
+
+.home-categories-section .section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-orange), var(--secondary-blue));
+    border-radius: 2px;
+    animation: expandWidth 1s ease;
+}
+
+.home-categories-section .section-header p {
+    color: #666;
+    font-size: 1.1rem;
+    font-family: "Raleway", sans-serif;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Animation pour le header */
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes expandWidth {
+    from {
+        width: 0;
+    }
+    to {
+        width: 80px;
+    }
+}
+
+/* Responsive pour le header */
+@media (max-width: 768px) {
+    .home-categories-section .section-header {
+        margin-bottom: 2rem;
+    }
+    
+    .home-categories-section .section-header h2 {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+    
+    .home-categories-section .section-header p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-categories-section .section-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .home-categories-section .section-header p {
+        font-size: 0.95rem;
+    }
+}
+/* Styles pour l'affichage de l'ID Free Fire dans le panier */
+.player-id-info {
+    background: rgba(56, 182, 255, 0.1);
+    border: 1px solid var(--secondary-blue);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--secondary-blue);
+}
+
+.player-id-info i {
+    margin-right: 0.5rem;
+    color: var(--secondary-blue);
+}

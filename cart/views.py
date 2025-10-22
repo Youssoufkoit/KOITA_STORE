@@ -27,11 +27,13 @@ def cart_view(request):
     cart = get_or_create_cart(request)
     cart_items = cart.items.all()
     
-    # Récupérer les IDs joueur depuis la session
+    # Récupérer les IDs joueur depuis les CartItems ou la session
     for item in cart_items:
-        if item.product.requires_player_id and not item.player_id:
-            player_id_key = f'player_id_{item.product.id}'
-            item.player_id = request.session.get(player_id_key, '')
+        if item.product.requires_player_id:
+            # Priorité à l'ID stocké dans CartItem
+            if not item.player_id:
+                player_id_key = f'player_id_{item.product.id}'
+                item.player_id = request.session.get(player_id_key, '')
     
     cart_total = sum(item.total_price() for item in cart_items)
     
@@ -70,7 +72,7 @@ def add_to_cart(request, product_id):
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             product=product,
-            defaults={'quantity': 1}
+            defaults={'quantity': 1, 'player_id': player_id}
         )
         
         if not created:
@@ -80,6 +82,9 @@ def add_to_cart(request, product_id):
                 return redirect('cart:cart_view')
             
             cart_item.quantity += 1
+            # Mettre à jour l'ID joueur si fourni
+            if player_id:
+                cart_item.player_id = player_id
             cart_item.save()
         
         # Stocker l'ID joueur dans la session si fourni
@@ -152,11 +157,21 @@ def checkout(request):
     
     if request.method == 'POST' and requires_free_fire_id:
         free_fire_id = request.POST.get('free_fire_id', '').strip()
+        payment_method = request.POST.get('payment_method', 'wave')  # Récupérer la méthode de paiement
+        
         if not free_fire_id:
             messages.error(request, '❌ ID Free Fire requis pour les recharges automatiques!')
         else:
-            # Stocker l'ID dans la session temporairement
+            # Stocker l'ID et la méthode de paiement dans la session
             request.session['free_fire_id'] = free_fire_id
+            request.session['payment_method'] = payment_method
+            
+            # Mettre à jour l'ID joueur dans tous les CartItems qui en ont besoin
+            for item in cart_items:
+                if item.product.requires_player_id:
+                    item.player_id = free_fire_id
+                    item.save()
+            
             return redirect('cart:process_order')
     
     context = {
@@ -368,7 +383,9 @@ def process_order(request):
         
         # Récupérer l'ID Free Fire si nécessaire
         free_fire_id = request.session.pop('free_fire_id', '')
+        payment_method = request.session.pop('payment_method', 'wave')
         logger.info(f"🎮 ID Free Fire récupéré: {free_fire_id}")
+        logger.info(f"💳 Méthode de paiement: {payment_method}")
         
         # Créer la commande
         total = sum(item.total_price() for item in cart_items)
@@ -376,6 +393,7 @@ def process_order(request):
             user=request.user,
             total_amount=total,
             free_fire_id=free_fire_id,
+            payment_method=payment_method,
             status='processing'
         )
         
@@ -471,49 +489,3 @@ def process_order(request):
     
     logger.warning("❌ Méthode non POST pour process_order")
     return redirect('cart:checkout')
-@login_required
-def checkout(request):
-    """Page de validation avec demande d'ID Free Fire si nécessaire"""
-    cart = get_or_create_cart(request)
-    cart_items = cart.items.all()
-    
-    if not cart_items:
-        messages.warning(request, 'Votre panier est vide !')
-        return redirect('cart:cart_view')
-    
-    # Vérifier si des produits nécessitent l'ID Free Fire (UNIQUEMENT pour recharges automatiques)
-    requires_free_fire_id = any(
-        item.product.category and 
-        ('free fire diamant' in item.product.category.name.lower())
-        for item in cart_items
-    )
-    
-    # Récupérer les IDs joueur déjà saisis depuis la session et les attacher aux items
-    for item in cart_items:
-        if item.product.requires_player_id:
-            player_id_key = f'player_id_{item.product.id}'
-            item.saved_player_id = request.session.get(player_id_key, '')
-        else:
-            item.saved_player_id = ''
-    
-    cart_total = sum(item.total_price() for item in cart_items)
-    
-    if request.method == 'POST' and requires_free_fire_id:
-        free_fire_id = request.POST.get('free_fire_id', '').strip()
-        payment_method = request.POST.get('payment_method', 'wave')  # Récupérer la méthode de paiement
-        
-        if not free_fire_id:
-            messages.error(request, '❌ ID Free Fire requis pour les recharges automatiques!')
-        else:
-            # Stocker l'ID et la méthode de paiement dans la session
-            request.session['free_fire_id'] = free_fire_id
-            request.session['payment_method'] = payment_method
-            return redirect('cart:process_order')
-    
-    context = {
-        'cart_items': cart_items,
-        'cart_total': cart_total,
-        'requires_free_fire_id': requires_free_fire_id,
-        'free_fire_id': request.session.get('free_fire_id', ''),
-    }
-    return render(request, 'cart/checkout.html', context)

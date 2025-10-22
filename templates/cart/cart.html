@@ -21,7 +21,17 @@
             <tbody>
                 {% for item in cart_items %}
                 <tr class="cart-item">
-                    <td>{{ item.product.name }}</td>
+                    <td>
+                        <div class="item-details">
+                            <strong>{{ item.product.name }}</strong>
+                            {% if item.product.requires_player_id and item.player_id %}
+                            <div class="player-id-info">
+                                <i class="fas fa-id-card"></i>
+                                <strong>ID Free Fire :</strong> {{ item.player_id }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </td>
                     <td>
                         {% if item.product.image %}
                             <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-image">
@@ -209,6 +219,41 @@
     font-size: 1.5rem !important;
 }
 
+/* Informations ID Joueur */
+.player-id-info {
+    background: rgba(255, 152, 0, 0.1);
+    border: 1px solid #ff9800;
+    border-radius: 8px;
+    padding: 0.5rem 0.8rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e65100;
+    animation: fadeIn 0.5s ease;
+}
+
+.player-id-info i {
+    color: #ff9800;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.item-details strong {
+    color: var(--secondary-blue);
+    font-size: 1.1rem;
+}
+
 /* ACTIONS DU PANIER */
 .cart-actions {
     margin-top: 2rem;
@@ -304,6 +349,32 @@
     margin-bottom: 2rem;
 }
 
+/* Animations */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .cart-table {
@@ -332,6 +403,11 @@
     .auth-buttons .btn {
         width: 100%;
     }
+    
+    .player-id-info {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -339,30 +415,16 @@
         display: block;
         overflow-x: auto;
     }
+    
+    .item-details strong {
+        font-size: 1rem;
+    }
+    
+    .player-id-info {
+        flex-direction: column;
+        gap: 0.3rem;
+        text-align: center;
+    }
 }
 </style>
 {% endblock %}
-{% for item in cart_items %}
-<div class="cart-item">
-    <!-- ... code existant ... -->
-    
-    {% if item.player_id %}
-    <div class="player-id-display">
-        <strong>🆔 ID Joueur:</strong> {{ item.player_id }}
-    </div>
-    {% endif %}
-    
-    <!-- ... code existant ... -->
-</div>
-{% endfor %}
-
-<style>
-.player-id-display {
-    background: rgba(255, 152, 0, 0.1);
-    border: 1px solid #ff9800;
-    border-radius: 5px;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-}
-</style>
