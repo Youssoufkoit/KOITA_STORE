@@ -1574,3 +1574,84 @@ INFO 2025-10-22 20:48:41,900 views ID joueur stocké: 11233333333 pour le produit
 INFO 2025-10-22 20:48:41,911 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
 INFO 2025-10-22 20:48:41,935 basehttp "GET /cart/ HTTP/1.1" 200 13705
 INFO 2025-10-22 20:48:44,091 basehttp "GET /cart/checkout/ HTTP/1.1" 200 34035
+INFO 2025-10-22 21:01:35,859 basehttp "GET /cart/checkout/ HTTP/1.1" 200 26626
+INFO 2025-10-22 21:01:35,912 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 21:02:14,836 basehttp "POST /cart/checkout/ HTTP/1.1" 200 26626
+INFO 2025-10-22 21:04:45,371 basehttp "POST /cart/checkout/ HTTP/1.1" 200 34035
+INFO 2025-10-22 21:08:06,120 basehttp "POST /cart/checkout/ HTTP/1.1" 200 31228
+INFO 2025-10-22 21:10:37,656 basehttp "POST /cart/checkout/ HTTP/1.1" 200 34035
+INFO 2025-10-22 21:10:37,729 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 21:10:52,264 basehttp "POST /cart/checkout/ HTTP/1.1" 200 25088
+INFO 2025-10-22 21:11:05,259 basehttp "POST /cart/checkout/ HTTP/1.1" 200 26177
+INFO 2025-10-22 21:11:26,697 basehttp "POST /cart/checkout/ HTTP/1.1" 200 31312
+INFO 2025-10-22 21:11:55,499 basehttp "POST /cart/checkout/ HTTP/1.1" 200 34035
+INFO 2025-10-22 21:12:32,666 basehttp "POST /cart/checkout/ HTTP/1.1" 200 31228
+INFO 2025-10-22 21:33:38,048 basehttp "GET / HTTP/1.1" 200 25220
+INFO 2025-10-22 21:33:38,101 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:38,228 basehttp "GET /media/categories/unnamed_85lSI9H.png HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:38,232 basehttp "GET /media/categories/blood-strike_dKRFXyu.jpg HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:38,239 basehttp "GET /media/categories/68b8f42815eab_com_QnTNPkj.pubg.krmobile.png HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:38,242 basehttp "GET /media/categories/unnamed_DCVofVn.png HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:38,242 basehttp "GET /media/products/free-fire-1188-diamonds_fuUj6T0.png HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:38,284 basehttp "GET /media/products/free-fire-1188-diamonds_SK89xl0.png HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:38,284 basehttp "GET /media/products/free-fire-1188-diamonds_nbXixpF.png HTTP/1.1" 304 0
+INFO 2025-10-22 21:33:41,905 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 21:33:43,272 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 21:33:45,068 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 21:33:47,952 basehttp "POST /cart/add/6/ HTTP/1.1" 302 0
+INFO 2025-10-22 21:33:47,996 basehttp "GET /product/6/ HTTP/1.1" 200 48044
+INFO 2025-10-22 21:33:54,324 views ID joueur stocké: 11233333333 pour le produit 100 DIAMANTS
+INFO 2025-10-22 21:33:54,334 basehttp "POST /cart/add/6/ HTTP/1.1" 302 0
+INFO 2025-10-22 21:33:54,368 basehttp "GET /cart/ HTTP/1.1" 200 15764
+INFO 2025-10-22 21:33:57,883 basehttp "GET /cart/checkout/ HTTP/1.1" 200 37553
+INFO 2025-10-22 21:57:29,473 basehttp "GET /cart/checkout/ HTTP/1.1" 200 37553
+INFO 2025-10-22 21:57:29,576 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 22:05:53,207 basehttp "GET /cart/checkout/ HTTP/1.1" 200 37553
+ERROR 2025-10-22 22:06:00,925 log Internal Server Error: /cart/process-order/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py", line 414, in process_order
+    order = Order.objects.create(
+        user=request.user,
+    ...<3 lines>...
+        status='processing'
+    )
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\db\models\query.py", line 661, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\LENOVO\Desktop\KOITA_STORE\venv\Lib\site-packages\django\db\models\base.py", line 569, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Order() got unexpected keyword arguments: 'payment_method'
+ERROR 2025-10-22 22:06:00,936 basehttp "POST /cart/process-order/ HTTP/1.1" 500 94100
+INFO 2025-10-22 22:12:14,048 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 22:12:15,185 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 22:12:24,153 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 22:12:25,166 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 22:12:33,951 basehttp "GET /cart/checkout/ HTTP/1.1" 200 24555
+INFO 2025-10-22 22:12:33,998 basehttp "GET /static/css/main.css HTTP/1.1" 304 0
+INFO 2025-10-22 22:12:57,171 basehttp "GET /cart/ HTTP/1.1" 200 15764
+INFO 2025-10-22 22:12:59,560 basehttp "POST /cart/remove/18/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:12:59,589 basehttp "GET /cart/ HTTP/1.1" 200 13702
+INFO 2025-10-22 22:13:01,069 basehttp "POST /cart/remove/19/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:13:01,101 basehttp "GET /cart/ HTTP/1.1" 200 10804
+INFO 2025-10-22 22:13:03,709 basehttp "GET /accounts-for-sale/ HTTP/1.1" 200 35898
+INFO 2025-10-22 22:13:05,680 basehttp "GET /recharges/ HTTP/1.1" 200 35806
+INFO 2025-10-22 22:13:08,009 basehttp "GET /recharges/?category=free-fire-diamant HTTP/1.1" 200 29519
+INFO 2025-10-22 22:13:11,760 basehttp "GET /product/7/ HTTP/1.1" 200 48045
+INFO 2025-10-22 22:13:15,168 views ID joueur stocké: 11233333333 pour le produit 583 DIAMANTS
+INFO 2025-10-22 22:13:15,185 basehttp "POST /cart/add/7/ HTTP/1.1" 302 0
+INFO 2025-10-22 22:13:15,230 basehttp "GET /cart/ HTTP/1.1" 200 13705
+INFO 2025-10-22 22:13:17,617 basehttp "GET /cart/checkout/ HTTP/1.1" 200 24004
+INFO 2025-10-22 22:13:58,542 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 22:13:59,501 autoreload Watching for file changes with StatReloader
+INFO 2025-10-22 22:14:01,982 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\cart\views.py changed, reloading.
+INFO 2025-10-22 22:14:02,994 autoreload Watching for file changes with StatReloader
