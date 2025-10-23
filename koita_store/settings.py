@@ -1,19 +1,32 @@
 import os
 from pathlib import Path
-from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'replace-this-with-your-secret-in-.env'
+# ==================================================
+# SÉCURITÉ - CONFIGURATION PRODUCTION
+# ==================================================
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# IMPORTANT: Utiliser des variables d'environnement
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'votre-cle-secrete-temporaire-a-changer')
 
-ALLOWED_HOSTS = []
+# DEBUG doit être False en production
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# Application definition
+# Hosts autorisés - MODIFIER AVEC TON DOMAINE
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'koitastore.com',  # Ton domaine
+    'www.koitastore.com',
+    # Ajoute ton domaine Heroku/Render/Railway
+]
+
+# ==================================================
+# APPLICATIONS
+# ==================================================
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -22,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # Vos applications
+    # Apps du projet
     'store',
     'accounts',
     'cart',
@@ -30,6 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Pour servir les fichiers statiques
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,7 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'koita_store.context_processors.cart_count',  # Context processor personnalisé
+                'koita_store.context_processors.cart_count',
             ],
         },
     },
@@ -59,41 +73,123 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'koita_store.wsgi.application'
 
-# Database
+# ==================================================
+# BASE DE DONNÉES
+# ==================================================
+
+# En production, utiliser PostgreSQL
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'koita_store_db'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
-# Password validation
-AUTH_PASSWORD_VALIDATORS = []
+# Fallback à SQLite en développement
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
-# Internationalization
+# ==================================================
+# VALIDATION DES MOTS DE PASSE
+# ==================================================
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+# ==================================================
+# INTERNATIONALISATION
+# ==================================================
+
 LANGUAGE_CODE = 'fr-fr'
-TIME_ZONE = 'Europe/Amsterdam'
+TIME_ZONE = 'Africa/Dakar'  # Fuseau horaire du Sénégal
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# ==================================================
+# FICHIERS STATIQUES (CSS, JavaScript, Images)
+# ==================================================
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media files (Images uploadées)
+# Configuration WhiteNoise pour servir les fichiers statiques
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# ==================================================
+# FICHIERS MÉDIA (Images uploadées)
+# ==================================================
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Default primary key field type
+# ==================================================
+# CONFIGURATION EMAIL
+# ==================================================
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'koitastore@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Mot de passe d'application
+DEFAULT_FROM_EMAIL = f'KOITA_STORE <{EMAIL_HOST_USER}>'
+
+# ==================================================
+# SÉCURITÉ SUPPLÉMENTAIRE POUR PRODUCTION
+# ==================================================
+
+if not DEBUG:
+    # HTTPS
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    
+    # HSTS
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # Autres protections
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+
+# ==================================================
+# AUTRES CONFIGURATIONS
+# ==================================================
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Authentication
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Messages framework
+from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
     messages.INFO: 'alert-info',
@@ -102,26 +198,16 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-error',
 }
 
-# Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'koitastore@gmail.com'  # Votre email
-EMAIL_HOST_PASSWORD = '#koitagaming31#'  # Mot de passe d'application Gmail
-DEFAULT_FROM_EMAIL = 'KOITA_STORE <koitastore@gmail.com>'
+# ==================================================
+# LOGGING
+# ==================================================
 
-# Configuration des logs
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
             'style': '{',
         },
     },
@@ -133,9 +219,9 @@ LOGGING = {
             'formatter': 'verbose',
         },
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -147,20 +233,12 @@ LOGGING = {
         'cart': {
             'handlers': ['file', 'console'],
             'level': 'INFO',
-            'propagate': False,
         },
         'store': {
             'handlers': ['file', 'console'],
             'level': 'INFO',
-            'propagate': False,
-        },
-        'accounts': {
-            'handlers': ['file', 'console'],
-            'level': 'INFO',
-            'propagate': False,
         },
     },
 }
 
-# Créer le dossier logs s'il n'existe pas
 os.makedirs(BASE_DIR / 'logs', exist_ok=True)

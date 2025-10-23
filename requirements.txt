@@ -1,5 +1,49 @@
-Django>=4.2
+# ==================================================
+# DJANGO ET DÉPENDANCES PRINCIPALES
+# ==================================================
+Django>=4.2,<5.0
 Pillow>=10.0.0
-requests>=2.31.0
+
+# ==================================================
+# BASE DE DONNÉES
+# ==================================================
+psycopg2-binary>=2.9.0  # Pour PostgreSQL
+
+# ==================================================
+# SERVEUR WEB POUR PRODUCTION
+# ==================================================
+gunicorn>=21.0.0
+whitenoise>=6.5.0  # Pour servir les fichiers statiques
+
+# ==================================================
+# SÉCURITÉ ET ENVIRONNEMENT
+# ==================================================
+python-decouple>=3.8  # Pour gérer les variables d'environnement
+django-environ>=0.11.0
+
+# ==================================================
+# FORMULAIRES ET VALIDATION
+# ==================================================
+django-crispy-forms>=2.0
+crispy-bootstrap4>=2.0
+
+# ==================================================
+# OUTILS DE DÉVELOPPEMENT (Optionnel)
+# ==================================================
+# django-debug-toolbar>=4.2.0  # Décommenter seulement en dev
+
+# ==================================================
+# PAIEMENT (À ajouter selon tes besoins)
+# ==================================================
+# stripe>=6.0.0  # Si tu utilises Stripe
+# requests>=2.31.0  # Pour les API externes
+
+# ==================================================
+# SELENIUM (Pour le script de recharge automatique)
+# ==================================================
 selenium>=4.15.0
-webdriver-manager>=4.0.1
+
+# ==================================================
+# AUTRES UTILITAIRES
+# ==================================================
+python-dotenv>=1.0.0
