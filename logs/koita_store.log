@@ -1754,3 +1754,4 @@ INFO 2025-10-23 21:32:52,118 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\koit
 INFO 2025-10-23 21:32:52,519 autoreload C:\Users\LENOVO\Desktop\KOITA_STORE\koita_store\settings.py changed, reloading.
 INFO 2025-10-23 21:32:53,161 autoreload Watching for file changes with StatReloader
 INFO 2025-10-23 21:32:53,520 autoreload Watching for file changes with StatReloader
+INFO 2025-10-23 21:43:46,136 autoreload Watching for file changes with StatReloader
